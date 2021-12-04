@@ -1,0 +1,37 @@
+load(":versions_test.bzl", "versions_test_suite")
+load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
+load("@bazel_skylib//rules:write_file.bzl", "write_file")
+load("@bazel_skylib//rules:run_binary.bzl", "run_binary")
+load("@aspect_rules_js//js:nodejs_binary.bzl", "nodejs_binary")
+
+versions_test_suite(name = "versions_test")
+
+write_file(
+    name = "gen_main",
+    out = "main.js",
+    content = ["require('@swc/cli')()"],
+)
+
+nodejs_binary(
+    name = "swc",
+    data = ["@npm__swc_cli-0.1.52"],
+    entry_point = "main.js",
+    #toolchains = ["@aspect_rules_swc//swc:toolchain_type"],
+)
+
+run_binary(
+    name = "run",
+    srcs = ["in.ts"],
+    outs = ["expected.js"],
+    args = [
+        "-f",
+        "$(location in.ts)",
+    ],
+    tool = ":swc",
+)
+
+diff_test(
+    name = "test",
+    file1 = "actual",
+    file2 = "expected.js",
+)

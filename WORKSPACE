@@ -1,32 +1,72 @@
 # Declare the local Bazel workspace.
 # This is *not* included in the published distribution.
 workspace(
-    # If your ruleset is "official"
-    # (i.e. is in the bazelbuild GitHub org)
-    # then this should just be named "rules_mylang"
-    # see https://docs.bazel.build/versions/main/skylark/deploying.html#workspace
-    name = "com_myorg_rules_mylang",
+    name = "aspect_rules_swc",
 )
 
-load(":internal_deps.bzl", "rules_mylang_internal_deps")
+load(":internal_deps.bzl", "rules_swc_internal_deps")
 
 # Fetch deps needed only locally for development
-rules_mylang_internal_deps()
+rules_swc_internal_deps()
 
-load("//mylang:repositories.bzl", "mylang_register_toolchains", "rules_mylang_dependencies")
+load("//swc:repositories.bzl", "rules_swc_dependencies", "swc_register_toolchains")
 
 # Fetch our "runtime" dependencies which users need as well
-rules_mylang_dependencies()
+rules_swc_dependencies()
 
-mylang_register_toolchains(
-    name = "mylang1_14",
-    mylang_version = "1.14.2",
+swc_register_toolchains(
+    name = "swc",
+    swc_version = "1.2.117",
 )
 
-# For running our own unit tests
-load("@bazel_skylib//lib:unittest.bzl", "register_unittest_toolchains")
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 
-register_unittest_toolchains()
+nodejs_register_toolchains(
+    name = "node16",
+    node_version = "16.9.0",
+)
+
+load("@aspect_rules_js//js:npm_import.bzl", "npm_import")
+
+npm_import(
+    integrity = "sha512-LAWnsTG6BNGinyPN5U0wPKA6OSMX+sl4VUzzo1dpS33V4osLQOXxLdITQnQbfI8zS74ekERvIwa8vvXKXCoc+A==",
+    package = "@swc/cli",
+    version = "0.1.52",
+    deps = [
+        "@npm__napi-rs_triples-1.1.0",
+        "@npm__node-rs_helper-1.2.1",
+        "@npm__swc_core-1.2.117",
+        "@npm_slash-3.0.0",
+    ],
+)
+
+npm_import(
+    integrity = "sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==",
+    package = "slash",
+    version = "3.0.0",
+)
+
+npm_import(
+    integrity = "sha512-bR1YGSyKbwguJxyZ3i3Au6+u8eP3SWhikGVWtCTE9sbfjSXuFKABaJiETg52IV3lU/WF6S97bGFdi+4SpyJnLw==",
+    package = "@swc/core",
+    version = "1.2.117",
+)
+
+npm_import(
+    integrity = "sha512-R5wEmm8nbuQU0YGGmYVjEc0OHtYsuXdpRG+Ut/3wZ9XAvQWyThN08bTh2cBJgoZxHQUPtvRfeQuxcAgLuiBISg==",
+    package = "@node-rs/helper",
+    version = "1.2.1",
+)
+
+npm_import(
+    integrity = "sha512-XQr74QaLeMiqhStEhLn1im9EOMnkypp7MZOwQhGzqp2Weu5eQJbpPxWxixxlYRKWPOmJjsk6qYfYH9kq43yc2w==",
+    package = "@napi-rs/triples",
+    version = "1.1.0",
+)
+
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
+bazel_skylib_workspace()
 
 ############################################
 # Gazelle, for generating bzl_library targets
