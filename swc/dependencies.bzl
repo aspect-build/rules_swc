@@ -40,8 +40,7 @@ def rules_swc_dependencies():
     maybe(
         http_archive,
         name = "aspect_rules_js",
-        sha256 = "6715942b2c6a9e3ca2a7cdd229111dcf93d4741a35fad039dec7fccd8b9b6f5d",
-        strip_prefix = "rules_js-swc",
-        # TODO: switch to release after merge
-        url = "https://github.com/aspect-build/rules_js/archive/refs/heads/swc.zip",
+        sha256 = "eca89b1f6f7bbe96ebe16d949c260abaac660ed2d93bbed9c612abfe36344a2e",
+        strip_prefix = "rules_js-4420d070f3c696166384535e3cf4235434e85e8d",
+        url = "https://github.com/aspect-build/rules_js/archive/4420d070f3c696166384535e3cf4235434e85e8d.zip",
     )

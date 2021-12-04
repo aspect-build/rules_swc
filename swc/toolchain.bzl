@@ -4,7 +4,7 @@
 SwcInfo = provider(
     doc = "Information about how to invoke the tool executable.",
     fields = {
-        "target_tool_path": "Path to the node binding for the target platform.",
+        "binding": "Path to the node binding for the target platform.",
         "tool_files": """Files required in runfiles to make the tool executable available.
 
 May be empty if the target_tool_path points to a locally installed tool binary.""",
@@ -41,7 +41,7 @@ def _swc_toolchain_impl(ctx):
         runfiles = ctx.runfiles(files = tool_files),
     )
     swcinfo = SwcInfo(
-        target_tool_path = target_tool_path,
+        binding = target_tool_path,
         tool_files = tool_files,
     )
 
