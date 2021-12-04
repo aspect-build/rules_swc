@@ -19,14 +19,13 @@ nodejs_binary(
         "@swc_cli//@swc/cli",
     ],
     entry_point = "main.js",
-    #toolchains = ["@aspect_rules_swc//swc:toolchain_type"],
 )
 
 genrule(
     name = "run",
     srcs = ["in.ts"],
     outs = ["actual.js"],
-    cmd = """SWC_BINDING=$$(pwd)/$(SWC_BINDING) \\
+    cmd = """SWC_BINDING=$(SWC_BINDING) \\
         $(execpath :swc-cli) \\
         $(location in.ts) \\
         -o $(location actual.js)""",
