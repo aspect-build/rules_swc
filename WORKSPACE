@@ -37,23 +37,6 @@ load("@swc_cli//:repositories.bzl", "npm_repositories")
 
 npm_repositories()
 
-# npm_import(
-#     integrity = "sha512-LAWnsTG6BNGinyPN5U0wPKA6OSMX+sl4VUzzo1dpS33V4osLQOXxLdITQnQbfI8zS74ekERvIwa8vvXKXCoc+A==",
-#     package = "@swc/cli",
-#     version = "0.1.52",
-#     deps = [
-#         "@npm__swc_core-1.2.117",
-#         "@npm_slash-3.0.0",
-#         "@npm_fast-glob-3.2.7",
-#     ],
-# )
-
-# npm_import(
-#     integrity = "sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==",
-#     package = "slash",
-#     version = "3.0.0",
-# )
-
 npm_import(
     integrity = "sha512-bR1YGSyKbwguJxyZ3i3Au6+u8eP3SWhikGVWtCTE9sbfjSXuFKABaJiETg52IV3lU/WF6S97bGFdi+4SpyJnLw==",
     package = "@swc/core",
@@ -78,12 +61,6 @@ npm_import(
     package = "@napi-rs/triples",
     version = "1.1.0",
 )
-
-# npm_import(
-#     package = "fast-glob",
-#     version = "3.2.7",
-#     integrity = "sha512-rYGMRwip6lUMvYD3BTScMwT1HtAs2d71SMv66Vrxs0IekGZEjhM0pcMfjQPnknBt2zeCwQMEupiN02ZP4DiT1Q==",
-# )
 
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 

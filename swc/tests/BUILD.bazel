@@ -1,28 +1,19 @@
 load(":versions_test.bzl", "versions_test_suite")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
-load("@bazel_skylib//rules:run_binary.bzl", "run_binary")
 load("@aspect_rules_js//js:nodejs_binary.bzl", "nodejs_binary")
 
 versions_test_suite(name = "versions_test")
 
+# Workaround: nodejs_binary doesn't support entry points under external yet
 write_file(
     name = "gen_main",
     out = "main.js",
     content = ["require('@swc/cli')"],
 )
 
-genrule(
-    name = "get_binding",
-    srcs = [],
-    outs = ["node.binding"],
-    cmd = "cp $(SWC_BIN) $@",
-    toolchains = ["@swc_toolchains//:resolved_toolchain"],
-    tools = ["@swc_toolchains//:resolved_toolchain"],
-)
-
 nodejs_binary(
-    name = "swc",
+    name = "swc-cli",
     data = [
         "@npm__swc_core-1.2.117",
         "@swc_cli//@swc/cli",
@@ -31,20 +22,23 @@ nodejs_binary(
     #toolchains = ["@aspect_rules_swc//swc:toolchain_type"],
 )
 
-run_binary(
+genrule(
     name = "run",
     srcs = ["in.ts"],
-    outs = ["actual"],
-    args = [
-        "$(location in.ts)",
-        "-o",
-        "$(location actual)",
+    outs = ["actual.js"],
+    cmd = """SWC_BINDING=$$(pwd)/$(SWC_BINDING) \\
+        $(execpath :swc-cli) \\
+        $(location in.ts) \\
+        -o $(location actual.js)""",
+    toolchains = ["@swc_toolchains//:resolved_toolchain"],
+    tools = [
+        ":swc-cli",
+        "@swc_toolchains//:resolved_toolchain",
     ],
-    tool = ":swc",
 )
 
 diff_test(
     name = "test",
-    file1 = "actual",
+    file1 = "actual.js",
     file2 = "expected.js",
 )
