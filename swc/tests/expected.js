@@ -1,1 +1,3 @@
-//#sourceMappingURL=data:application/json;charset=utf-8;base64,IntcInZlcnNpb25cIjozLFwic291cmNlc1wiOltdLFwibmFtZXNcIjpbXSxcIm1hcHBpbmdzXCI6XCJcIixcImZpbGVcIjpcInN0ZG91dFwifSI=
+export var a = "foo";
+
+//# sourceMappingURL=actual.map

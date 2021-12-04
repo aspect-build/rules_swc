@@ -9,12 +9,24 @@ versions_test_suite(name = "versions_test")
 write_file(
     name = "gen_main",
     out = "main.js",
-    content = ["require('@swc/cli')()"],
+    content = ["require('@swc/cli')"],
+)
+
+genrule(
+    name = "get_binding",
+    srcs = [],
+    outs = ["node.binding"],
+    cmd = "cp $(SWC_BIN) $@",
+    toolchains = ["@swc_toolchains//:resolved_toolchain"],
+    tools = ["@swc_toolchains//:resolved_toolchain"],
 )
 
 nodejs_binary(
     name = "swc",
-    data = ["@npm__swc_cli-0.1.52"],
+    data = [
+        "@npm__swc_core-1.2.117",
+        "@swc_cli//@swc/cli",
+    ],
     entry_point = "main.js",
     #toolchains = ["@aspect_rules_swc//swc:toolchain_type"],
 )
@@ -22,10 +34,11 @@ nodejs_binary(
 run_binary(
     name = "run",
     srcs = ["in.ts"],
-    outs = ["expected.js"],
+    outs = ["actual"],
     args = [
-        "-f",
         "$(location in.ts)",
+        "-o",
+        "$(location actual)",
     ],
     tool = ":swc",
 )
