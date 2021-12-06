@@ -48,12 +48,12 @@ Next, include this in your WORKSPACE file:
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # See the rules_swc releases page for an up-to-date snippet.
-_RULES_SWC_VERSION="02b26f90549025fe7f78909ab668404c5cb9aaea"
+_RULES_SWC_VERSION="391c3748d48e964b9987e614028db9cb9cd35868"
 http_archive(
     name = "aspect_rules_swc",
     url = "https://github.com/aspect-build/rules_swc/archive/%s.zip" % _RULES_SWC_VERSION,
     strip_prefix = "rules_swc-" + _RULES_SWC_VERSION,
-    sha256 = "e0c6ae79ac380879a22b186970f41357e89a35df983f3dfb8564f24445f31537",
+    sha256 = "174494327d7e715a8d95755c89afa71dd671d9f2d8296f96c772151a02036919",
 )
 
 # Fetches the rules_swc dependencies.
@@ -71,7 +71,7 @@ rules_swc_dependencies()
 load("@aspect_rules_swc//swc:repositories.bzl", "swc_register_toolchains")
 swc_register_toolchains(
     name = "swc",
-    swc_version = "1.2.117",
+    swc_version = "v1.2.118",
 )
 
 # Fetches a NodeJS interpreter, needed to run the swc CLI.
