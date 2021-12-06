@@ -20,7 +20,7 @@ def _is_supported_src(src):
             return True
     return False
 
-def swc(name, srcs = None, args = [], data = [], swcrc = None, source_maps = None, source_map_outputs = False):
+def swc(name, srcs = None, args = [], data = [], swcrc = None, source_maps = None, source_map_outputs = False, **kwargs):
     """Execute the swc compiler
 
     Args:
@@ -33,6 +33,7 @@ def swc(name, srcs = None, args = [], data = [], swcrc = None, source_maps = Non
           If source_maps is "true" or "both" then source_map_outputs is automatically set to True.
         source_map_outputs: if the rule is expected to produce a .js.map file output for each .js file output
         swcrc: label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc
+        **kwargs: additional named parameters like tags or visibility
     """
     if srcs == None:
         srcs = native.glob(["**/*" + e for e in _SUPPORTED_EXTENSIONS])
@@ -68,4 +69,5 @@ def swc(name, srcs = None, args = [], data = [], swcrc = None, source_maps = Non
         args = args,
         data = data,
         swcrc = swcrc,
+        **kwargs
     )

@@ -16,7 +16,7 @@ load("//swc:repositories.bzl", "swc_register_toolchains")
 
 swc_register_toolchains(
     name = "swc",
-    swc_version = "1.2.117",
+    swc_version = "v1.2.118",
 )
 
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
