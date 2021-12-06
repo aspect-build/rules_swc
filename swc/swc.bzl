@@ -9,6 +9,9 @@ _swc = rule(
     toolchains = _swc_lib.toolchains,
 )
 
+# In theory, swc can transform .js -> .js.
+# But this would cause Bazel outputs to collide with inputs so it requires some re-rooting scheme.
+# TODO: add this if users need it
 _SUPPORTED_EXTENSIONS = [".ts", ".tsx", ".jsx", ".mjs", ".cjs"]
 
 def _is_supported_src(src):
@@ -17,17 +20,19 @@ def _is_supported_src(src):
             return True
     return False
 
-def swc(name, srcs = None, args = [], source_maps = None, source_map_outputs = False):
+def swc(name, srcs = None, args = [], data = [], swcrc = None, source_maps = None, source_map_outputs = False):
     """Execute the swc compiler
 
     Args:
         name: A name for the target
-        srcs: srcs
-        args: additional use args to pass to swc cli
-        source_maps: If set, the --source-maps argument is passed to the swc cli with the value
-          True/False are automaticaly converted to "true"/"false" string values the cli expects
-          If source_maps is "true" or "both" then source_map_outputs is automatically set to True
+        srcs: source files, typically .ts files in the source tree
+        data: runtime dependencies to be propagated in the runfiles
+        args: additional arguments to pass to swc cli, see https://swc.rs/docs/usage/cli
+        source_maps: If set, the --source-maps argument is passed to the swc cli with the value.
+          True/False are automaticaly converted to "true"/"false" string values the cli expects.
+          If source_maps is "true" or "both" then source_map_outputs is automatically set to True.
         source_map_outputs: if the rule is expected to produce a .js.map file output for each .js file output
+        swcrc: label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc
     """
     if srcs == None:
         srcs = native.glob(["**/*" + e for e in _SUPPORTED_EXTENSIONS])
@@ -38,7 +43,7 @@ def swc(name, srcs = None, args = [], source_maps = None, source_map_outputs = F
     elif source_maps == False:
         source_maps = "false"
 
-    # Detect if we are expecting
+    # Detect if we are expecting sourcemap outputs
     if not source_map_outputs:
         source_map_outputs = (source_maps == "true" or source_maps == "both")
 
@@ -61,4 +66,6 @@ def swc(name, srcs = None, args = [], source_maps = None, source_map_outputs = F
         js_outs = js_outs,
         map_outs = map_outs,
         args = args,
+        data = data,
+        swcrc = swcrc,
     )

@@ -22,7 +22,6 @@ _outputs = {
 
 def _impl(ctx):
     outputs = ctx.outputs.js_outs + ctx.outputs.map_outs
-    outputs_depset = depset(outputs)
     source_maps = len(ctx.outputs.map_outs) > 0
 
     for src in ctx.files.srcs:
@@ -45,8 +44,10 @@ def _impl(ctx):
                 "--config",
                 swcrc_path,
             ])
-            if not src_path.startswith(swcrc_directory):
-                fail("sources must be in swcrc directory or subdirector if swcrc is specified")
+
+            # TODO(greg): determine if this is needed, given that relativize below should provide a correct path
+            # if not src_path.startswith(swcrc_directory):
+            #     fail("sources must be in swcrc directory or subdirectory if swcrc is specified")
             src_path = paths.relativize(src_path, swcrc_directory)
 
         args.add_all([
@@ -63,10 +64,11 @@ def _impl(ctx):
             arguments = [args],
             outputs = outs,
             env = {
+                # Our patch for @swc/core uses this environment variable to locate the rust binding
                 "SWC_BINDING": binding,
             },
             executable = ctx.executable.swc_cli,
-            progress_message = "Compiling with swc %s [swc %s]" % (
+            progress_message = "Transpiling with swc %s [swc %s]" % (
                 ctx.label,
                 src.short_path,
             ),
@@ -74,8 +76,8 @@ def _impl(ctx):
 
     providers = [
         DefaultInfo(
-            files = outputs_depset,
-            runfiles = ctx.runfiles(transitive_files = outputs_depset),
+            files = depset(outputs),
+            runfiles = ctx.runfiles(outputs, transitive_files = depset(ctx.files.data)),
         ),
     ]
 
