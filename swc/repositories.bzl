@@ -16,7 +16,7 @@ _ATTRS = {
 
 def _swc_repo_impl(repository_ctx):
     filename = "swc.%s.node" % repository_ctx.attr.platform
-    url = "https://github.com/swc-project/swc/releases/download/v{0}/{1}".format(
+    url = "https://github.com/swc-project/swc/releases/download/{0}/{1}".format(
         repository_ctx.attr.swc_version,
         filename,
     )

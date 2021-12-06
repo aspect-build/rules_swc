@@ -11,3 +11,10 @@ bzl_library(
     srcs = ["versions.bzl"],
     visibility = ["//swc:__subpackages__"],
 )
+
+bzl_library(
+    name = "swc",
+    srcs = ["swc.bzl"],
+    visibility = ["//swc:__subpackages__"],
+    deps = ["@bazel_skylib//lib:paths"],
+)
