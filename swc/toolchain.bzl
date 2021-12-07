@@ -34,7 +34,7 @@ def _swc_toolchain_impl(ctx):
     # Make the $(tool_BIN) variable available in places like genrules.
     # See https://docs.bazel.build/versions/main/be/make-variables.html#custom_variables
     template_variables = platform_common.TemplateVariableInfo({
-        "SWC_BINDING": target_tool_path,
+        "SWC_BINARY_PATH": target_tool_path,
     })
     default = DefaultInfo(
         files = depset(tool_files),
