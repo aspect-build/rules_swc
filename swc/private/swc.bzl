@@ -65,7 +65,7 @@ def _impl(ctx):
             outputs = outs,
             env = {
                 # Our patch for @swc/core uses this environment variable to locate the rust binding
-                "SWC_BINDING": binding,
+                "SWC_BINARY_PATH": binding,
             },
             executable = ctx.executable.swc_cli,
             progress_message = "Transpiling with swc %s [swc %s]" % (

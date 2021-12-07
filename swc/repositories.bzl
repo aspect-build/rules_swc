@@ -70,7 +70,7 @@ def swc_register_toolchains(name, **kwargs):
         integrity = "sha512-bR1YGSyKbwguJxyZ3i3Au6+u8eP3SWhikGVWtCTE9sbfjSXuFKABaJiETg52IV3lU/WF6S97bGFdi+4SpyJnLw==",
         package = "@swc/core",
         patches = [
-            "@aspect_rules_swc//swc/private:swc_core.patch",
+            "@aspect_rules_swc//swc/private:swc.pr2983.patch",
         ],
         version = "1.2.117",
         deps = [

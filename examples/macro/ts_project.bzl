@@ -19,7 +19,7 @@ def my_ts_project(name, srcs = []):
             name = "run",
             srcs = [src],
             outs = [src.replace(".ts", ".js")],
-            cmd = """SWC_BINDING=$(SWC_BINDING) \\
+            cmd = """SWC_BINARY_PATH=$(SWC_BINARY_PATH) \\
                 $(execpath @aspect_rules_swc//swc:cli) \\
                 $(location in.ts) \\
                 -o $@""",
