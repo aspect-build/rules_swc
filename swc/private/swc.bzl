@@ -41,7 +41,7 @@ def _impl(ctx):
             swcrc_path = ctx.file.swcrc.path
             swcrc_directory = paths.dirname(swcrc_path)
             args.add_all([
-                "--config",
+                "--config-file",
                 swcrc_path,
             ])
 
