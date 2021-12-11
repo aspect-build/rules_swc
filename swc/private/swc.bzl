@@ -55,6 +55,7 @@ def _impl(ctx):
             "--out-file",
             js_out.path,
             "--no-swcrc",
+            "-q",
         ])
 
         binding = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.binding
