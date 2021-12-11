@@ -26,21 +26,22 @@ def rules_swc_dependencies():
     maybe(
         http_archive,
         name = "rules_nodejs",
-        sha256 = "a2b1b60c51b0193ed1646accf77a28cfd4f4ce1f6c86f32ce11455101be3a9c4",
-        urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/4.4.3/rules_nodejs-core-4.4.3.tar.gz"],
+        sha256 = "8f4a19de1eb16b57ac03a8e9b78344b44473e0e06b0510cec14a81f6adfdfc25",
+        urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/4.4.6/rules_nodejs-core-4.4.6.tar.gz"],
     )
 
     maybe(
         http_archive,
         name = "aspect_bazel_lib",
-        sha256 = "7cb2faf813bae1712dcb09b23dd8d68fffd8631a25d54b9ca8ae866ca7debc06",
-        urls = ["https://github.com/aspect-build/bazel-lib/releases/download/v0.2.1/bazel_lib-0.2.1.tar.gz"],
+        sha256 = "e834c368f36cb336b5b42cd1dd9cd4b6bafa0ad3ed7f92f54a47e5ab436e4f59",
+        strip_prefix = "bazel-lib-0.3.0",
+        url = "https://github.com/aspect-build/bazel-lib/archive/v0.3.0.tar.gz",
     )
 
     maybe(
         http_archive,
         name = "aspect_rules_js",
-        sha256 = "eca89b1f6f7bbe96ebe16d949c260abaac660ed2d93bbed9c612abfe36344a2e",
-        strip_prefix = "rules_js-4420d070f3c696166384535e3cf4235434e85e8d",
-        url = "https://github.com/aspect-build/rules_js/archive/4420d070f3c696166384535e3cf4235434e85e8d.zip",
+        sha256 = "e8576a74a7e80b873179514cf1ad48b62b18ae024e74200ecd40ae6dc00c515a",
+        strip_prefix = "rules_js-0.3.0",
+        url = "https://github.com/aspect-build/rules_js/archive/v0.3.0.tar.gz",
     )

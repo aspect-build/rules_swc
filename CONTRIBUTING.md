@@ -39,9 +39,6 @@ This means that any usage of `@rules_swc` on your system will point to this fold
 
 ## Releasing
 
-1. Make sure your git state is at the right place (something like `git fetch; git checkout origin/main`)
 1. Determine the next release version, following semver (could automate in the future from changelog)
-1. `git tag -a v1.2.3` (will open an editor to put release notes)
-1. `git push --tags`
+1. Push a tag to the repo, or create one on the GH UI
 1. Watch the automation run on GitHub actions
-1. Update the release page with auto-generated release notes
