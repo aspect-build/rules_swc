@@ -67,12 +67,9 @@ def swc_register_toolchains(name, **kwargs):
     )
 
     npm_import(
-        integrity = "sha512-bR1YGSyKbwguJxyZ3i3Au6+u8eP3SWhikGVWtCTE9sbfjSXuFKABaJiETg52IV3lU/WF6S97bGFdi+4SpyJnLw==",
+        integrity = "sha512-hNelzQ5ShAaaf2SHy4oZQ0dB8VCI4AaVchWEe5bZtirW3sY0gOqVL5V7x0b5Zzo0FyjlMnGIbX1k5IuX5uyn8A==",
         package = "@swc/core",
-        patches = [
-            "@aspect_rules_swc//swc/private:swc.pr2983.patch",
-        ],
-        version = "1.2.117",
+        version = "1.2.119",
         deps = [
             "@npm__napi-rs_triples-1.1.0",
             "@npm__node-rs_helper-1.2.1",
