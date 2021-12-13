@@ -20,13 +20,14 @@ def _is_supported_src(src):
             return True
     return False
 
-def swc(name, srcs = None, args = [], data = [], swcrc = None, source_maps = None, source_map_outputs = False, **kwargs):
+def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = None, source_maps = None, source_map_outputs = False, **kwargs):
     """Execute the swc compiler
 
     Args:
         name: A name for the target
         srcs: source files, typically .ts files in the source tree
         data: runtime dependencies to be propagated in the runfiles
+        output_dir: whether to produce a directory output rather than individual files
         args: additional arguments to pass to swc cli, see https://swc.rs/docs/usage/cli
         source_maps: If set, the --source-maps argument is passed to the swc cli with the value.
           True/False are automaticaly converted to "true"/"false" string values the cli expects.
@@ -55,17 +56,20 @@ def swc(name, srcs = None, args = [], data = [], swcrc = None, source_maps = Non
     # Determine js & map outputs
     js_outs = []
     map_outs = []
-    for f in srcs:
-        if _is_supported_src(f):
-            js_outs.append(paths.replace_extension(f, ".js"))
-            if source_map_outputs:
-                map_outs.append(paths.replace_extension(f, ".js.map"))
+
+    if not output_dir:
+        for f in srcs:
+            if _is_supported_src(f):
+                js_outs.append(paths.replace_extension(f, ".js"))
+                if source_map_outputs:
+                    map_outs.append(paths.replace_extension(f, ".js.map"))
 
     _swc(
         name = name,
         srcs = srcs,
         js_outs = js_outs,
         map_outs = map_outs,
+        output_dir = output_dir,
         args = args,
         data = data,
         swcrc = swcrc,
