@@ -1,0 +1,33 @@
+"""Directory use case for swc: minifying a folder of code-split files
+
+This has to be a directory-in, directory-out pattern since the codesplitter produces unpredictable filenames.
+
+Note that this example also depends on the setup in /WORKSPACE at the root of this repository.
+"""
+
+load("@aspect_rules_swc//swc:swc.bzl", "swc")
+load(":mocks.bzl", "mock_codesplit")
+
+mock_codesplit(
+    name = "split_app",
+)
+
+# Runs `swc path/to/split_app --out-dir ../../bazel-bin/examples/directory/minify`
+# You can run `bazel build --subcommands //examples/directory:minify`
+# to see the exact command line Bazel runs.
+# Note that by default, sources are found by glob(["**/*.ts"])
+swc(
+    name = "minify",
+    srcs = ["split_app"],
+    output_dir = True,
+)
+
+sh_test(
+    name = "test",
+    srcs = ["test.sh"],
+    # Workaround https://github.com/swc-project/swc/issues/3028
+    # The test will need to know this folder to make the assertion
+    args = ["$(TARGET_CPU)-$(COMPILATION_MODE)"],
+    data = ["minify"],
+    deps = ["@bazel_tools//tools/bash/runfiles"],
+)
