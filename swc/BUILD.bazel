@@ -35,8 +35,12 @@ write_file(
 nodejs_binary(
     name = "cli",
     data = [
-        "@npm__swc_cli-0.1.52",
-        "@npm__swc_core-1.2.119",
+        # Don't use the shorter syntax here because the user or bzlmod
+        # might use repository mapping to give a different name
+        # to the repository, e.g.
+        # @aspect_rules_swc.0.2.0.swc.npm__swc_core-1.2.119
+        "@npm__swc_cli-0.1.52//:pkg",
+        "@npm__swc_core-1.2.119//:pkg",
     ],
     entry_point = "main.js",
     visibility = ["//visibility:public"],

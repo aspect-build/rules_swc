@@ -41,7 +41,7 @@ swc_repositories = repository_rule(
 )
 
 # Wrapper macro around everything above, this is the primary API
-def swc_register_toolchains(name, **kwargs):
+def swc_register_toolchains(name, register = True, **kwargs):
     """Convenience macro for users which does typical setup.
 
     - create a repository for each built-in platform like "swc_linux_amd64" -
@@ -52,6 +52,8 @@ def swc_register_toolchains(name, **kwargs):
     Users can avoid this macro and do these steps themselves, if they want more control.
     Args:
         name: base name for all created repos, like "swc"
+        register: whether to call through to native.register_toolchains.
+            Should be True for WORKSPACE users, but false when used under bzlmod extension
         **kwargs: passed to each node_repositories call
     """
     for platform in PLATFORMS.keys():
@@ -60,7 +62,8 @@ def swc_register_toolchains(name, **kwargs):
             platform = platform,
             **kwargs
         )
-        native.register_toolchains("@%s_toolchains//:%s_toolchain" % (name, platform))
+        if register:
+            native.register_toolchains("@%s_toolchains//:%s_toolchain" % (name, platform))
 
     toolchains_repo(
         name = name + "_toolchains",
