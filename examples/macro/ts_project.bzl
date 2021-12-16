@@ -23,9 +23,9 @@ def my_ts_project(name, srcs = []):
                 $(execpath @aspect_rules_swc//swc:cli) \\
                 $(location in.ts) \\
                 -o $@""",
-            toolchains = ["@swc_toolchains//:resolved_toolchain"],
+            toolchains = ["@default_swc_toolchains//:resolved_toolchain"],
             tools = [
                 "@aspect_rules_swc//swc:cli",
-                "@swc_toolchains//:resolved_toolchain",
+                "@default_swc_toolchains//:resolved_toolchain",
             ],
         )

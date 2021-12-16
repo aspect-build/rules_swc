@@ -15,7 +15,7 @@ rules_swc_dependencies()
 load("//swc:repositories.bzl", "swc_register_toolchains")
 
 swc_register_toolchains(
-    name = "swc",
+    name = "default_swc",
     swc_version = "v1.2.119",
 )
 
