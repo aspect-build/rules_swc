@@ -123,7 +123,6 @@ resolved_toolchain(name = "resolved_toolchain", visibility = ["//visibility:publ
 toolchain(
     name = "{platform}_toolchain",
     exec_compatible_with = {compatible_with},
-    target_compatible_with = {compatible_with},
     toolchain = "@{user_repository_name}_{platform}//:swc_toolchain",
     toolchain_type = "@aspect_rules_swc//swc:toolchain_type",
 )
