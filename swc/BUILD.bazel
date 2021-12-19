@@ -35,8 +35,8 @@ write_file(
 nodejs_binary(
     name = "cli",
     data = [
+        "@npm__swc_cli-0.1.52",
         "@npm__swc_core-1.2.119",
-        "@swc_cli//@swc/cli",
     ],
     entry_point = "main.js",
     visibility = ["//visibility:public"],

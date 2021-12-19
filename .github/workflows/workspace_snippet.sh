@@ -44,9 +44,5 @@ nodejs_register_toolchains(
     name = "node16",
     node_version = "16.9.0",
 )
-
-# Fetches the npm packages needed to run @swc/cli
-load("@swc_cli//:repositories.bzl", _swc_cli_deps = "npm_repositories")
-_swc_cli_deps()
 \`\`\`
 EOF

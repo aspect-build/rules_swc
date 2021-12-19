@@ -7,6 +7,7 @@ See https://docs.bazel.build/versions/main/skylark/deploying.html#dependencies
 load("@aspect_rules_js//js:npm_import.bzl", "npm_import", "translate_package_lock")
 load("//swc/private:toolchains_repo.bzl", "PLATFORMS", "toolchains_repo")
 load("//swc/private:versions.bzl", "TOOL_VERSIONS")
+load("//swc/private:cli_repositories.bzl", _cli_repositories = "npm_repositories")
 
 _DOC = "Fetch external tools needed for swc toolchain"
 _ATTRS = {
@@ -88,7 +89,12 @@ def swc_register_toolchains(name, **kwargs):
         version = "1.1.0",
     )
 
+    # See comments at the top of /swc/private/cli_repositories.bzl
+    # This is used to generate code in this repo, but otherwise unused
+    # at runtime or by users directly.
     translate_package_lock(
         name = "swc_cli",
         package_lock = "@aspect_rules_swc//swc/private:package-lock.json",
     )
+
+    _cli_repositories()

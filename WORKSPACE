@@ -26,10 +26,6 @@ nodejs_register_toolchains(
     node_version = "16.9.0",
 )
 
-load("@swc_cli//:repositories.bzl", "npm_repositories")
-
-npm_repositories()
-
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 
 bazel_skylib_workspace()
