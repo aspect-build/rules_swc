@@ -1,4 +1,13 @@
-"swc rule"
+"""API for running SWC under Bazel
+
+Simplest usage:
+
+```starlark
+load("@aspect_rules_swc//swc:swc.bzl", "swc")
+
+swc(name = "transpile")
+```
+"""
 
 load("//swc/private:swc.bzl", _swc_lib = "swc")
 load("@bazel_skylib//lib:paths.bzl", "paths")
@@ -6,8 +15,10 @@ load("@bazel_skylib//lib:paths.bzl", "paths")
 swc_rule = rule(
     doc = """Underlying rule for the `swc` macro.
 
-    Use this if you need more control over how the rule is called,
-    for example to set your own output labels for `js_outs`.""",
+Most users should just use [swc](#swc) instead.
+
+Use this if you need more control over how the rule is called,
+for example to set your own output labels for `js_outs`.""",
     implementation = _swc_lib.implementation,
     attrs = _swc_lib.attrs,
     toolchains = _swc_lib.toolchains,

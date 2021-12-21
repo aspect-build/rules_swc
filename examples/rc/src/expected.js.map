@@ -1,1 +1,1 @@
-{"version":3,"sources":["../../../../../../examples/rc/src/in.ts"],"names":[],"mappings":";;;;;AAAO,KAAK,CAAC,CAAC,GAAW,CAAK;QAAjB,CAAC,GAAD,CAAC","file":"in.js","sourcesContent":["export const a: string = 'foo'\n"]}
+{"version":3,"sources":["../../../../../../examples/rc/src/in.ts"],"names":[],"mappings":";;;;;AAAO,KAAK,CAAC,CAAC,GAAW,CAAK;QAAjB,CAAC,GAAD,CAAC","file":"in.js","sourcesContent":["export const a: string = \"foo\";\n"]}
