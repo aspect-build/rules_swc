@@ -17,8 +17,8 @@ _attrs = {
 }
 
 _outputs = {
-    "js_outs": attr.output_list(),
-    "map_outs": attr.output_list(),
+    "js_outs": attr.output_list(doc = "list of expected JavaScript output files"),
+    "map_outs": attr.output_list(doc = "list of expected source map output files"),
 }
 
 def _impl(ctx):
