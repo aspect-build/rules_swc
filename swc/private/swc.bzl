@@ -62,13 +62,12 @@ def _impl(ctx):
         outputs.extend(ctx.outputs.map_outs)
         for src in ctx.files.srcs:
             js_out = ctx.actions.declare_file(paths.replace_extension(src.basename, ".js"), sibling = src)
+            inputs = [src] + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files
             outs = [js_out]
             if source_maps:
                 outs.append(ctx.actions.declare_file(paths.replace_extension(src.basename, ".js.map"), sibling = src))
 
-            # Pass in the swcrc config if it is set; if it is
-            # then source paths are expected to be relative to the swcrc directory
-            src_path = src.path
+            # Pass in the swcrc config if it is set
             if ctx.file.swcrc:
                 swcrc_path = ctx.file.swcrc.path
                 swcrc_directory = paths.dirname(swcrc_path)
@@ -76,22 +75,19 @@ def _impl(ctx):
                     "--config-file",
                     swcrc_path,
                 ])
-
-                # TODO(greg): determine if this is needed, given that relativize below should provide a correct path
-                # if not src_path.startswith(swcrc_directory):
-                #     fail("sources must be in swcrc directory or subdirectory if swcrc is specified")
-                src_path = paths.relativize(src_path, swcrc_directory)
+                inputs.append(ctx.file.swcrc)
+            else:
+                args.add("--no-swcrc")
 
             args.add_all([
-                src_path,
+                src.path,
                 "--out-file",
                 js_out.path,
-                "--no-swcrc",
                 "-q",
             ])
 
             ctx.actions.run(
-                inputs = [src] + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files,
+                inputs = inputs,
                 arguments = [args],
                 outputs = outs,
                 env = {
