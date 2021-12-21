@@ -3,13 +3,13 @@
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
 _attrs = {
-    "srcs": attr.label_list(allow_files = True, mandatory = True),
-    "args": attr.string_list(),
-    "source_maps": attr.string(),
-    "output_dir": attr.bool(),
-    "data": attr.label_list(default = [], allow_files = True),
-    "swcrc": attr.label(allow_single_file = True),
+    "srcs": attr.label_list(allow_files = True, mandatory = True, doc = "source files, typically .ts files in the source tree"),
+    "args": attr.string_list(doc = "additional arguments to pass to swc cli, see https://swc.rs/docs/usage/cli"),
+    "output_dir": attr.bool(doc = "whether to produce a directory output rather than individual files"),
+    "data": attr.label_list(default = [], allow_files = True, doc = "runtime dependencies propagated to binaries that depend on this"),
+    "swcrc": attr.label(allow_single_file = True, doc = "label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc"),
     "swc_cli": attr.label(
+        doc = "binary that executes the swc CLI",
         default = "@aspect_rules_swc//swc:cli",
         executable = True,
         cfg = "exec",
