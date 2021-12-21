@@ -34,8 +34,8 @@ for example to set your own output labels for `js_outs`.
 | <a id="swc_rule-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 | <a id="swc_rule-args"></a>args |  additional arguments to pass to swc cli, see https://swc.rs/docs/usage/cli   | List of strings | optional | [] |
 | <a id="swc_rule-data"></a>data |  runtime dependencies propagated to binaries that depend on this   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | optional | [] |
-| <a id="swc_rule-js_outs"></a>js_outs |  list of expected JavaScript output files   | List of labels | optional |  |
-| <a id="swc_rule-map_outs"></a>map_outs |  list of expected source map output files   | List of labels | optional |  |
+| <a id="swc_rule-js_outs"></a>js_outs |  list of expected JavaScript output files.<br><br>There must be one for each entry in srcs, and in the same order.   | List of labels | optional |  |
+| <a id="swc_rule-map_outs"></a>map_outs |  list of expected source map output files.<br><br>Can be empty, meaning no source maps should be produced. If non-empty, there must be one for each entry in srcs, and in the same order.   | List of labels | optional |  |
 | <a id="swc_rule-output_dir"></a>output_dir |  whether to produce a directory output rather than individual files   | Boolean | optional | False |
 | <a id="swc_rule-srcs"></a>srcs |  source files, typically .ts files in the source tree   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | required |  |
 | <a id="swc_rule-swc_cli"></a>swc_cli |  binary that executes the swc CLI   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | @aspect_rules_swc//swc:cli |

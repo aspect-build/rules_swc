@@ -1,0 +1,30 @@
+load("@aspect_rules_swc//swc:swc.bzl", swc = "swc_rule")
+load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
+
+[
+    swc(
+        name = "transpile_" + format,
+        srcs = ["in.ts"],
+        args = [
+            "-C",
+            "module.type=" + format,
+        ],
+        js_outs = [format + "/out." + ("cjs" if format == "commonjs" else "js")],
+    )
+    for format in [
+        "commonjs",
+        "es6",
+    ]
+]
+
+diff_test(
+    name = "test_commonjs",
+    file1 = "commonjs/out.cjs",
+    file2 = "expected.cjs",
+)
+
+diff_test(
+    name = "test_es6",
+    file1 = "es6/out.js",
+    file2 = "expected.js",
+)

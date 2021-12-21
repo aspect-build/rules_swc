@@ -17,8 +17,13 @@ _attrs = {
 }
 
 _outputs = {
-    "js_outs": attr.output_list(doc = "list of expected JavaScript output files"),
-    "map_outs": attr.output_list(doc = "list of expected source map output files"),
+    "js_outs": attr.output_list(doc = """list of expected JavaScript output files.
+
+There must be one for each entry in srcs, and in the same order."""),
+    "map_outs": attr.output_list(doc = """list of expected source map output files.
+
+Can be empty, meaning no source maps should be produced.
+If non-empty, there must be one for each entry in srcs, and in the same order."""),
 }
 
 def _impl(ctx):
@@ -60,12 +65,12 @@ def _impl(ctx):
     else:
         outputs.extend(ctx.outputs.js_outs)
         outputs.extend(ctx.outputs.map_outs)
-        for src in ctx.files.srcs:
-            js_out = ctx.actions.declare_file(paths.replace_extension(src.basename, ".js"), sibling = src)
+        for i, src in enumerate(ctx.files.srcs):
+            js_out = ctx.outputs.js_outs[i]
             inputs = [src] + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files
             outs = [js_out]
             if source_maps:
-                outs.append(ctx.actions.declare_file(paths.replace_extension(src.basename, ".js.map"), sibling = src))
+                outs.append(ctx.outputs.map_outs[i])
 
             # Pass in the swcrc config if it is set
             if ctx.file.swcrc:
