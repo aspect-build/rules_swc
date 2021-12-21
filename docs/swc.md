@@ -2,6 +2,35 @@
 
 swc rule
 
+<a id="#swc_rule"></a>
+
+## swc_rule
+
+<pre>
+swc_rule(<a href="#swc_rule-name">name</a>, <a href="#swc_rule-args">args</a>, <a href="#swc_rule-data">data</a>, <a href="#swc_rule-js_outs">js_outs</a>, <a href="#swc_rule-map_outs">map_outs</a>, <a href="#swc_rule-output_dir">output_dir</a>, <a href="#swc_rule-srcs">srcs</a>, <a href="#swc_rule-swc_cli">swc_cli</a>, <a href="#swc_rule-swcrc">swcrc</a>)
+</pre>
+
+Underlying rule for the `swc` macro.
+
+    Use this if you need more control over how the rule is called,
+    for example to set your own output labels for `js_outs`.
+
+**ATTRIBUTES**
+
+
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="swc_rule-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
+| <a id="swc_rule-args"></a>args |  additional arguments to pass to swc cli, see https://swc.rs/docs/usage/cli   | List of strings | optional | [] |
+| <a id="swc_rule-data"></a>data |  runtime dependencies propagated to binaries that depend on this   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | optional | [] |
+| <a id="swc_rule-js_outs"></a>js_outs |  -   | List of labels | optional |  |
+| <a id="swc_rule-map_outs"></a>map_outs |  -   | List of labels | optional |  |
+| <a id="swc_rule-output_dir"></a>output_dir |  whether to produce a directory output rather than individual files   | Boolean | optional | False |
+| <a id="swc_rule-srcs"></a>srcs |  source files, typically .ts files in the source tree   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | required |  |
+| <a id="swc_rule-swc_cli"></a>swc_cli |  binary that executes the swc CLI   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | @aspect_rules_swc//swc:cli |
+| <a id="swc_rule-swcrc"></a>swcrc |  label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | None |
+
+
 <a id="#swc"></a>
 
 ## swc

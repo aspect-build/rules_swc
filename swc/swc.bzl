@@ -3,7 +3,11 @@
 load("//swc/private:swc.bzl", _swc_lib = "swc")
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
-_swc = rule(
+swc_rule = rule(
+    doc = """Underlying rule for the `swc` macro.
+
+    Use this if you need more control over how the rule is called,
+    for example to set your own output labels for `js_outs`.""",
     implementation = _swc_lib.implementation,
     attrs = _swc_lib.attrs,
     toolchains = _swc_lib.toolchains,
@@ -64,7 +68,7 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
                 if source_map_outputs:
                     map_outs.append(paths.replace_extension(f, ".js.map"))
 
-    _swc(
+    swc_rule(
         name = name,
         srcs = srcs,
         js_outs = js_outs,
