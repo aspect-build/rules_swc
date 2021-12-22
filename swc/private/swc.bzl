@@ -40,7 +40,7 @@ def _impl(ctx):
             fail("Under output_dir, there must be a single entry in srcs")
         if not ctx.files.srcs[0].is_directory:
             fail("Under output_dir, the srcs must be directories, not files")
-        out = ctx.actions.declare_file(ctx.label.name)
+        out = ctx.actions.declare_directory(ctx.label.name)
         outputs.append(out)
         args.add_all([
             ctx.files.srcs[0].path,
