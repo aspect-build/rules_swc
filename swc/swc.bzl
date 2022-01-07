@@ -12,7 +12,7 @@ swc(name = "transpile")
 load("//swc/private:swc.bzl", _swc_lib = "swc")
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
-swc_rule = rule(
+swc_transpiler = rule(
     doc = """Underlying rule for the `swc` macro.
 
 Most users should just use [swc](#swc) instead.
@@ -79,7 +79,7 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
                 if source_map_outputs:
                     map_outs.append(paths.replace_extension(f, ".js.map"))
 
-    swc_rule(
+    swc_transpiler(
         name = name,
         srcs = srcs,
         js_outs = js_outs,

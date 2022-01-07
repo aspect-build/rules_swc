@@ -1,8 +1,8 @@
-load("@aspect_rules_swc//swc:swc.bzl", swc = "swc_rule")
+load("@aspect_rules_swc//swc:swc.bzl", "swc_transpiler")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 
 [
-    swc(
+    swc_transpiler(
         name = "transpile_" + format,
         srcs = ["in.ts"],
         args = [
