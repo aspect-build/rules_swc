@@ -16,7 +16,7 @@ http_archive(
     name = "aspect_rules_swc",
     sha256 = "${SHA}",
     strip_prefix = "${PREFIX}",
-    url = "https://github.com/aspect-build/rules_swc/archive/${TAG}.tar.gz",
+    url = "https://github.com/aspect-build/rules_swc/archive/refs/tags/${TAG}.tar.gz",
 )
 
 # Fetches the rules_swc dependencies.
