@@ -6,7 +6,7 @@ load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
         name = "transpile_" + format,
         srcs = ["in.ts"],
         args = [
-            "-C",
+            "--config",
             "module.type=" + format,
         ],
         js_outs = [format + "/out." + ("cjs" if format == "commonjs" else "js")],
