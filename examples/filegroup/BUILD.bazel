@@ -1,0 +1,25 @@
+load("@aspect_rules_swc//swc:swc.bzl", "swc")
+
+filegroup(
+    name = "srcs",
+    srcs = [
+        "a.ts",
+        "b.ts",
+    ],
+)
+
+swc(
+    name = "transpile",
+    srcs = ["srcs"],
+    source_maps = "true",
+)
+
+# Since the srcs were in a filegroup, the swc macro cannot pre-declare the outputs.
+# So there is no label ":a.js" that we can reference from the build file.
+# However, a.js is still produced as one of the default outputs of the transpile rule.
+# We can verify this in an action that depends on the ":transpile" rule and reads the files.
+sh_test(
+    name = "check_outputs",
+    srcs = ["check_outputs.sh"],
+    data = [":transpile"],
+)

@@ -1,6 +1,21 @@
 "Mirror of release info"
 
 TOOL_VERSIONS = {
+    "v1.2.141": {
+        "android-arm-eabi": "sha384-1Kpl5sj2A50yTtZu5Ae7rGGY+t+0FYvcy/VCUp1IM8lW36RuhERqfahcWdmgtinB",
+        "android-arm64": "sha384-F/kmewGo2LlmyIeEQBnctRBJULmcSbko/5Gz1AJNxATWS1JUEX8C06AhdTpV7dk0",
+        "darwin-arm64": "sha384-UoQMYxodChrzQ785r7bo71aBDUqiu8qE8OSlE+64XrQUk7af0E9QfeA/uOKH81I8",
+        "darwin-x64": "sha384-nzfWWp7SHinJEGXyzeDFcprHs30oGJ4Xb6KV1NDPBMItkP37dGif9KQ4vjIcRiM2",
+        "freebsd-x64": "sha384-oS5YYV3h2CkOdPXy0ERp4/33EMn/iBDA353qp7zlSDsfuFpcCjdauFkMEiAwIipi",
+        "linux-arm-gnueabihf": "sha384-Y0xADrA2UwuwQq0OA3dNdjWLIqq4HwPR0lfhai3Ss+BvMDMpsjtSKLek/shav5++",
+        "linux-arm64-gnu": "sha384-lFM98s0YsVi2LRW5W082i+omOvkeOhiDFHWWdv2N91VGGXrmQxrMbhDgR85aPZBZ",
+        "linux-arm64-musl": "sha384-paCvYozCr4y0XQw4wbp5yi00GaAzMo6pqAxUMkYleY3is8H4obpRr48XCXEJ9ouq",
+        "linux-x64-gnu": "sha384-uNw6WyW05qRZhxam2ls9cQRXi9Cmx1+ItQ1+i2CgXuImHHl3lFhnlMCgvvJTdRyL",
+        "linux-x64-musl": "sha384-uzzI2i5JdE8G/zwvQPGeMbemVIwRnnqWExifbcQGNVYQ614Md26Hhriw4Ej9YFRA",
+        "win32-arm64-msvc": "sha384-iBDJmWJVtxouMntcoGrPqpOEZP5OQrXDWPOE1+kIWSvmlC/JDkNhPL0zyiTxX/Bb",
+        "win32-ia32-msvc": "sha384-p9MgHvIpyHbBoRSbvmAe3llF6xTmjTvfPTjc04xoNgMiIL2wCRG5HaPWNEd/10i0",
+        "win32-x64-msvc": "sha384-4t9URv/+EEfnaU1sp9aFnG/CVWD3/biCq18o/MLvKiZw4ZzcRtyqWZz12aL/HDUY",
+    },
     "v1.2.119": {
         "android-arm64": "sha384-whzMbD0maV04vzMdOVfPQNDhpe3gWy9Tyg+SsXbzgA5oZDoqTjTM3e2Y5MeKWnz3",
         "darwin-arm64": "sha384-2E4E13tCxfatne30Ss2FY+o0T8ebMV4gO999oqWPbehFxcaQI/6+D304xGZPF8/x",

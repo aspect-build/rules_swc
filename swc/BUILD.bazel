@@ -63,6 +63,7 @@ bzl_library(
     deps = [
         "//swc/private:swc",
         "@bazel_skylib//lib:paths",
+        "@bazel_skylib//lib:types",
     ],
 )
 
