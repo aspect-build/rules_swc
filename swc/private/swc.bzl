@@ -121,6 +121,8 @@ def _impl(ctx):
         outputs.extend(js_outs)
         outputs.extend(map_outs)
         for i, src in enumerate(ctx.files.srcs):
+            src_args = ctx.actions.args()
+
             js_out = js_outs[i]
             inputs = [src] + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files
             outs = [js_out]
@@ -131,15 +133,15 @@ def _impl(ctx):
             if ctx.file.swcrc:
                 swcrc_path = ctx.file.swcrc.path
                 swcrc_directory = paths.dirname(swcrc_path)
-                args.add_all([
+                src_args.add_all([
                     "--config-file",
                     swcrc_path,
                 ])
                 inputs.append(ctx.file.swcrc)
             else:
-                args.add("--no-swcrc")
+                src_args.add("--no-swcrc")
 
-            args.add_all([
+            src_args.add_all([
                 src.path,
                 "--out-file",
                 js_out.path,
@@ -148,7 +150,7 @@ def _impl(ctx):
 
             ctx.actions.run(
                 inputs = inputs,
-                arguments = [args],
+                arguments = [args, src_args],
                 outputs = outs,
                 env = {
                     # Our patch for @swc/core uses this environment variable to locate the rust binding
