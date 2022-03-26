@@ -26,6 +26,11 @@ Most users should just use [swc](#swc) instead.
 Use this if you need more control over how the rule is called,
 for example to set your own output labels for `js_outs`.
 
+This rule is also suitable for the
+[ts_project#transpiler](https://bazelbuild.github.io/rules_nodejs/TypeScript.html#ts_project-transpiler)
+attribute.
+
+
 **ATTRIBUTES**
 
 
