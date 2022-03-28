@@ -92,7 +92,6 @@ def swc_register_toolchains(name, register = True, **kwargs):
         version = "1.1.0",
     )
 
-    # See comments at the top of /swc/private/cli_repositories.bzl
     # This is used to generate code in this repo, but otherwise unused
     # at runtime or by users directly.
     translate_package_lock(

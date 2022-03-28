@@ -3,11 +3,8 @@
 load("@aspect_bazel_lib//lib:docs.bzl", "stardoc_with_diff_test", "update_docs")
 
 stardoc_with_diff_test(
+    name = "swc",
     bzl_library_target = "//swc:swc",
-    out_label = "//docs:swc.md",
 )
 
-update_docs(
-    name = "update",
-    docs_folder = "docs",
-)
+update_docs(name = "update")
