@@ -28,7 +28,7 @@ bzl_library(
 # Workaround: nodejs_binary doesn't support entry points under external yet
 write_file(
     name = "gen_main",
-    out = "main.js",
+    out = "main.cjs",
     content = ["require('@swc/cli')"],
 )
 
@@ -42,7 +42,7 @@ nodejs_binary(
         "@npm__swc_cli-0.1.52//:pkg",
         "@npm__swc_core-1.2.119//:pkg",
     ],
-    entry_point = "main.js",
+    entry_point = "main.cjs",
     visibility = ["//visibility:public"],
 )
 
