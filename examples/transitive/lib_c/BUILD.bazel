@@ -1,0 +1,12 @@
+load("@aspect_rules_swc//swc:swc.bzl", "swc")
+
+package(default_visibility = ["//:__subpackages__"])
+
+swc(
+    name = "lib_c",
+    srcs = ["c.ts"],
+    args = [
+        "--config",
+        "module.type=commonjs",
+    ],
+)

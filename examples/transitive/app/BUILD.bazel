@@ -1,0 +1,24 @@
+load("@aspect_rules_swc//swc:swc.bzl", "swc")
+load("@aspect_rules_js//js:nodejs_binary.bzl", "nodejs_binary")
+
+package(default_visibility = ["//:__subpackages__"])
+
+swc(
+    name = "app",
+    srcs = ["a.ts"],
+    args = [
+        "--config",
+        "module.type=commonjs",
+    ],
+    # In Bazel, a "data" dependency is a runtime dependency.
+    # This file isn't required to transpile b.ts -> b.js
+    # however any program which depends on lib_b should have
+    # lib_c available in the "runfiles".
+    data = ["//examples/transitive/lib_b"],
+)
+
+nodejs_binary(
+    name = "bin",
+    data = [":app"],
+    entry_point = "a.js",
+)
