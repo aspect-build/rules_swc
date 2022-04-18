@@ -1,0 +1,21 @@
+"""Test transitive dependencies between typescript files
+which are transpiled separately as "libraries" but which
+have runtime dependencies.
+"""
+
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+
+genrule(
+    name = "run",
+    outs = ["actual"],
+    cmd = "$(location //examples/transitive/app:bin) > $@",
+    tools = ["//examples/transitive/app:bin"],
+)
+
+# Assert the output of the program matches the expected file
+write_source_files(
+    name = "assertion",
+    files = {
+        "expected": "actual",
+    },
+)

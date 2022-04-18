@@ -163,10 +163,14 @@ def _impl(ctx):
                 ),
             )
 
+    # See https://docs.bazel.build/versions/main/skylark/rules.html#runfiles
+    runfiles = ctx.runfiles(files = outputs + ctx.files.data)
+    runfiles = runfiles.merge_all([d[DefaultInfo].default_runfiles for d in ctx.attr.data])
+
     providers = [
         DefaultInfo(
             files = depset(outputs),
-            runfiles = ctx.runfiles(outputs, transitive_files = depset(ctx.files.data)),
+            runfiles = runfiles,
         ),
     ]
 
