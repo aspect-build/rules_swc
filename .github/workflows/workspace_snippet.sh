@@ -34,7 +34,7 @@ rules_swc_dependencies()
 load("@aspect_rules_swc//swc:repositories.bzl", "swc_register_toolchains")
 swc_register_toolchains(
     name = "swc",
-    swc_version = "v1.2.118",
+    swc_version = "v1.2.168",
 )
 
 # Fetches a NodeJS interpreter, needed to run the swc CLI.
