@@ -1,6 +1,27 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
-load("@aspect_rules_js//js:nodejs_binary.bzl", "nodejs_binary")
+load("@aspect_rules_js//js:js_binary.bzl", "js_binary")
+load("@swc_cli//:package.bzl", "package")
+load("@swc_cli//:node_modules.bzl", "node_modules")
+load("@npm__at_swc_core_1.2.119//:node_package.bzl", swc_core_package = "node_package")
+load("@npm__at_node-rs_helper_1.2.1//:node_package.bzl", rs_helper_package = "node_package")
+load("@npm__at_napi-rs_triples_1.1.0//:node_package.bzl", rs_triples_package = "node_package")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+
+write_source_files(
+    name = "write_cli_repos",
+    files = {
+        "cli_repositories.bzl": "@swc_cli//:repositories.bzl",
+    },
+)
+
+swc_core_package()
+
+rs_helper_package()
+
+rs_triples_package()
+
+node_modules()
 
 # For stardoc to reference the files
 exports_files(["swc.bzl"])
@@ -25,22 +46,22 @@ bzl_library(
     ],
 )
 
-# Workaround: nodejs_binary doesn't support entry points under external yet
+# Workaround: js_binary doesn't support entry points under external yet
 write_file(
     name = "gen_main",
     out = "main.cjs",
     content = ["require('@swc/cli')"],
 )
 
-nodejs_binary(
+js_binary(
     name = "cli",
     data = [
         # Don't use the shorter syntax here because the user or bzlmod
         # might use repository mapping to give a different name
         # to the repository, e.g.
         # @aspect_rules_swc.0.2.0.swc.npm__swc_core-1.2.119
-        "@npm__swc_cli-0.1.52//:pkg",
-        "@npm__swc_core-1.2.119//:pkg",
+        package("@swc/cli"),
+        "//swc:npm__@swc+core",
     ],
     entry_point = "main.cjs",
     visibility = ["//visibility:public"],

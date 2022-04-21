@@ -1,6 +1,7 @@
 "Internal implementation details"
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_file_to_bin_action", "copy_files_to_bin_actions")
 
 _attrs = {
     "srcs": attr.label_list(
@@ -89,20 +90,21 @@ def _impl(ctx):
         out = ctx.actions.declare_directory(ctx.label.name)
         outputs.append(out)
         args.add_all([
-            ctx.files.srcs[0].path,
+            ctx.files.srcs[0].short_path,
             "--out-dir",
-            out.path,
+            out.short_path,
             "--no-swcrc",
             "-q",
         ])
 
         ctx.actions.run(
-            inputs = ctx.files.srcs + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files,
+            inputs = copy_files_to_bin_actions(ctx, ctx.files.srcs) + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files,
             arguments = [args],
             outputs = [out],
             env = {
                 # Our patch for @swc/core uses this environment variable to locate the rust binding
-                "SWC_BINARY_PATH": binding,
+                "SWC_BINARY_PATH": "../../../" + binding,
+                "BAZEL_BINDIR": ctx.bin_dir.path,
             },
             executable = ctx.executable.swc_cli,
             progress_message = "Transpiling with swc %s" % ctx.label,
@@ -124,27 +126,27 @@ def _impl(ctx):
             src_args = ctx.actions.args()
 
             js_out = js_outs[i]
-            inputs = [src] + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files
+            inputs = [copy_file_to_bin_action(ctx, src)] + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files
             outs = [js_out]
             if ctx.attr.source_maps in ["true", "both"]:
                 outs.append(map_outs[i])
 
             # Pass in the swcrc config if it is set
             if ctx.file.swcrc:
-                swcrc_path = ctx.file.swcrc.path
+                swcrc_path = ctx.file.swcrc.short_path
                 swcrc_directory = paths.dirname(swcrc_path)
                 src_args.add_all([
                     "--config-file",
                     swcrc_path,
                 ])
-                inputs.append(ctx.file.swcrc)
+                inputs.append(copy_file_to_bin_action(ctx, ctx.file.swcrc))
             else:
                 src_args.add("--no-swcrc")
 
             src_args.add_all([
-                src.path,
+                src.short_path,
                 "--out-file",
-                js_out.path,
+                js_out.short_path,
                 "-q",
             ])
 
@@ -154,7 +156,8 @@ def _impl(ctx):
                 outputs = outs,
                 env = {
                     # Our patch for @swc/core uses this environment variable to locate the rust binding
-                    "SWC_BINARY_PATH": binding,
+                    "SWC_BINARY_PATH": "../../../" + binding,
+                    "BAZEL_BINDIR": ctx.bin_dir.path,
                 },
                 executable = ctx.executable.swc_cli,
                 progress_message = "Transpiling with swc %s [swc %s]" % (
