@@ -4,7 +4,7 @@ These are needed for local dev, and users must install them as well.
 See https://docs.bazel.build/versions/main/skylark/deploying.html#dependencies
 """
 
-load("@aspect_rules_js//js:npm_import.bzl", "npm_import", "translate_pnpm_lock")
+load("@aspect_rules_js//js:npm_import.bzl", "npm_import")
 load("//swc/private:toolchains_repo.bzl", "PLATFORMS", "toolchains_repo")
 load("//swc/private:versions.bzl", "TOOL_VERSIONS")
 load("//swc:cli_repositories.bzl", _cli_repositories = "npm_repositories")
@@ -93,13 +93,6 @@ def swc_register_toolchains(name, register = True, **kwargs):
         integrity = "sha512-XQr74QaLeMiqhStEhLn1im9EOMnkypp7MZOwQhGzqp2Weu5eQJbpPxWxixxlYRKWPOmJjsk6qYfYH9kq43yc2w==",
         package = "@napi-rs/triples",
         version = "1.1.0",
-    )
-
-    # This is used to generate code in this repo, but otherwise unused
-    # at runtime or by users directly.
-    translate_pnpm_lock(
-        name = "swc_cli",
-        pnpm_lock = "@aspect_rules_swc//swc:pnpm-lock.json",
     )
 
     _cli_repositories()

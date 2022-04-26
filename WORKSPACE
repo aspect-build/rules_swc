@@ -28,8 +28,18 @@ register_yq_toolchains(
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 
 nodejs_register_toolchains(
-    name = "nodejs",
+    name = "node16",
     node_version = "16.9.0",
+)
+
+load("@aspect_rules_js//js:npm_import.bzl", "translate_pnpm_lock")
+
+# This is used to generate code in this repo, but otherwise unused
+# at runtime or by users directly.
+translate_pnpm_lock(
+    name = "swc_cli",
+    node_repository = "node16",
+    pnpm_lock = "@aspect_rules_swc//swc:pnpm-lock.json",
 )
 
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
