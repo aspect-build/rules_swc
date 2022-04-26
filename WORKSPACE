@@ -39,7 +39,7 @@ load("@aspect_rules_js//js:npm_import.bzl", "translate_pnpm_lock")
 translate_pnpm_lock(
     name = "swc_cli",
     node_repository = "node16",
-    pnpm_lock = "@aspect_rules_swc//swc:pnpm-lock.json",
+    pnpm_lock = "@aspect_rules_swc//swc:pnpm-lock.yaml",
 )
 
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
