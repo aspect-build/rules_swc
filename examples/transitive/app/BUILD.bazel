@@ -1,5 +1,5 @@
 load("@aspect_rules_swc//swc:swc.bzl", "swc")
-load("@aspect_rules_js//js:js_binary.bzl", "js_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 
 package(default_visibility = ["//:__subpackages__"])
 
