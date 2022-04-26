@@ -2,6 +2,7 @@
 
 load("@aspect_rules_js//js:npm_import.bzl", "npm_import")
 
+# buildifier: disable=function-docstring
 def npm_repositories():
     npm_import(
         name = "swc_cli__at_nodelib_fs.scandir_2.1.5",
@@ -9,7 +10,16 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "@nodelib/fs.scandir",
         version = "2.1.5",
-        deps = ["@nodelib/fs.stat@2.0.5", "run-parallel@1.2.0"],
+        deps = {
+            "@nodelib/fs.stat": "2.0.5",
+            "run-parallel": "1.2.0",
+        },
+        transitive_closure = {
+            "@nodelib/fs.scandir": ["2.1.5"],
+            "@nodelib/fs.stat": ["2.0.5"],
+            "run-parallel": ["1.2.0"],
+            "queue-microtask": ["1.2.3"],
+        },
         indirect = True,
     )
 
@@ -19,6 +29,9 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "@nodelib/fs.stat",
         version = "2.0.5",
+        transitive_closure = {
+            "@nodelib/fs.stat": ["2.0.5"],
+        },
         indirect = True,
     )
 
@@ -28,7 +41,19 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "@nodelib/fs.walk",
         version = "1.2.8",
-        deps = ["@nodelib/fs.scandir@2.1.5", "fastq@1.13.0"],
+        deps = {
+            "@nodelib/fs.scandir": "2.1.5",
+            "fastq": "1.13.0",
+        },
+        transitive_closure = {
+            "@nodelib/fs.walk": ["1.2.8"],
+            "@nodelib/fs.scandir": ["2.1.5"],
+            "@nodelib/fs.stat": ["2.0.5"],
+            "run-parallel": ["1.2.0"],
+            "queue-microtask": ["1.2.3"],
+            "fastq": ["1.13.0"],
+            "reusify": ["1.0.4"],
+        },
         indirect = True,
     )
 
@@ -38,7 +63,36 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "@swc/cli",
         version = "0.1.52",
-        deps = ["commander@7.2.0", "fast-glob@3.2.11", "slash@3.0.0", "source-map@0.7.3"],
+        deps = {
+            "commander": "7.2.0",
+            "fast-glob": "3.2.11",
+            "slash": "3.0.0",
+            "source-map": "0.7.3",
+        },
+        transitive_closure = {
+            "@swc/cli": ["0.1.52"],
+            "commander": ["7.2.0"],
+            "fast-glob": ["3.2.11"],
+            "@nodelib/fs.stat": ["2.0.5"],
+            "@nodelib/fs.walk": ["1.2.8"],
+            "@nodelib/fs.scandir": ["2.1.5"],
+            "run-parallel": ["1.2.0"],
+            "queue-microtask": ["1.2.3"],
+            "fastq": ["1.13.0"],
+            "reusify": ["1.0.4"],
+            "glob-parent": ["5.1.2"],
+            "is-glob": ["4.0.3"],
+            "is-extglob": ["2.1.1"],
+            "merge2": ["1.4.1"],
+            "micromatch": ["4.0.5"],
+            "braces": ["3.0.2"],
+            "fill-range": ["7.0.1"],
+            "to-regex-range": ["5.0.1"],
+            "is-number": ["7.0.0"],
+            "picomatch": ["2.3.1"],
+            "slash": ["3.0.0"],
+            "source-map": ["0.7.3"],
+        },
     )
 
     npm_import(
@@ -47,7 +101,15 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "braces",
         version = "3.0.2",
-        deps = ["fill-range@7.0.1"],
+        deps = {
+            "fill-range": "7.0.1",
+        },
+        transitive_closure = {
+            "braces": ["3.0.2"],
+            "fill-range": ["7.0.1"],
+            "to-regex-range": ["5.0.1"],
+            "is-number": ["7.0.0"],
+        },
         indirect = True,
     )
 
@@ -57,6 +119,9 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "commander",
         version = "7.2.0",
+        transitive_closure = {
+            "commander": ["7.2.0"],
+        },
         indirect = True,
     )
 
@@ -66,7 +131,33 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "fast-glob",
         version = "3.2.11",
-        deps = ["@nodelib/fs.stat@2.0.5", "@nodelib/fs.walk@1.2.8", "glob-parent@5.1.2", "merge2@1.4.1", "micromatch@4.0.5"],
+        deps = {
+            "@nodelib/fs.stat": "2.0.5",
+            "@nodelib/fs.walk": "1.2.8",
+            "glob-parent": "5.1.2",
+            "merge2": "1.4.1",
+            "micromatch": "4.0.5",
+        },
+        transitive_closure = {
+            "fast-glob": ["3.2.11"],
+            "@nodelib/fs.stat": ["2.0.5"],
+            "@nodelib/fs.walk": ["1.2.8"],
+            "@nodelib/fs.scandir": ["2.1.5"],
+            "run-parallel": ["1.2.0"],
+            "queue-microtask": ["1.2.3"],
+            "fastq": ["1.13.0"],
+            "reusify": ["1.0.4"],
+            "glob-parent": ["5.1.2"],
+            "is-glob": ["4.0.3"],
+            "is-extglob": ["2.1.1"],
+            "merge2": ["1.4.1"],
+            "micromatch": ["4.0.5"],
+            "braces": ["3.0.2"],
+            "fill-range": ["7.0.1"],
+            "to-regex-range": ["5.0.1"],
+            "is-number": ["7.0.0"],
+            "picomatch": ["2.3.1"],
+        },
         indirect = True,
     )
 
@@ -76,7 +167,13 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "fastq",
         version = "1.13.0",
-        deps = ["reusify@1.0.4"],
+        deps = {
+            "reusify": "1.0.4",
+        },
+        transitive_closure = {
+            "fastq": ["1.13.0"],
+            "reusify": ["1.0.4"],
+        },
         indirect = True,
     )
 
@@ -86,7 +183,14 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "fill-range",
         version = "7.0.1",
-        deps = ["to-regex-range@5.0.1"],
+        deps = {
+            "to-regex-range": "5.0.1",
+        },
+        transitive_closure = {
+            "fill-range": ["7.0.1"],
+            "to-regex-range": ["5.0.1"],
+            "is-number": ["7.0.0"],
+        },
         indirect = True,
     )
 
@@ -96,7 +200,14 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "glob-parent",
         version = "5.1.2",
-        deps = ["is-glob@4.0.3"],
+        deps = {
+            "is-glob": "4.0.3",
+        },
+        transitive_closure = {
+            "glob-parent": ["5.1.2"],
+            "is-glob": ["4.0.3"],
+            "is-extglob": ["2.1.1"],
+        },
         indirect = True,
     )
 
@@ -106,6 +217,9 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "is-extglob",
         version = "2.1.1",
+        transitive_closure = {
+            "is-extglob": ["2.1.1"],
+        },
         indirect = True,
     )
 
@@ -115,7 +229,13 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "is-glob",
         version = "4.0.3",
-        deps = ["is-extglob@2.1.1"],
+        deps = {
+            "is-extglob": "2.1.1",
+        },
+        transitive_closure = {
+            "is-glob": ["4.0.3"],
+            "is-extglob": ["2.1.1"],
+        },
         indirect = True,
     )
 
@@ -125,6 +245,9 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "is-number",
         version = "7.0.0",
+        transitive_closure = {
+            "is-number": ["7.0.0"],
+        },
         indirect = True,
     )
 
@@ -134,6 +257,9 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "merge2",
         version = "1.4.1",
+        transitive_closure = {
+            "merge2": ["1.4.1"],
+        },
         indirect = True,
     )
 
@@ -143,7 +269,18 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "micromatch",
         version = "4.0.5",
-        deps = ["braces@3.0.2", "picomatch@2.3.1"],
+        deps = {
+            "braces": "3.0.2",
+            "picomatch": "2.3.1",
+        },
+        transitive_closure = {
+            "micromatch": ["4.0.5"],
+            "braces": ["3.0.2"],
+            "fill-range": ["7.0.1"],
+            "to-regex-range": ["5.0.1"],
+            "is-number": ["7.0.0"],
+            "picomatch": ["2.3.1"],
+        },
         indirect = True,
     )
 
@@ -153,6 +290,9 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "picomatch",
         version = "2.3.1",
+        transitive_closure = {
+            "picomatch": ["2.3.1"],
+        },
         indirect = True,
     )
 
@@ -162,6 +302,9 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "queue-microtask",
         version = "1.2.3",
+        transitive_closure = {
+            "queue-microtask": ["1.2.3"],
+        },
         indirect = True,
     )
 
@@ -171,6 +314,9 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "reusify",
         version = "1.0.4",
+        transitive_closure = {
+            "reusify": ["1.0.4"],
+        },
         indirect = True,
     )
 
@@ -180,7 +326,13 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "run-parallel",
         version = "1.2.0",
-        deps = ["queue-microtask@1.2.3"],
+        deps = {
+            "queue-microtask": "1.2.3",
+        },
+        transitive_closure = {
+            "run-parallel": ["1.2.0"],
+            "queue-microtask": ["1.2.3"],
+        },
         indirect = True,
     )
 
@@ -190,6 +342,9 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "slash",
         version = "3.0.0",
+        transitive_closure = {
+            "slash": ["3.0.0"],
+        },
         indirect = True,
     )
 
@@ -199,6 +354,9 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "source-map",
         version = "0.7.3",
+        transitive_closure = {
+            "source-map": ["0.7.3"],
+        },
         indirect = True,
     )
 
@@ -208,6 +366,12 @@ def npm_repositories():
         link_package_guard = "swc",
         package = "to-regex-range",
         version = "5.0.1",
-        deps = ["is-number@7.0.0"],
+        deps = {
+            "is-number": "7.0.0",
+        },
+        transitive_closure = {
+            "to-regex-range": ["5.0.1"],
+            "is-number": ["7.0.0"],
+        },
         indirect = True,
     )

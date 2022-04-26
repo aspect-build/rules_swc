@@ -75,10 +75,10 @@ def swc_register_toolchains(name, register = True, **kwargs):
         integrity = "sha512-hNelzQ5ShAaaf2SHy4oZQ0dB8VCI4AaVchWEe5bZtirW3sY0gOqVL5V7x0b5Zzo0FyjlMnGIbX1k5IuX5uyn8A==",
         package = "@swc/core",
         version = "1.2.119",
-        deps = [
-            "@napi-rs/triples@1.1.0",
-            "@node-rs/helper@1.2.1",
-        ],
+        deps = {
+            "@napi-rs/triples": "1.1.0",
+            "@node-rs/helper": "1.2.1",
+        },
     )
 
     npm_import(

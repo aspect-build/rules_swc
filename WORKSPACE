@@ -19,10 +19,16 @@ swc_register_toolchains(
     swc_version = "v1.2.168",
 )
 
+load("@aspect_bazel_lib//lib:repositories.bzl", "DEFAULT_YQ_VERSION", "register_yq_toolchains")
+
+register_yq_toolchains(
+    version = DEFAULT_YQ_VERSION,
+)
+
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 
 nodejs_register_toolchains(
-    name = "node16",
+    name = "nodejs",
     node_version = "16.9.0",
 )
 
