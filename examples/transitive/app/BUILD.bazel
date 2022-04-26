@@ -1,5 +1,5 @@
 load("@aspect_rules_swc//swc:swc.bzl", "swc")
-load("@aspect_rules_js//js:nodejs_binary.bzl", "nodejs_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -17,7 +17,7 @@ swc(
     data = ["//examples/transitive/lib_b"],
 )
 
-nodejs_binary(
+js_binary(
     name = "bin",
     data = [":app"],
     entry_point = "a.js",

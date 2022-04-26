@@ -12,10 +12,9 @@ mock_codesplit(
     name = "split_app",
 )
 
-# Runs `swc path/to/split_app --out-dir ../../bazel-bin/examples/directory/minify`
+# Runs `swc path/to/split_app --out-dir ../../examples/directory/minify`
 # You can run `bazel build --subcommands //examples/directory:minify`
 # to see the exact command line Bazel runs.
-# Note that by default, sources are found by glob(["**/*.ts"])
 swc(
     name = "minify",
     srcs = ["split_app"],
@@ -25,9 +24,6 @@ swc(
 sh_test(
     name = "test",
     srcs = ["test.sh"],
-    # Workaround https://github.com/swc-project/swc/issues/3028
-    # The test will need to know this folder to make the assertion
-    args = ["$(TARGET_CPU)-$(COMPILATION_MODE)"],
     data = ["minify"],
     deps = ["@bazel_tools//tools/bash/runfiles"],
 )

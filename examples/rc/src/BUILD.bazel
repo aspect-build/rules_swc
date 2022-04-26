@@ -8,7 +8,7 @@ load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 swc(
     name = "transpile",
     source_maps = True,
-    swcrc = "//examples/rc:.swcrc",
+    swcrc = "//examples/rc",
 )
 
 diff_test(

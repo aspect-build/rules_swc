@@ -8,7 +8,7 @@ load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 genrule(
     name = "run",
     outs = ["actual"],
-    cmd = "$(location //examples/transitive/app:bin) > $@",
+    cmd = "BAZEL_BINDIR=$(BINDIR) $(location //examples/transitive/app:bin) > $@",
     tools = ["//examples/transitive/app:bin"],
 )
 

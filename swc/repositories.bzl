@@ -4,10 +4,10 @@ These are needed for local dev, and users must install them as well.
 See https://docs.bazel.build/versions/main/skylark/deploying.html#dependencies
 """
 
-load("@aspect_rules_js//js:npm_import.bzl", "npm_import", "translate_package_lock")
+load("@aspect_rules_js//js:npm_import.bzl", "npm_import")
 load("//swc/private:toolchains_repo.bzl", "PLATFORMS", "toolchains_repo")
 load("//swc/private:versions.bzl", "TOOL_VERSIONS")
-load("//swc/private:cli_repositories.bzl", _cli_repositories = "npm_repositories")
+load("//swc:cli_repositories.bzl", _cli_repositories = "npm_repositories")
 
 _DOC = "Fetch external tools needed for swc toolchain"
 _ATTRS = {
@@ -71,32 +71,28 @@ def swc_register_toolchains(name, register = True, **kwargs):
     )
 
     npm_import(
+        name = "npm__at_swc_core_1.2.119",
         integrity = "sha512-hNelzQ5ShAaaf2SHy4oZQ0dB8VCI4AaVchWEe5bZtirW3sY0gOqVL5V7x0b5Zzo0FyjlMnGIbX1k5IuX5uyn8A==",
         package = "@swc/core",
         version = "1.2.119",
-        deps = [
-            "@npm__napi-rs_triples-1.1.0",
-            "@npm__node-rs_helper-1.2.1",
-        ],
+        deps = {
+            "@napi-rs/triples": "1.1.0",
+            "@node-rs/helper": "1.2.1",
+        },
     )
 
     npm_import(
+        name = "npm__at_node-rs_helper_1.2.1",
         integrity = "sha512-R5wEmm8nbuQU0YGGmYVjEc0OHtYsuXdpRG+Ut/3wZ9XAvQWyThN08bTh2cBJgoZxHQUPtvRfeQuxcAgLuiBISg==",
         package = "@node-rs/helper",
         version = "1.2.1",
     )
 
     npm_import(
+        name = "npm__at_napi-rs_triples_1.1.0",
         integrity = "sha512-XQr74QaLeMiqhStEhLn1im9EOMnkypp7MZOwQhGzqp2Weu5eQJbpPxWxixxlYRKWPOmJjsk6qYfYH9kq43yc2w==",
         package = "@napi-rs/triples",
         version = "1.1.0",
-    )
-
-    # This is used to generate code in this repo, but otherwise unused
-    # at runtime or by users directly.
-    translate_package_lock(
-        name = "swc_cli",
-        package_lock = "@aspect_rules_swc//swc/private:package-lock.json",
     )
 
     _cli_repositories()
