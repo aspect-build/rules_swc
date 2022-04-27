@@ -44,5 +44,11 @@ nodejs_register_toolchains(
     name = "node16",
     node_version = "16.9.0",
 )
+load("@aspect_bazel_lib//lib:repositories.bzl", "DEFAULT_YQ_VERSION", "register_yq_toolchains")
+
+register_yq_toolchains(
+    version = DEFAULT_YQ_VERSION,
+)
+
 \`\`\`
 EOF
