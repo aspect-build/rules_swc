@@ -9,6 +9,8 @@ load("//swc/private:toolchains_repo.bzl", "PLATFORMS", "toolchains_repo")
 load("//swc/private:versions.bzl", "TOOL_VERSIONS")
 load("//swc:cli_repositories.bzl", _cli_repositories = "npm_repositories")
 
+LATEST_VERSION = TOOL_VERSIONS.keys()[0]
+
 _DOC = "Fetch external tools needed for swc toolchain"
 _ATTRS = {
     "swc_version": attr.string(mandatory = True, values = TOOL_VERSIONS.keys()),
@@ -41,7 +43,7 @@ swc_repositories = repository_rule(
 )
 
 # Wrapper macro around everything above, this is the primary API
-def swc_register_toolchains(name, register = True, **kwargs):
+def swc_register_toolchains(name, node_repository = "nodejs", register = True, **kwargs):
     """Convenience macro for users which does typical setup.
 
     - create a repository for each built-in platform like "swc_linux_amd64" -
@@ -52,6 +54,7 @@ def swc_register_toolchains(name, register = True, **kwargs):
     Users can avoid this macro and do these steps themselves, if they want more control.
     Args:
         name: base name for all created repos, like "swc"
+        node_repository: what name was given to register_nodejs_toolchains.
         register: whether to call through to native.register_toolchains.
             Should be True for WORKSPACE users, but false when used under bzlmod extension
         **kwargs: passed to each node_repositories call
@@ -97,7 +100,7 @@ def swc_register_toolchains(name, register = True, **kwargs):
 
     translate_pnpm_lock(
         name = "swc_cli",
-        node_repository = "node16",
+        node_repository = node_repository,
         pnpm_lock = "@aspect_rules_swc//swc:pnpm-lock.yaml",
     )
 

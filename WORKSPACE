@@ -16,6 +16,7 @@ load("//swc:repositories.bzl", "swc_register_toolchains")
 
 swc_register_toolchains(
     name = "default_swc",
+    node_repository = "node16",
     swc_version = "v1.2.168",
 )
 
