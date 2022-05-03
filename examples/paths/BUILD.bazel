@@ -1,0 +1,15 @@
+"""Path-alias use case for swc: specifying the paths options in .swcrc
+
+Note that this example also depends on the setup in /WORKSPACE at the root of this repository.
+"""
+
+load("@aspect_rules_swc//swc:swc.bzl", "swc")
+
+# Runs `swc src/index.ts > ../../bazel-bin/examples/paths/src/index.js`
+# You can run `bazel build --subcommands //examples/paths:transpile`
+# to see the exact command line Bazel runs.
+# Note that by default, sources are found by glob(["**/*.ts"])
+swc(
+    name = "transpile",
+    swcrc = ".swcrc",
+)
