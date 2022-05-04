@@ -160,6 +160,7 @@ def _impl(ctx):
                     "BAZEL_BINDIR": ctx.bin_dir.path,
                 },
                 executable = ctx.executable.swc_cli,
+                mnemonic = "SWCTranspile",
                 progress_message = "Transpiling with swc %s [swc %s]" % (
                     ctx.label,
                     src.short_path,
