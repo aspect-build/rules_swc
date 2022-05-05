@@ -7,6 +7,12 @@ load("@aspect_rules_swc//swc:swc.bzl", "swc")
 
 swc(name = "transpile")
 ```
+
+Known issues:
+- import statements improperly transformed when using symlinks: [swc#4057](https://github.com/swc-project/swc/issues/4057)
+  See https://github.com/aspect-build/rules_swc/issues/31.
+  You can add this to your `.bazelrc` to workaround by disabling sandboxing for SWC actions:
+  `build --modify_execution_info=SWCTranspile=+no-sandbox`
 """
 
 load("//swc/private:swc.bzl", _swc_lib = "swc")
