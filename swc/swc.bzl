@@ -42,7 +42,7 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
           See https://swc.rs/docs/usage/cli#--source-maps--s
           True/False are automaticaly converted to "true"/"false" string values the cli expects.
         swcrc: label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc
-        out_dir: base directory for output files
+        out_dir: base directory for output files relative to the output directory for this package
         **kwargs: additional named parameters like tags or visibility
     """
     if srcs == None:

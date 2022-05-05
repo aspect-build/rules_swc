@@ -128,8 +128,7 @@ def _impl(ctx):
         if len(ctx.attr.js_outs):
             js_outs = ctx.outputs.js_outs
         else:
-            out_dir = ctx.attr.out_dir
-            js_outs = _declare_outputs(ctx, _calculate_js_outs(srcs, out_dir))
+            js_outs = _declare_outputs(ctx, _calculate_js_outs(srcs, ctx.attr.out_dir))
         if len(ctx.attr.map_outs):
             map_outs = ctx.outputs.map_outs
         else:
