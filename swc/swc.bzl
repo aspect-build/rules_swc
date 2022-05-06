@@ -35,7 +35,7 @@ attribute.
     toolchains = _swc_lib.toolchains,
 )
 
-def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = None, source_maps = False, **kwargs):
+def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = None, source_maps = False, out_dir = None, **kwargs):
     """Execute the swc compiler
 
     Args:
@@ -48,6 +48,7 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
           See https://swc.rs/docs/usage/cli#--source-maps--s
           True/False are automaticaly converted to "true"/"false" string values the cli expects.
         swcrc: label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc
+        out_dir: base directory for output files relative to the output directory for this package
         **kwargs: additional named parameters like tags or visibility
     """
     if srcs == None:
@@ -66,7 +67,7 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
     map_outs = []
 
     if not output_dir:
-        js_outs = _swc_lib.calculate_js_outs(srcs)
+        js_outs = _swc_lib.calculate_js_outs(srcs, out_dir)
         map_outs = _swc_lib.calculate_map_outs(srcs, source_maps)
 
     swc_transpiler(
@@ -79,5 +80,6 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
         args = args,
         data = data,
         swcrc = swcrc,
+        out_dir = out_dir,
         **kwargs
     )

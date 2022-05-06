@@ -34,6 +34,9 @@ _attrs = {
         executable = True,
         cfg = "exec",
     ),
+    "out_dir": attr.string(
+        doc = "base directory for output files",
+    ),
 }
 
 _outputs = {
@@ -46,10 +49,7 @@ Can be empty, meaning no source maps should be produced.
 If non-empty, there must be one for each entry in srcs, and in the same order."""),
 }
 
-# In theory, swc can transform .js -> .js.
-# But this would cause Bazel outputs to collide with inputs so it requires some re-rooting scheme.
-# TODO: add this if users need it
-_SUPPORTED_EXTENSIONS = [".ts", ".tsx", ".jsx", ".mjs", ".cjs"]
+_SUPPORTED_EXTENSIONS = [".ts", ".tsx", ".jsx", ".mjs", ".cjs", ".js"]
 
 def _is_supported_src(src):
     return paths.split_extension(src)[-1] in _SUPPORTED_EXTENSIONS
@@ -65,8 +65,20 @@ def _relative_to_package(path, ctx):
             path = path[len(prefix):]
     return path
 
-def _calculate_js_outs(srcs):
-    return [paths.replace_extension(f, ".js") for f in srcs if _is_supported_src(f)]
+def _calculate_js_outs(srcs, out_dir = None):
+    if out_dir == None:
+        js_srcs = []
+        for src in srcs:
+            if paths.split_extension(src)[-1] == ".js":
+                js_srcs.append(src)
+        if len(js_srcs) > 0:
+            fail("Detected swc rule with srcs=[{}, ...] and out_dir=None. Please set out_dir when compiling .js files.".format(', '.join(js_srcs[:3])))
+
+    js_outs = [paths.replace_extension(f, ".js") for f in srcs if _is_supported_src(f)]
+    if out_dir != None:
+        js_outs = [paths.join(out_dir, f) for f in js_outs]
+
+    return js_outs
 
 def _calculate_map_outs(srcs, source_maps):
     if source_maps in ["false", "inline"]:
@@ -112,10 +124,11 @@ def _impl(ctx):
 
     else:
         srcs = [_relative_to_package(src.path, ctx) for src in ctx.files.srcs]
+
         if len(ctx.attr.js_outs):
             js_outs = ctx.outputs.js_outs
         else:
-            js_outs = _declare_outputs(ctx, _calculate_js_outs(srcs))
+            js_outs = _declare_outputs(ctx, _calculate_js_outs(srcs, ctx.attr.out_dir))
         if len(ctx.attr.map_outs):
             map_outs = ctx.outputs.map_outs
         else:
