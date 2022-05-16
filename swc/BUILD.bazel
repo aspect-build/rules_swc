@@ -1,11 +1,7 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
-load("@aspect_rules_js//js:defs.bzl", "js_binary")
-load("@swc_cli//:package.bzl", "package")
-load("@swc_cli//:node_modules.bzl", "node_modules")
-load("@npm__at_swc_core_1.2.119//:node_package.bzl", swc_core_package = "node_package")
-load("@npm__at_node-rs_helper_1.2.1//:node_package.bzl", rs_helper_package = "node_package")
-load("@npm__at_napi-rs_triples_1.1.0//:node_package.bzl", rs_triples_package = "node_package")
+load("@aspect_rules_js//js:defs.bzl", "js_binary", "link_js_package")
+load("@swc_cli//:defs.bzl", "link_js_packages", "package")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 
 write_source_files(
@@ -15,13 +11,12 @@ write_source_files(
     },
 )
 
-swc_core_package()
+link_js_package(
+    name = "link_core",
+    src = "@npm__at_swc_core__1.2.185//:jsp",
+)
 
-rs_helper_package()
-
-rs_triples_package()
-
-node_modules()
+link_js_packages()
 
 # For stardoc to reference the files
 exports_files(["swc.bzl"])
@@ -61,7 +56,7 @@ js_binary(
         # to the repository, e.g.
         # @aspect_rules_swc.0.2.0.swc.npm__swc_core-1.2.119
         package("@swc/cli"),
-        "//swc:np__at_swc_core",
+        ":link_core",
     ],
     entry_point = "main.cjs",
     visibility = ["//visibility:public"],

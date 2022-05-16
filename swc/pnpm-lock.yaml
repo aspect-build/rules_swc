@@ -1,10 +1,10 @@
 lockfileVersion: 5.3
 
 specifiers:
-  "@swc/cli": 0.1.52
+  "@swc/cli": latest
 
 dependencies:
-  "@swc/cli": 0.1.52
+  "@swc/cli": 0.1.57
 
 packages:
   /@nodelib/fs.scandir/2.1.5:
@@ -37,10 +37,10 @@ packages:
       fastq: 1.13.0
     dev: false
 
-  /@swc/cli/0.1.52:
+  /@swc/cli/0.1.57:
     resolution:
       {
-        integrity: sha512-LAWnsTG6BNGinyPN5U0wPKA6OSMX+sl4VUzzo1dpS33V4osLQOXxLdITQnQbfI8zS74ekERvIwa8vvXKXCoc+A==,
+        integrity: sha512-HxM8TqYHhAg+zp7+RdTU69bnkl4MWdt1ygyp6BDIPjTiaJVH6Dizn2ezbgDS8mnFZI1FyhKvxU/bbaUs8XhzQg==,
       }
     engines: { node: ">= 12.13" }
     hasBin: true

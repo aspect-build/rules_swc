@@ -52,7 +52,7 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
         **kwargs: additional named parameters like tags or visibility
     """
     if srcs == None:
-        srcs = native.glob(["**/*" + e for e in _swc_lib.SUPPORTED_EXTENSIONS])
+        srcs = native.glob(["**/*.ts", "**/*.tsx"])
     elif not types.is_list(srcs):
         fail("srcs must be a list, not a " + type(srcs))
 

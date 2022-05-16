@@ -74,33 +74,19 @@ def swc_register_toolchains(name, node_repository = "nodejs", register = True, *
     )
 
     npm_import(
-        name = "npm__at_swc_core_1.2.119",
-        integrity = "sha512-hNelzQ5ShAaaf2SHy4oZQ0dB8VCI4AaVchWEe5bZtirW3sY0gOqVL5V7x0b5Zzo0FyjlMnGIbX1k5IuX5uyn8A==",
+        name = "npm__at_swc_core__1.2.185",
+        integrity = "sha512-dDNzDrJ4bzMVWeFWqLJojjv5XZJZ84Zia7kQdJjp+kfOMdEhS+onrAwrk5Q88PlAvbrhY6kQbWD2LZ8JdyEaSQ==",
+        root_path = "",
+        link_paths = ["."],
         package = "@swc/core",
-        version = "1.2.119",
-        deps = {
-            "@napi-rs/triples": "1.1.0",
-            "@node-rs/helper": "1.2.1",
+        version = "1.2.185",
+        transitive_closure = {
+            "@swc/core": ["1.2.185"],
         },
-    )
-
-    npm_import(
-        name = "npm__at_node-rs_helper_1.2.1",
-        integrity = "sha512-R5wEmm8nbuQU0YGGmYVjEc0OHtYsuXdpRG+Ut/3wZ9XAvQWyThN08bTh2cBJgoZxHQUPtvRfeQuxcAgLuiBISg==",
-        package = "@node-rs/helper",
-        version = "1.2.1",
-    )
-
-    npm_import(
-        name = "npm__at_napi-rs_triples_1.1.0",
-        integrity = "sha512-XQr74QaLeMiqhStEhLn1im9EOMnkypp7MZOwQhGzqp2Weu5eQJbpPxWxixxlYRKWPOmJjsk6qYfYH9kq43yc2w==",
-        package = "@napi-rs/triples",
-        version = "1.1.0",
     )
 
     translate_pnpm_lock(
         name = "swc_cli",
-        node_repository = node_repository,
         pnpm_lock = "@aspect_rules_swc//swc:pnpm-lock.yaml",
     )
 

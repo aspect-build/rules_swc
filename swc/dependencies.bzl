@@ -33,15 +33,15 @@ def rules_swc_dependencies():
     maybe(
         http_archive,
         name = "aspect_bazel_lib",
-        sha256 = "2f6f04a002a9f988ae79107a91a8498892fb03bee978a8bf841eb1bd9fded2ea",
-        strip_prefix = "bazel-lib-0.9.8",
-        url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v0.9.8.tar.gz",
+        sha256 = "a8b47eeaf3c1bd41c4f4b633ef4c959daf83fdee343379495098b50571d4b3b8",
+        strip_prefix = "bazel-lib-0.11.1",
+        url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v0.11.1.tar.gz",
     )
 
     maybe(
         http_archive,
         name = "aspect_rules_js",
-        sha256 = "e5de2d6aa3c6987875085c381847a216b1053b095ec51c11e97b781309406ad4",
-        strip_prefix = "rules_js-0.5.0",
-        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v0.5.0.tar.gz",
+        sha256 = "83c6380c83417cd37c7b912d04a9a85e5c4f287416083224c343ce052428e536",
+        strip_prefix = "rules_js-0.6.3",
+        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v0.6.3.tar.gz",
     )
