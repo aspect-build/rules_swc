@@ -41,7 +41,7 @@ def rules_swc_dependencies():
     maybe(
         http_archive,
         name = "aspect_rules_js",
-        sha256 = "83c6380c83417cd37c7b912d04a9a85e5c4f287416083224c343ce052428e536",
-        strip_prefix = "rules_js-0.6.3",
-        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v0.6.3.tar.gz",
+        sha256 = "06dd11130f05df3e8b9aa8cc1b93577e88f540cd4ece8f00035109cc17dcf5ff",
+        strip_prefix = "rules_js-0.8.0",
+        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v0.8.0.tar.gz",
     )

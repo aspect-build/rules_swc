@@ -7,8 +7,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__at_nodelib_fs.scandir__2.1.5",
         integrity = "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "@nodelib/fs.scandir",
         version = "2.1.5",
         deps = {
@@ -26,8 +27,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__at_nodelib_fs.stat__2.0.5",
         integrity = "sha512-RkhPPp2zrqDAQA/2jNhnztcPAlv64XdhIp7a7454A5ovI7Bukxgt7MX7udwAu3zg1DcpPU0rz3VV1SeaqvY4+A==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "@nodelib/fs.stat",
         version = "2.0.5",
         transitive_closure = {
@@ -38,8 +40,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__at_nodelib_fs.walk__1.2.8",
         integrity = "sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "@nodelib/fs.walk",
         version = "1.2.8",
         deps = {
@@ -60,8 +63,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__at_swc_cli__0.1.57",
         integrity = "sha512-HxM8TqYHhAg+zp7+RdTU69bnkl4MWdt1ygyp6BDIPjTiaJVH6Dizn2ezbgDS8mnFZI1FyhKvxU/bbaUs8XhzQg==",
-        root_path = "swc",
-        link_paths = ["."],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = ["swc"],
         package = "@swc/cli",
         version = "0.1.57",
         deps = {
@@ -99,8 +103,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__braces__3.0.2",
         integrity = "sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "braces",
         version = "3.0.2",
         deps = {
@@ -117,8 +122,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__commander__7.2.0",
         integrity = "sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "commander",
         version = "7.2.0",
         transitive_closure = {
@@ -129,8 +135,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__fast-glob__3.2.11",
         integrity = "sha512-xrO3+1bxSo3ZVHAnqzyuewYT6aMFHRAd4Kcs92MAonjwQZLsK9d0SF1IyQ3k5PoirxTW0Oe/RqFgMQ6TcNE5Ew==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "fast-glob",
         version = "3.2.11",
         deps = {
@@ -165,8 +172,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__fastq__1.13.0",
         integrity = "sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "fastq",
         version = "1.13.0",
         deps = {
@@ -181,8 +189,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__fill-range__7.0.1",
         integrity = "sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "fill-range",
         version = "7.0.1",
         deps = {
@@ -198,8 +207,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__glob-parent__5.1.2",
         integrity = "sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "glob-parent",
         version = "5.1.2",
         deps = {
@@ -215,8 +225,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__is-extglob__2.1.1",
         integrity = "sha1-qIwCU1eR8C7TfHahueqXc8gz+MI=",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "is-extglob",
         version = "2.1.1",
         transitive_closure = {
@@ -227,8 +238,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__is-glob__4.0.3",
         integrity = "sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "is-glob",
         version = "4.0.3",
         deps = {
@@ -243,8 +255,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__is-number__7.0.0",
         integrity = "sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "is-number",
         version = "7.0.0",
         transitive_closure = {
@@ -255,8 +268,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__merge2__1.4.1",
         integrity = "sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "merge2",
         version = "1.4.1",
         transitive_closure = {
@@ -267,8 +281,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__micromatch__4.0.5",
         integrity = "sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "micromatch",
         version = "4.0.5",
         deps = {
@@ -288,8 +303,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__picomatch__2.3.1",
         integrity = "sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "picomatch",
         version = "2.3.1",
         transitive_closure = {
@@ -300,8 +316,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__queue-microtask__1.2.3",
         integrity = "sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "queue-microtask",
         version = "1.2.3",
         transitive_closure = {
@@ -312,8 +329,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__reusify__1.0.4",
         integrity = "sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "reusify",
         version = "1.0.4",
         transitive_closure = {
@@ -324,8 +342,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__run-parallel__1.2.0",
         integrity = "sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "run-parallel",
         version = "1.2.0",
         deps = {
@@ -340,8 +359,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__slash__3.0.0",
         integrity = "sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "slash",
         version = "3.0.0",
         transitive_closure = {
@@ -352,8 +372,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__source-map__0.7.3",
         integrity = "sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "source-map",
         version = "0.7.3",
         transitive_closure = {
@@ -364,8 +385,9 @@ def npm_repositories():
     npm_import(
         name = "swc_cli__to-regex-range__5.0.1",
         integrity = "sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==",
-        root_path = "swc",
-        link_paths = [],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "to-regex-range",
         version = "5.0.1",
         deps = {

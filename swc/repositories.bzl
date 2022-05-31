@@ -76,8 +76,9 @@ def swc_register_toolchains(name, node_repository = "nodejs", register = True, *
     npm_import(
         name = "npm__at_swc_core__1.2.185",
         integrity = "sha512-dDNzDrJ4bzMVWeFWqLJojjv5XZJZ84Zia7kQdJjp+kfOMdEhS+onrAwrk5Q88PlAvbrhY6kQbWD2LZ8JdyEaSQ==",
-        root_path = "",
-        link_paths = ["."],
+        root_package = "swc",
+        link_workspace = "aspect_rules_swc",
+        link_packages = [],
         package = "@swc/core",
         version = "1.2.185",
         transitive_closure = {
