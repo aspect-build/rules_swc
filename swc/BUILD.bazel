@@ -1,8 +1,8 @@
-load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("@bazel_skylib//rules:write_file.bzl", "write_file")
-load("@aspect_rules_js//js:defs.bzl", "js_binary", "link_js_package")
-load("@swc_cli//:defs.bzl", "link_js_packages", "package")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_rules_js//js:defs.bzl", "link_js_package")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@swc_cli//:defs.bzl", "link_js_packages")
+load("@swc_cli//swc/@swc/cli:package_json.bzl", swc_cli_bin = "bin")
 
 write_source_files(
     name = "write_cli_repos",
@@ -14,6 +14,7 @@ write_source_files(
 link_js_package(
     name = "link_core",
     src = "@npm__at_swc_core__1.2.185//:jsp",
+    root_package = "swc",
 )
 
 link_js_packages()
@@ -41,24 +42,11 @@ bzl_library(
     ],
 )
 
-# Workaround: js_binary doesn't support entry points under external yet
-write_file(
-    name = "gen_main",
-    out = "main.cjs",
-    content = ["require('@swc/cli')"],
-)
-
-js_binary(
+swc_cli_bin.swc_binary(
     name = "cli",
     data = [
-        # Don't use the shorter syntax here because the user or bzlmod
-        # might use repository mapping to give a different name
-        # to the repository, e.g.
-        # @aspect_rules_swc.0.2.0.swc.npm__swc_core-1.2.119
-        package("@swc/cli"),
         ":link_core",
     ],
-    entry_point = "main.cjs",
     visibility = ["//visibility:public"],
 )
 
