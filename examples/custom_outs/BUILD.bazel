@@ -1,4 +1,4 @@
-load("@aspect_rules_swc//swc:swc.bzl", "swc_transpiler")
+load("@aspect_rules_swc//swc:defs.bzl", "swc_transpiler")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 
 [

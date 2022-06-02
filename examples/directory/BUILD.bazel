@@ -5,7 +5,7 @@ This has to be a directory-in, directory-out pattern since the codesplitter prod
 Note that this example also depends on the setup in /WORKSPACE at the root of this repository.
 """
 
-load("@aspect_rules_swc//swc:swc.bzl", "swc")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load(":mocks.bzl", "mock_codesplit")
 
 mock_codesplit(
