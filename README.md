@@ -71,7 +71,7 @@ The most advanced usage is to write your own rule that uses the swc toolchain.
 This is a good choice if you need to integrate with other Bazel rules via
 [Providers](https://docs.bazel.build/versions/main/skylark/rules.html#providers)
 
-You'll basically follow the example of /swc/swc.bzl in this repo, by using
+You'll basically follow the example of /swc/private/swc.bzl in this repo, by using
 the `ctx.actions.run` Starlark API.
 
 - Use `@aspect_rules_swc//swc:cli` as the binary tool to execute

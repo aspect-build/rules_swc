@@ -3,7 +3,7 @@
 Note that this example also depends on the setup in /WORKSPACE at the root of this repository.
 """
 
-load("@aspect_rules_swc//swc:swc.bzl", "swc")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 
 # Runs `swc in.ts > ../../bazel-bin/examples/simple/in.js`

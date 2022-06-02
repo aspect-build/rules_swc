@@ -1,4 +1,4 @@
-load("@aspect_rules_swc//swc:swc.bzl", "swc")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
 filegroup(
     name = "srcs",

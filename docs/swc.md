@@ -5,7 +5,7 @@ API for running SWC under Bazel
 Simplest usage:
 
 ```starlark
-load("@aspect_rules_swc//swc:swc.bzl", "swc")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
 swc(name = "transpile")
 ```
