@@ -4,7 +4,7 @@ These are needed for local dev, and users must install them as well.
 See https://docs.bazel.build/versions/main/skylark/deploying.html#dependencies
 """
 
-load("@aspect_rules_js//js:npm_import.bzl", "npm_import", "translate_pnpm_lock")
+load("@aspect_rules_js//npm:npm_import.bzl", "npm_import", "translate_pnpm_lock")
 load("//swc/private:toolchains_repo.bzl", "PLATFORMS", "toolchains_repo")
 load("//swc/private:versions.bzl", "TOOL_VERSIONS")
 load("//swc:cli_repositories.bzl", _cli_repositories = "npm_repositories")
