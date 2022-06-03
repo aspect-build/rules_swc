@@ -1,7 +1,7 @@
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
-load("@aspect_rules_js//npm:defs.bzl", "link_npm_package")
+load("@aspect_rules_js//npm:defs.bzl", "npm_link_package")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("@swc_cli//:defs.bzl", "link_all_npm_packages")
+load("@swc_cli//:defs.bzl", "npm_link_all_packages")
 load("@swc_cli//swc/@swc/cli:package_json.bzl", swc_cli_bin = "bin")
 
 write_source_files(
@@ -11,11 +11,11 @@ write_source_files(
     },
 )
 
-link_all_npm_packages(name = "node_modules")
+npm_link_all_packages(name = "node_modules")
 
-link_npm_package(
+npm_link_package(
     name = "node_modules/@swc/core",
-    src = "@npm__at_swc_core__1.2.185//:jsp",
+    src = "@npm__at_swc_core__1.2.185//:pkg",
     root_package = "swc",
 )
 
