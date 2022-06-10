@@ -78,7 +78,7 @@ def swc_register_toolchains(name, node_repository = "nodejs", register = True, *
         integrity = "sha512-dDNzDrJ4bzMVWeFWqLJojjv5XZJZ84Zia7kQdJjp+kfOMdEhS+onrAwrk5Q88PlAvbrhY6kQbWD2LZ8JdyEaSQ==",
         root_package = "swc",
         link_workspace = "aspect_rules_swc",
-        link_packages = [],
+        link_packages = {},
         package = "@swc/core",
         version = "1.2.185",
         transitive_closure = {
