@@ -27,8 +27,8 @@ def rules_swc_dependencies():
 
     http_archive(
         name = "rules_nodejs",
-        sha256 = "8f4a19de1eb16b57ac03a8e9b78344b44473e0e06b0510cec14a81f6adfdfc25",
-        urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/4.4.6/rules_nodejs-core-4.4.6.tar.gz"],
+        sha256 = "2b66bad65cb67a10413be4e3e1660eae580758ea18ac42d46372391dbb4d003c",
+        urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/4.7.1/rules_nodejs-core-4.7.1.tar.gz"],
     )
 
     http_archive(
