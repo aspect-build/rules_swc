@@ -25,55 +25,55 @@ with only the toolchain attribute pointing into the platform-specific repositori
 # linux-x64-musl
 PLATFORMS = {
     "android-arm64": struct(
-        compatible_with = [
+        exec_compatible_with = [
             "@platforms//os:android",
             "@platforms//cpu:aarch64",
         ],
     ),
     "darwin-arm64": struct(
-        compatible_with = [
-            "@platforms//os:macos",
+        exec_compatible_with = [
+            "@platforms//os:osx",
             "@platforms//cpu:aarch64",
         ],
     ),
     "darwin-x64": struct(
-        compatible_with = [
-            "@platforms//os:macos",
+        exec_compatible_with = [
+            "@platforms//os:osx",
             "@platforms//cpu:x86_64",
         ],
     ),
     "freebsd-x64": struct(
-        compatible_with = [
+        exec_compatible_with = [
             "@platforms//os:freebsd",
             "@platforms//cpu:x86_64",
         ],
     ),
     "linux-arm64-gnu": struct(
-        compatible_with = [
+        exec_compatible_with = [
             "@platforms//os:linux",
             "@platforms//cpu:aarch64",
         ],
     ),
     "linux-x64-gnu": struct(
-        compatible_with = [
+        exec_compatible_with = [
             "@platforms//os:linux",
             "@platforms//cpu:x86_64",
         ],
     ),
     "win32-arm64-msvc": struct(
-        compatible_with = [
+        exec_compatible_with = [
             "@platforms//os:windows",
             "@platforms//cpu:aarch64",
         ],
     ),
     "win32-ia32-msvc": struct(
-        compatible_with = [
+        exec_compatible_with = [
             "@platforms//os:windows",
             "@platforms//cpu:i386",
         ],
     ),
     "win32-x64-msvc": struct(
-        compatible_with = [
+        exec_compatible_with = [
             "@platforms//os:windows",
             "@platforms//cpu:x86_64",
         ],
@@ -122,7 +122,7 @@ resolved_toolchain(name = "resolved_toolchain", visibility = ["//visibility:publ
         build_content += """
 toolchain(
     name = "{platform}_toolchain",
-    exec_compatible_with = {compatible_with},
+    exec_compatible_with = {exec_compatible_with},
     toolchain = "@{user_repository_name}_{platform}//:swc_toolchain",
     toolchain_type = "@aspect_rules_swc//swc:toolchain_type",
 )
@@ -130,7 +130,7 @@ toolchain(
             platform = platform,
             name = repository_ctx.attr.name,
             user_repository_name = repository_ctx.attr.user_repository_name,
-            compatible_with = meta.compatible_with,
+            exec_compatible_with = meta.exec_compatible_with,
         )
 
     # Base BUILD file for this repository

@@ -1,6 +1,11 @@
 "Mirror of release info"
 
 TOOL_VERSIONS = {
+    "v1.2.244": {
+        "darwin-arm64": "sha512-OtN6rGQ14wDxrCl43riGnU4ytkg3ZSgRZYttMYQ5ZnDdDE6KmbfSee+bjaSqpBYG",
+        "darwin-x64": "sha384-LBsJRZGm/B9iIyW+3c1MQAbPB28zRpndq8RRagKYlZy6Q53jsmldspIv7RbI6S6B",
+        "linux-x64-gnu": "sha384-gSSdWDOyzAvGkcUNIQyveh+d8gqBQcVH1GG1aUyt2TkowNJoqfqXukPp+svmDiI5",
+    },
     "v1.2.241": {
         "android-arm-eabi": "sha384-sbYFwXf/ODwjpSXWB0CSnfrtNxKXr9g7L1y+IdgivpWqz/XVNttrtaP6mFc05Xo/",
         "android-arm64": "sha384-gGGZTW2mksz+9G9VWxyPTpTJEx/yPxCmMZ0VRZSCHW2CjhF3Wy8mfA2Lq6EvpzEv",
@@ -14,7 +19,7 @@ TOOL_VERSIONS = {
         "linux-x64-musl": "sha384-vHka+4h5y9T6v0Tr6rg4QDK22DXF5pcM2mO90H2SRni6Lk3VVZkK+bcnV3mBiJQh",
         "win32-arm64-msvc": "sha384-Q+CuDdX8k1vCU+O/vu5tEaLuRaRs+WSqDaKoDoH4pTdr6JecAOPBXJhHu50lgfeD",
         "win32-ia32-msvc": "sha384-+sLQw0nV10ez5Y11jBUoJg3l5f30fmNjfUitG1+9jaYXW89I04BcmKDy0KCtkrKx",
-        "win32-x64-msvc": "sha384-YZNKiTbRusW/ZMcu0ur0OmoU+2lr4pbuM88ah7NuawwCNQrMOyrL9cPx069dpBwL"
+        "win32-x64-msvc": "sha384-YZNKiTbRusW/ZMcu0ur0OmoU+2lr4pbuM88ah7NuawwCNQrMOyrL9cPx069dpBwL",
     },
     "v1.2.239": {
         "android-arm-eabi": "sha384-zN5B3ClOZk1DCXDbKhCprqPAfhEIypMjGKYvP34R//oLT461Bp1U8SVamXJjY/Tq",
@@ -29,7 +34,7 @@ TOOL_VERSIONS = {
         "linux-x64-musl": "sha384-RRJWDq4dZxIGo3YJEDSdj4BPzjhqB1j1YjJge27pUFh8+NbElQH/su8ZAqOVtX6w",
         "win32-arm64-msvc": "sha384-Gf5lz1GVCMF+5btFqvxMqy5S52wqJoPMkpnC/BZa4UIey0xPpCc7Ss3gSh67Lxdo",
         "win32-ia32-msvc": "sha384-CaRgeh4ayRyaqAbY3Y/IcJy7NPQLEbMLqiuPlOQDFNJasm6uMOJS7PJXbxrQ62Dy",
-        "win32-x64-msvc": "sha384-0Xf8eqdBc7TaShmTSiQT7/e22JSbHPNRur2A4h4Q9nDbHFeA7+PHVdvFtmk8pOAW"
+        "win32-x64-msvc": "sha384-0Xf8eqdBc7TaShmTSiQT7/e22JSbHPNRur2A4h4Q9nDbHFeA7+PHVdvFtmk8pOAW",
     },
     "v1.2.185": {
         "android-arm-eabi": "sha384-a9NRmV90j+tXV7xT3+LK+UBcUgKMVRp9k4yz29hKi7VRqwIQxuL3aKAcyP1mXCly",

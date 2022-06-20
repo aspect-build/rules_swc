@@ -75,8 +75,6 @@ You'll basically follow the example of /swc/private/swc.bzl in this repo, by usi
 the `ctx.actions.run` Starlark API.
 
 - Use `@aspect_rules_swc//swc:cli` as the binary tool to execute
-- To get the swc nodejs bindings for Rust, `env` should include
-  `"SWC_BINARY_PATH": ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.binding`
 - To pass the relevant files to the action, `inputs` should include
   `ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files`
 
