@@ -2,7 +2,7 @@ load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@swc_cli//:defs.bzl", "npm_link_all_packages")
-load("@swc_cli//swc/@swc/cli:package_json.bzl", swc_cli_bin = "bin")
+load("@swc_cli//swc:@swc/cli/package_json.bzl", swc_cli_bin = "bin")
 
 write_source_files(
     name = "write_cli_repos",
