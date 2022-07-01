@@ -6,15 +6,12 @@ package(default_visibility = ["//:__subpackages__"])
 swc(
     name = "app",
     srcs = ["a.ts"],
-    args = [
-        "--config",
-        "module.type=commonjs",
-    ],
     # In Bazel, a "data" dependency is a runtime dependency.
     # This file isn't required to transpile b.ts -> b.js
     # however any program which depends on lib_b should have
     # lib_c available in the "runfiles".
     data = ["//examples/transitive/lib_b"],
+    swcrc = "//examples/transitive:.swcrc",
 )
 
 js_binary(

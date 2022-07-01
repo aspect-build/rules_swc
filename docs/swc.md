@@ -34,7 +34,7 @@ Use this if you need more control over how the rule is called,
 for example to set your own output labels for `js_outs`.
 
 This rule is also suitable for the
-[ts_project#transpiler](https://bazelbuild.github.io/rules_nodejs/TypeScript.html#ts_project-transpiler)
+[ts_project#transpiler](https://github.com/aspect-build/rules_ts/blob/main/docs/rules.md#ts_project-transpiler)
 attribute.
 
 
@@ -48,13 +48,11 @@ attribute.
 | <a id="swc_transpiler-data"></a>data |  Runtime dependencies to include in binaries/tests that depend on this target.<br><br>    The transitive npm dependencies, transitive sources, default outputs and runfiles of targets in the <code>data</code> attribute     are added to the runfiles of this target. They should appear in the '*.runfiles' area of any executable which has     a runtime dependency on this target.<br><br>    If this list contains linked npm packages, npm package store targets or other targets that provide <code>JsInfo</code>,     <code>NpmPackageStoreInfo</code> providers are gathered from <code>JsInfo</code>. This is done directly from the     <code>npm_package_store_deps</code> field of these. For linked npm package targets, the underlying npm_package_store     target(s) that back the links is used.<br><br>    Gathered <code>NpmPackageStoreInfo</code> providers are used downstream as direct dependencies when linking a downstream     <code>npm_package</code> target with <code>npm_link_package</code>.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional | <code>[]</code> |
 | <a id="swc_transpiler-js_outs"></a>js_outs |  list of expected JavaScript output files.<br><br>There must be one for each entry in srcs, and in the same order.   | List of labels | optional |  |
 | <a id="swc_transpiler-map_outs"></a>map_outs |  list of expected source map output files.<br><br>Can be empty, meaning no source maps should be produced. If non-empty, there must be one for each entry in srcs, and in the same order.   | List of labels | optional |  |
-| <a id="swc_transpiler-out_dir"></a>out_dir |  base directory for output files   | String | optional | <code>""</code> |
-| <a id="swc_transpiler-output_dir"></a>output_dir |  whether to produce a directory output rather than individual files   | Boolean | optional | <code>False</code> |
-| <a id="swc_transpiler-root_dir"></a>root_dir |  a subdirectory under the input package which should be consider the root directory of all the input files   | String | optional | <code>""</code> |
-| <a id="swc_transpiler-source_maps"></a>source_maps |  see https://swc.rs/docs/usage/cli#--source-maps--s   | String | optional | <code>"false"</code> |
-| <a id="swc_transpiler-srcs"></a>srcs |  source files, typically .ts files in the source tree   | <a href="https://bazel.build/concepts/labels">List of labels</a> | required |  |
-| <a id="swc_transpiler-swc_cli"></a>swc_cli |  binary that executes the swc CLI   | <a href="https://bazel.build/concepts/labels">Label</a> | optional | <code>@aspect_rules_swc//swc:cli</code> |
-| <a id="swc_transpiler-swcrc"></a>swcrc |  label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc   | <a href="https://bazel.build/concepts/labels">Label</a> | optional | <code>None</code> |
+| <a id="swc_transpiler-out_dir"></a>out_dir |  base directory for output files   | String | optional | "" |
+| <a id="swc_transpiler-output_dir"></a>output_dir |  whether to produce a directory output rather than individual files   | Boolean | optional | False |
+| <a id="swc_transpiler-source_maps"></a>source_maps |  see https://swc.rs/docs/usage/cli#--source-maps--s   | String | optional | "false" |
+| <a id="swc_transpiler-srcs"></a>srcs |  source files, typically .ts files in the source tree   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | required |  |
+| <a id="swc_transpiler-swcrc"></a>swcrc |  label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | None |
 
 
 <a id="swc"></a>

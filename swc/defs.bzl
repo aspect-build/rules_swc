@@ -27,7 +27,7 @@ Use this if you need more control over how the rule is called,
 for example to set your own output labels for `js_outs`.
 
 This rule is also suitable for the
-[ts_project#transpiler](https://bazelbuild.github.io/rules_nodejs/TypeScript.html#ts_project-transpiler)
+[ts_project#transpiler](https://github.com/aspect-build/rules_ts/blob/main/docs/rules.md#ts_project-transpiler)
 attribute.
 """,
     implementation = _swc_lib.implementation,

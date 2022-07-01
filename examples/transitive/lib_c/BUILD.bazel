@@ -5,8 +5,5 @@ package(default_visibility = ["//:__subpackages__"])
 swc(
     name = "lib_c",
     srcs = ["c.ts"],
-    args = [
-        "--config",
-        "module.type=commonjs",
-    ],
+    swcrc = "//examples/transitive:.swcrc",
 )

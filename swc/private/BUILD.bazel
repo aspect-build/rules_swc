@@ -17,7 +17,6 @@ bzl_library(
     srcs = ["swc.bzl"],
     visibility = ["//swc:__subpackages__"],
     deps = [
-        "@aspect_bazel_lib//lib:copy_to_bin",
         "@aspect_rules_js//js:libs",
         "@aspect_rules_js//js:providers",
         "@bazel_skylib//lib:paths",

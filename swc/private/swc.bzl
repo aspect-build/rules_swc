@@ -1,9 +1,8 @@
 "Internal implementation details"
 
-load("@bazel_skylib//lib:paths.bzl", "paths")
-load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_file_to_bin_action", "copy_files_to_bin_actions")
 load("@aspect_rules_js//js:libs.bzl", "js_lib_helpers")
 load("@aspect_rules_js//js:providers.bzl", "js_info")
+load("@bazel_skylib//lib:paths.bzl", "paths")
 
 _attrs = {
     "srcs": attr.label_list(
@@ -26,12 +25,7 @@ _attrs = {
     "swcrc": attr.label(
         doc = "label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc",
         allow_single_file = True,
-    ),
-    "swc_cli": attr.label(
-        doc = "binary that executes the swc CLI",
-        default = "@aspect_rules_swc//swc:cli",
-        executable = True,
-        cfg = "exec",
+        # mandatory = True,
     ),
     "out_dir": attr.string(
         doc = "base directory for output files",
@@ -115,18 +109,19 @@ def _calculate_map_outs(srcs, source_maps, out_dir = None, root_dir = None):
     return [f2 for f2 in [_calculate_map_out(f, source_maps, out_dir, root_dir) for f in srcs] if f2]
 
 def _impl(ctx):
-    swcinfo = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo
-    env = {
-        # Our patch for @swc/core uses this environment variable to locate the rust binding
-        "SWC_BINARY_PATH": "../../../" + swcinfo.binding,
-        "BAZEL_BINDIR": ctx.bin_dir.path,
-    }
+    outputs = []
+    binary = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.swc_binary
 
+    # Arguments to pure-rust CLI differ from the Node.js wrapper in @swc/cli.
+    # Feature parity issue: https://github.com/swc-project/swc/issues/4017
+    # To see what's available, you can run help:
+    # $(bazel info output_base)/execroot/aspect_rules_swc/external/default_swc_linux-x64-gnu/package/swc compile --help
     args = ctx.actions.args()
+    args.add("compile")
 
     # Add user specified arguments *before* rule supplied arguments
     args.add_all(ctx.attr.args)
-    args.add("--source-maps", ctx.attr.source_maps)
+    args.add_all(["--source-maps", ctx.attr.source_maps])
 
     if ctx.attr.output_dir:
         if len(ctx.attr.srcs) != 1:
@@ -138,20 +133,20 @@ def _impl(ctx):
         output_sources = [output_dir]
 
         args.add_all([
-            ctx.files.srcs[0].short_path,
             "--out-dir",
-            output_dir.short_path,
-            "--no-swcrc",
-            "-q",
+            output_dir.path,
+            # There is no longer such an option - the rust CLI doesn't go looking for it though
+            #"--no-swcrc",
+            # There is no "quiet" flag to the rust CLI.
+            #"-q",
         ])
 
-        ctx.actions.run(
-            inputs = copy_files_to_bin_actions(ctx, ctx.files.srcs) + swcinfo.tool_files,
+        ctx.actions.run_shell(
+            inputs = ctx.files.srcs + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files,
             arguments = [args],
-            outputs = [output_dir],
-            env = env,
-            executable = ctx.executable.swc_cli,
-            progress_message = "Transpiling with swc %{label}",
+            outputs = output_sources,
+            command = binary + " $@ < " + ctx.files.srcs[0].path,
+            progress_message = "Transpiling with swc %s" % ctx.label,
         )
     else:
         output_sources = []
@@ -172,31 +167,50 @@ def _impl(ctx):
 
             src_args = ctx.actions.args()
 
-            # Pass in the swcrc config if it is set
-            if ctx.file.swcrc:
-                swcrc_path = ctx.file.swcrc.short_path
-                src_args.add("--config-file", swcrc_path)
-                inputs.append(copy_file_to_bin_action(ctx, ctx.file.swcrc))
-            else:
-                src_args.add("--no-swcrc")
+            js_out = js_outs[i]
+            inputs = [src] + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files
+            outs = [js_out]
+            if ctx.attr.source_maps in ["true", "both"]:
+                outs.append(map_outs[i])
+                src_args.add_all([
+                    "--source-map-target",
+                    map_outs[i].path,
+                ])
+
+            if ctx.attr.swcrc:
+                swcrc_path = ctx.file.swcrc.path
+                src_args.add_all([
+                    "--config-file",
+                    swcrc_path,
+                ])
+                inputs.append(ctx.file.swcrc)
 
             src_args.add_all([
-                src.short_path,
                 "--out-file",
-                js_out.short_path,
-                "-q",
+                js_out.path,
             ])
 
             output_sources.extend(outputs)
 
-            ctx.actions.run(
+            ctx.actions.run_shell(
                 inputs = inputs,
-                arguments = [args, src_args],
-                outputs = outputs,
-                env = env,
-                executable = ctx.executable.swc_cli,
+                arguments = [
+                    args,
+                    src_args,
+                    "--filename",
+                    src.path,
+                ],
+                outputs = outs,
+                # Workaround swc cli bug:
+                # https://github.com/swc-project/swc/blob/main/crates/swc_cli/src/commands/compile.rs#L241-L254
+                # under Bazel it will think there's no tty and so it always errors here
+                # https://github.com/swc-project/swc/blob/main/crates/swc_cli/src/commands/compile.rs#L301
+                command = binary + " $@ < " + src.path,
                 mnemonic = "SWCTranspile",
-                progress_message = "Transpiling with swc %{label} [swc %{input}]",
+                progress_message = "Transpiling with swc %s [swc %s]" % (
+                    ctx.label,
+                    src.path,
+                ),
             )
 
     output_sources_depset = depset(output_sources)

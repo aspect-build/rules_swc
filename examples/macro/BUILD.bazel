@@ -1,5 +1,5 @@
-load(":ts_project.bzl", "my_ts_project")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load(":ts_project.bzl", "my_ts_project")
 
 # In your org, my_ts_project can be whatever macro fits your use case, composing swc with other tools
 my_ts_project(
