@@ -16,8 +16,12 @@ load("//swc:repositories.bzl", "swc_register_toolchains")
 
 swc_register_toolchains(
     name = "default_swc",
-    node_repository = "node16",
-    swc_version = "v1.2.168",
+    integrity_hashes = {
+        "darwin-arm64": "sha512-DuBBKIyk0iUGPmq6RQc7/uOCkGnvB0JDWQbWxA2NGAEcK0ZtI9J0efG9M1/gLIb0QD+d2DVS5Lx7VRIUFTx9lA==",
+        "darwin-x64": "sha512-WvDN6tRjQ/p+4gNvT4UVU4VyJLXy6hT4nT6mGgrtftG/9pP5dDPwwtTm86ISfqGUs8/LuZvrr4Nhwdr3j+0uAA==",
+        "linux-x64-gnu": "sha512-6eco63idgYWPYrSpDeSE3tgh/4CC0hJz8cAO/M/f3azmCXvI+11isC60ic3UKeZ2QNXz3YbsX6CKAgBPSkkaVA==",
+    },
+    swc_version = "v1.2.204",
 )
 
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
