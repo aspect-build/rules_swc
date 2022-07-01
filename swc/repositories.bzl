@@ -4,10 +4,8 @@ These are needed for local dev, and users must install them as well.
 See https://docs.bazel.build/versions/main/skylark/deploying.html#dependencies
 """
 
-load("@aspect_rules_js//npm:npm_import.bzl", "npm_import", "npm_translate_lock")
 load("//swc/private:toolchains_repo.bzl", "PLATFORMS", "toolchains_repo")
 load("//swc/private:versions.bzl", "TOOL_VERSIONS")
-load("//swc:cli_repositories.bzl", _cli_repositories = "npm_repositories")
 
 LATEST_VERSION = TOOL_VERSIONS.keys()[0]
 
@@ -86,26 +84,3 @@ def swc_register_toolchains(name, register = True, **kwargs):
         name = name + "_toolchains",
         user_repository_name = name,
     )
-
-    # FIXME
-    npm_import(
-        name = "npm__at_swc_core__1.2.185",
-        integrity = "sha512-dDNzDrJ4bzMVWeFWqLJojjv5XZJZ84Zia7kQdJjp+kfOMdEhS+onrAwrk5Q88PlAvbrhY6kQbWD2LZ8JdyEaSQ==",
-        root_package = "swc",
-        link_workspace = "aspect_rules_swc",
-        link_packages = {},
-        package = "@swc/core",
-        version = "1.2.185",
-        transitive_closure = {
-            "@swc/core": ["1.2.185"],
-        },
-    )
-
-    npm_translate_lock(
-        name = "swc_cli",
-        pnpm_lock = "@aspect_rules_swc//swc:pnpm-lock.yaml",
-    )
-
-    # We ALSO re-declare the results of the previous npm_translate_lock
-    # so that users don't have to make an extra load/execution in their WORKSPACE
-    _cli_repositories()

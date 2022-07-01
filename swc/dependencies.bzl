@@ -31,16 +31,3 @@ def rules_swc_dependencies():
         strip_prefix = "bazel-lib-1.3.1",
         url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.3.1.tar.gz",
     )
-
-    http_archive(
-        name = "aspect_rules_js",
-        sha256 = "be39996444ab94de605e21cdcaa9bc4965a96186329d776e400b47fefd540902",
-        strip_prefix = "rules_js-1.0.0-rc.0",
-        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.0.0-rc.0.tar.gz",
-    )
-
-    http_archive(
-        name = "rules_nodejs",
-        sha256 = "4d48998e3fa1e03c684e6bdf7ac98051232c7486bfa412e5b5475bbaec7bb257",
-        urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.5.0/rules_nodejs-core-5.5.0.tar.gz"],
-    )
