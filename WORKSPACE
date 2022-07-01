@@ -12,12 +12,12 @@ load("//swc:dependencies.bzl", "rules_swc_dependencies")
 # Fetch our "runtime" dependencies which users need as well
 rules_swc_dependencies()
 
-load("//swc:repositories.bzl", "swc_register_toolchains")
+load("//swc:repositories.bzl", "LATEST_VERSION", "swc_register_toolchains")
 
 swc_register_toolchains(
     name = "default_swc",
-    node_repository = "node16",
-    swc_version = "v1.2.168",
+    # FIXME: demonstrate pulling whatever version we like, with manual hashes
+    swc_version = LATEST_VERSION,
 )
 
 load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")

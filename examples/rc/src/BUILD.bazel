@@ -8,11 +8,11 @@ load("@aspect_rules_swc//swc:defs.bzl", "swc")
 swc(
     name = "transpile",
     source_maps = True,
-    swcrc = "//examples/rc",
+    swcrc = "//examples/rc:.swcrc",
 )
 
 write_source_files(
-    name = "test",
+    name = "tests",
     files = {
         "expected.js": ":in.js",
         "expected.js.map": ":in.js.map",

@@ -2,9 +2,8 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.a = void 0;
+Object.defineProperty(exports, "a", {
+    enumerable: true,
+    get: ()=>a
+});
 const a = "foo";
-exports.a = a;
-
-
-//# sourceMappingURL=in.js.map

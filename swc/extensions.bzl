@@ -4,7 +4,7 @@ load(":repositories.bzl", "swc_register_toolchains")
 
 swc_toolchain = tag_class(attrs = {
     "name": attr.string(doc = "Base name for generated repositories"),
-    "swc_version": attr.string(doc = "Version of the swc rust binding"),
+    "swc_version": attr.string(doc = "Version of the swc core package"),
 })
 
 def _toolchain_extension(module_ctx):

@@ -12,6 +12,7 @@ swc(
     name = "transpile",
     srcs = ["srcs"],
     source_maps = "true",
+    swcrc = ".swcrc",
 )
 
 # Since the srcs were in a filegroup, the swc macro cannot pre-declare the outputs.
