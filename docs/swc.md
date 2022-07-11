@@ -22,8 +22,7 @@ Known issues:
 ## swc_transpiler
 
 <pre>
-swc_transpiler(<a href="#swc_transpiler-name">name</a>, <a href="#swc_transpiler-args">args</a>, <a href="#swc_transpiler-data">data</a>, <a href="#swc_transpiler-js_outs">js_outs</a>, <a href="#swc_transpiler-map_outs">map_outs</a>, <a href="#swc_transpiler-out_dir">out_dir</a>, <a href="#swc_transpiler-output_dir">output_dir</a>, <a href="#swc_transpiler-source_maps">source_maps</a>, <a href="#swc_transpiler-srcs">srcs</a>, <a href="#swc_transpiler-swc_cli">swc_cli</a>,
-               <a href="#swc_transpiler-swcrc">swcrc</a>)
+swc_transpiler(<a href="#swc_transpiler-name">name</a>, <a href="#swc_transpiler-args">args</a>, <a href="#swc_transpiler-data">data</a>, <a href="#swc_transpiler-js_outs">js_outs</a>, <a href="#swc_transpiler-map_outs">map_outs</a>, <a href="#swc_transpiler-out_dir">out_dir</a>, <a href="#swc_transpiler-output_dir">output_dir</a>, <a href="#swc_transpiler-source_maps">source_maps</a>, <a href="#swc_transpiler-srcs">srcs</a>, <a href="#swc_transpiler-swcrc">swcrc</a>)
 </pre>
 
 Underlying rule for the `swc` macro.
@@ -52,7 +51,6 @@ attribute.
 | <a id="swc_transpiler-output_dir"></a>output_dir |  whether to produce a directory output rather than individual files   | Boolean | optional | False |
 | <a id="swc_transpiler-source_maps"></a>source_maps |  see https://swc.rs/docs/usage/cli#--source-maps--s   | String | optional | "false" |
 | <a id="swc_transpiler-srcs"></a>srcs |  source files, typically .ts files in the source tree   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | required |  |
-| <a id="swc_transpiler-swc_cli"></a>swc_cli |  binary that executes the swc CLI   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | @aspect_rules_swc//swc:cli |
 | <a id="swc_transpiler-swcrc"></a>swcrc |  label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | None |
 
 

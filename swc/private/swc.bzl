@@ -27,6 +27,7 @@ _attrs = {
     "swcrc": attr.label(
         doc = "label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc",
         allow_single_file = True,
+        mandatory = True,
     ),
     "out_dir": attr.string(
         doc = "base directory for output files",
@@ -87,7 +88,7 @@ def _impl(ctx):
 
     # Add user specified arguments *before* rule supplied arguments
     args.add_all(ctx.attr.args)
-    #args.add_all(["--source-maps", ctx.attr.source_maps])
+    args.add_all(["--source-maps", ctx.attr.source_maps])
 
     if ctx.attr.output_dir:
         if len(ctx.attr.srcs) != 1:
@@ -110,8 +111,6 @@ def _impl(ctx):
             outputs = [out],
             executable = binary,
             progress_message = "Transpiling with swc %s" % ctx.label,
-            # sandboxing is unnecessary with swc which takes an explilit list of srcs via args
-            execution_requirements = {"no-sandbox": "1"},
         )
 
     else:
@@ -135,19 +134,18 @@ def _impl(ctx):
             outs = [js_out]
             if ctx.attr.source_maps in ["true", "both"]:
                 outs.append(map_outs[i])
-
-            # Pass in the swcrc config if it is set
-            if ctx.file.swcrc:
-                swcrc_path = ctx.file.swcrc.path
-                swcrc_directory = paths.dirname(swcrc_path)
                 src_args.add_all([
-                    "--config-file",
-                    swcrc_path,
+                    "--source-maps-target",
+                    map_outs[i].path,
                 ])
-                inputs.append(copy_file_to_bin_action(ctx, ctx.file.swcrc))
-            else:
-                pass
-                #src_args.add("--no-swcrc")
+
+            swcrc_path = ctx.file.swcrc.path
+            swcrc_directory = paths.dirname(swcrc_path)
+            src_args.add_all([
+                "--config-file",
+                swcrc_path,
+            ])
+            inputs.append(copy_file_to_bin_action(ctx, ctx.file.swcrc))
 
             src_args.add_all([
                 # src.path,
@@ -161,7 +159,7 @@ def _impl(ctx):
                 arguments = [
                     args,
                     src_args,
-                    "-f ",
+                    "--filename",
                     src.path,
                 ],
                 outputs = outs,
@@ -175,8 +173,6 @@ def _impl(ctx):
                     ctx.label,
                     src.path,
                 ),
-                # sandboxing is unnecessary with swc which takes an explilit list of srcs via args
-                execution_requirements = {"no-sandbox": "1"},
             )
 
     # See https://docs.bazel.build/versions/main/skylark/rules.html#runfiles
