@@ -12,12 +12,11 @@ load("//swc:dependencies.bzl", "rules_swc_dependencies")
 # Fetch our "runtime" dependencies which users need as well
 rules_swc_dependencies()
 
-load("//swc:repositories.bzl", "swc_register_toolchains")
+load("//swc:repositories.bzl", "LATEST_VERSION", "swc_register_toolchains")
 
 swc_register_toolchains(
     name = "default_swc",
-    node_repository = "node16",
-    swc_version = "v1.2.168",
+    swc_version = LATEST_VERSION,
 )
 
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
