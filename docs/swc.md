@@ -17,7 +17,7 @@ Known issues:
   `build --modify_execution_info=SWCTranspile=+no-sandbox`
 
 
-<a id="#swc_transpiler"></a>
+<a id="swc_transpiler"></a>
 
 ## swc_transpiler
 
@@ -56,7 +56,7 @@ attribute.
 | <a id="swc_transpiler-swcrc"></a>swcrc |  label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | optional | None |
 
 
-<a id="#swc"></a>
+<a id="swc"></a>
 
 ## swc
 
