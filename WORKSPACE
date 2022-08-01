@@ -40,3 +40,49 @@ go_rules_dependencies()
 go_register_toolchains(version = "1.17.2")
 
 gazelle_dependencies()
+
+#####
+# rust, to compile swc from sources
+
+load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
+
+rules_rust_dependencies()
+
+rust_register_toolchains()
+
+load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
+
+crate_universe_dependencies()
+
+load("@rules_rust//crate_universe:defs.bzl", "crates_repository")
+
+crates_repository(
+    name = "crate_index",
+    cargo_lockfile = "@swc-project_swc//:Cargo.lock",
+    manifests = [
+        "@swc-project_swc//:Cargo.toml",
+        "@swc-project_swc//:crates/binding_core_node/Cargo.toml",
+        "@swc-project_swc//:crates/binding_core_wasm/Cargo.toml",
+        "@swc-project_swc//:crates/dbg-swc/Cargo.toml",
+        "@swc-project_swc//:crates/jsdoc/Cargo.toml",
+        "@swc-project_swc//:crates/swc_cli/Cargo.toml",
+        "@swc-project_swc//:crates/swc_css/Cargo.toml",
+        "@swc-project_swc//:crates/swc_css_lints/Cargo.toml",
+        "@swc-project_swc//:crates/swc_css_prefixer/Cargo.toml",
+        "@swc-project_swc//:crates/swc_ecma_lints/Cargo.toml",
+        "@swc-project_swc//:crates/swc_ecma_quote/Cargo.toml",
+        "@swc-project_swc//:crates/swc_ecmascript/Cargo.toml",
+        "@swc-project_swc//:crates/swc_estree_compat/Cargo.toml",
+        "@swc-project_swc//:crates/swc_html/Cargo.toml",
+        "@swc-project_swc//:crates/swc_plugin/Cargo.toml",
+        "@swc-project_swc//:crates/swc_plugin_macro/Cargo.toml",
+        "@swc-project_swc//:crates/swc_plugin_proxy/Cargo.toml",
+        "@swc-project_swc//:crates/swc_plugin_runner/Cargo.toml",
+        "@swc-project_swc//:crates/swc_plugin_testing/Cargo.toml",
+        "@swc-project_swc//:crates/swc_timer/Cargo.toml",
+    ],
+)
+
+load("@crate_index//:defs.bzl", "crate_repositories")
+
+crate_repositories()

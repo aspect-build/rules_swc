@@ -1,0 +1,10 @@
+package(default_visibility = ["//visibility:public"])
+load("@crate_index//:defs.bzl", "aliases", "all_crate_deps")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library")
+
+rust_binary(
+    name = "swc_cli",
+    edition = "2021",
+    srcs = glob(["crates/swc_cli/**/*.rs"]),
+    deps = all_crate_deps(normal = True),
+)

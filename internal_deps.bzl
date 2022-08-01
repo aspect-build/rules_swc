@@ -60,3 +60,21 @@ def rules_swc_internal_deps():
             "https://github.com/bazelbuild/stardoc/releases/download/0.5.0/stardoc-0.5.0.tar.gz",
         ],
     )
+
+    # Can we build it from source?
+    http_archive(
+        name = "swc-project_swc",
+        build_file = "//swc:BUILD.swc",
+        sha256 = "6ee3445ebaad503f0ba7ee6eff15eb9f4521cadaa53b937b4bd3915683c1d311",
+        strip_prefix = "swc-b87e3b0d4f46e6aea1ee7745f0bb3d129ef12b9c",
+        urls = ["https://github.com/swc-project/swc/archive/b87e3b0d4f46e6aea1ee7745f0bb3d129ef12b9c.zip"],
+    )
+
+    http_archive(
+        name = "rules_rust",
+        sha256 = "7fb9b4fe1a6fb4341bdf7c623e619460ecc0f52d5061cc56abc750111fba8a87",
+        urls = [
+            "https://mirror.bazel.build/github.com/bazelbuild/rules_rust/releases/download/0.7.0/rules_rust-v0.7.0.tar.gz",
+            "https://github.com/bazelbuild/rules_rust/releases/download/0.7.0/rules_rust-v0.7.0.tar.gz",
+        ],
+    )
