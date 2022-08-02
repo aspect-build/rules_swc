@@ -2,6 +2,8 @@
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_file_to_bin_action", "copy_files_to_bin_actions")
+load("@aspect_rules_js//js:libs.bzl", "js_lib_helpers")
+load("@aspect_rules_js//js:providers.bzl", "js_info")
 
 _attrs = {
     "srcs": attr.label_list(
@@ -20,10 +22,7 @@ _attrs = {
     "output_dir": attr.bool(
         doc = "whether to produce a directory output rather than individual files",
     ),
-    "data": attr.label_list(
-        doc = "runtime dependencies propagated to binaries that depend on this",
-        allow_files = True,
-    ),
+    "data": js_lib_helpers.JS_LIBRARY_DATA_ATTR,
     "swcrc": attr.label(
         doc = "label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc",
         allow_single_file = True,
@@ -72,7 +71,7 @@ def _calculate_js_outs(srcs, out_dir = None):
             if paths.split_extension(src)[-1] == ".js":
                 js_srcs.append(src)
         if len(js_srcs) > 0:
-            fail("Detected swc rule with srcs=[{}, ...] and out_dir=None. Please set out_dir when compiling .js files.".format(', '.join(js_srcs[:3])))
+            fail("Detected swc rule with srcs=[{}, ...] and out_dir=None. Please set out_dir when compiling .js files.".format(", ".join(js_srcs[:3])))
 
     js_outs = [paths.replace_extension(f, ".js") for f in srcs if _is_supported_src(f)]
     if out_dir != None:
@@ -86,7 +85,6 @@ def _calculate_map_outs(srcs, source_maps):
     return [paths.replace_extension(f, ".js.map") for f in srcs if _is_supported_src(f)]
 
 def _impl(ctx):
-    outputs = []
     binding = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.binding
     args = ctx.actions.args()
 
@@ -94,17 +92,18 @@ def _impl(ctx):
     args.add_all(ctx.attr.args)
     args.add_all(["--source-maps", ctx.attr.source_maps])
 
+    output_sources = []
+
     if ctx.attr.output_dir:
         if len(ctx.attr.srcs) != 1:
             fail("Under output_dir, there must be a single entry in srcs")
         if not ctx.files.srcs[0].is_directory:
             fail("Under output_dir, the srcs must be directories, not files")
-        out = ctx.actions.declare_directory(ctx.label.name)
-        outputs.append(out)
+        output_dir = ctx.actions.declare_directory(ctx.label.name)
         args.add_all([
             ctx.files.srcs[0].short_path,
             "--out-dir",
-            out.short_path,
+            output_dir.short_path,
             "--no-swcrc",
             "-q",
         ])
@@ -112,7 +111,7 @@ def _impl(ctx):
         ctx.actions.run(
             inputs = copy_files_to_bin_actions(ctx, ctx.files.srcs) + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files,
             arguments = [args],
-            outputs = [out],
+            outputs = [output_dir],
             env = {
                 # Our patch for @swc/core uses this environment variable to locate the rust binding
                 "SWC_BINARY_PATH": "../../../" + binding,
@@ -122,6 +121,7 @@ def _impl(ctx):
             progress_message = "Transpiling with swc %s" % ctx.label,
         )
 
+        output_sources.append(output_dir)
     else:
         srcs = [_relative_to_package(src.path, ctx) for src in ctx.files.srcs]
 
@@ -133,6 +133,7 @@ def _impl(ctx):
             map_outs = ctx.outputs.map_outs
         else:
             map_outs = _declare_outputs(ctx, _calculate_map_outs(srcs, ctx.attr.source_maps))
+        outputs = []
         outputs.extend(js_outs)
         outputs.extend(map_outs)
         for i, src in enumerate(ctx.files.srcs):
@@ -140,9 +141,9 @@ def _impl(ctx):
 
             js_out = js_outs[i]
             inputs = [copy_file_to_bin_action(ctx, src)] + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files
-            outs = [js_out]
+            outputs = [js_out]
             if ctx.attr.source_maps in ["true", "both"]:
-                outs.append(map_outs[i])
+                outputs.append(map_outs[i])
 
             # Pass in the swcrc config if it is set
             if ctx.file.swcrc:
@@ -166,7 +167,7 @@ def _impl(ctx):
             ctx.actions.run(
                 inputs = inputs,
                 arguments = [args, src_args],
-                outputs = outs,
+                outputs = outputs,
                 env = {
                     # Our patch for @swc/core uses this environment variable to locate the rust binding
                     "SWC_BINARY_PATH": "../../../" + binding,
@@ -180,18 +181,49 @@ def _impl(ctx):
                 ),
             )
 
-    # See https://docs.bazel.build/versions/main/skylark/rules.html#runfiles
-    runfiles = ctx.runfiles(files = outputs + ctx.files.data)
-    runfiles = runfiles.merge_all([d[DefaultInfo].default_runfiles for d in ctx.attr.data])
+            output_sources.extend(outputs)
 
-    providers = [
+    transitive_sources = js_lib_helpers.gather_transitive_sources(
+        sources = output_sources,
+        targets = ctx.attr.srcs,
+    )
+
+    transitive_declarations = js_lib_helpers.gather_transitive_declarations(
+        declarations = [],
+        targets = ctx.attr.srcs,
+    )
+
+    npm_linked_packages = js_lib_helpers.gather_npm_linked_packages(
+        srcs = ctx.attr.srcs,
+        deps = [],
+    )
+
+    npm_package_stores = js_lib_helpers.gather_npm_package_stores(
+        targets = ctx.attr.data,
+    )
+
+    runfiles = js_lib_helpers.gather_runfiles(
+        ctx = ctx,
+        sources = transitive_sources,
+        data = ctx.attr.data,
+        deps = ctx.attr.srcs,
+    )
+
+    return [
+        js_info(
+            npm_linked_packages = npm_linked_packages.direct,
+            npm_package_stores = npm_package_stores.direct,
+            sources = output_sources,
+            transitive_declarations = transitive_declarations,
+            transitive_npm_linked_packages = npm_linked_packages.transitive,
+            transitive_npm_package_stores = npm_package_stores.transitive,
+            transitive_sources = transitive_sources,
+        ),
         DefaultInfo(
-            files = depset(outputs),
+            files = depset(output_sources),
             runfiles = runfiles,
         ),
     ]
-
-    return providers
 
 swc = struct(
     implementation = _impl,
