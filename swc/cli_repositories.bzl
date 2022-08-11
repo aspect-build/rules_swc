@@ -78,14 +78,14 @@ def npm_repositories():
             "commander": "7.2.0",
             "fast-glob": "3.2.11",
             "slash": "3.0.0",
-            "source-map": "0.7.3",
+            "source-map": "0.7.4",
         },
         transitive_closure = {
             "@swc/cli": ["0.1.57"],
             "commander": ["7.2.0"],
             "fast-glob": ["3.2.11"],
             "slash": ["3.0.0"],
-            "source-map": ["0.7.3"],
+            "source-map": ["0.7.4"],
             "@nodelib/fs.stat": ["2.0.5"],
             "@nodelib/fs.walk": ["1.2.8"],
             "glob-parent": ["5.1.2"],
@@ -242,7 +242,7 @@ def npm_repositories():
         package = "is-extglob",
         version = "2.1.1",
         lifecycle_hooks_no_sandbox = True,
-        integrity = "sha1-qIwCU1eR8C7TfHahueqXc8gz+MI=",
+        integrity = "sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==",
         transitive_closure = {
             "is-extglob": ["2.1.1"],
         },
@@ -392,16 +392,16 @@ def npm_repositories():
     )
 
     npm_import(
-        name = "swc_cli__source-map__0.7.3",
+        name = "swc_cli__source-map__0.7.4",
         root_package = "swc",
         link_workspace = "aspect_rules_swc",
         link_packages = {},
         package = "source-map",
-        version = "0.7.3",
+        version = "0.7.4",
         lifecycle_hooks_no_sandbox = True,
-        integrity = "sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==",
+        integrity = "sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==",
         transitive_closure = {
-            "source-map": ["0.7.3"],
+            "source-map": ["0.7.4"],
         },
     )
 
