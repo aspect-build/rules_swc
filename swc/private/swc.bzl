@@ -183,8 +183,10 @@ def _impl(ctx):
 
             output_sources.extend(outputs)
 
+    output_sources_depset = depset(output_sources)
+
     transitive_sources = js_lib_helpers.gather_transitive_sources(
-        sources = output_sources,
+        sources = output_sources_depset,
         targets = ctx.attr.srcs,
     )
 
@@ -198,7 +200,7 @@ def _impl(ctx):
         deps = [],
     )
 
-    npm_package_stores = js_lib_helpers.gather_npm_package_stores(
+    npm_package_store_deps = js_lib_helpers.gather_npm_package_store_deps(
         targets = ctx.attr.data,
     )
 
@@ -211,16 +213,17 @@ def _impl(ctx):
 
     return [
         js_info(
+            npm_linked_package_files = npm_linked_packages.direct_files,
             npm_linked_packages = npm_linked_packages.direct,
-            npm_package_stores = npm_package_stores.direct,
-            sources = output_sources,
+            npm_package_store_deps = npm_package_store_deps,
+            sources = output_sources_depset,
             transitive_declarations = transitive_declarations,
+            transitive_npm_linked_package_files = npm_linked_packages.transitive_files,
             transitive_npm_linked_packages = npm_linked_packages.transitive,
-            transitive_npm_package_stores = npm_package_stores.transitive,
             transitive_sources = transitive_sources,
         ),
         DefaultInfo(
-            files = depset(output_sources),
+            files = output_sources_depset,
             runfiles = runfiles,
         ),
     ]
