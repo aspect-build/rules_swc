@@ -14,11 +14,19 @@ echo "Fetching release list from GitHub..."
     | jq -f $SCRIPT_DIR/filter.jq
 ) > $RAW
 
-# Replace URLs with their hash
-# shasum -b -a 384 $FILE | awk '{ print $1 }' | xxd -r -p | base64
-# sed -i.bak 's#https://github.com/.*/.node##e' $SCRIPT_DIR/../swc/private/versions.bzl
+cat $RAW
 
 echo "Fetching binaries to calculate their SHA-384..."
+
+# sedd uses gnu-sed on darwin (https://formulae.brew.sh/formula/gnu-sed)
+# install on macos with `brew install gnu-sed`
+sedd () {
+  case $(uname) in
+    Darwin*) gsed "$@" ;;
+    *) sed "$@" ;;
+  esac
+}
+
 # FIXME: this is very slow, but only the md5 hash is available from S3 in a HEAD request, and bazel doesn't accept that
 # Unsupported checksum algorithm: 'https://github.com/swc-project/swc/releases/download/v1.2.118/swc.linux-x64-gnu.node' (expected SHA-1, SHA-256, SHA-384, or SHA-512) at /home/alexeagle/Projects/rules_swc/WORKSPACE:17:24
-sed -r 's#\s+(.*): "(https://github.com.*\.node)#echo -n "    \\"\1\\": \\"\"sha384-$(curl --silent -L "\2" | shasum -b -a 384 | awk "{ print $1 }" | xxd -r -p | base64)\\""#e' < $RAW # | tee $SCRIPT_DIR/../swc/private/versions.bzl
+sedd -r 's#\s+(.*): "(https://github.com.*\.node)#echo "    \\"\1\\": \\"\"sha384-$(curl --silent -L "\2" | shasum -b -a 384 | awk "{ print $1 }" | xxd -r -p | base64)\\""#e' < $RAW # | tee $SCRIPT_DIR/../swc/private/versions.bzl
