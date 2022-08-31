@@ -85,14 +85,18 @@ def _calculate_map_outs(srcs, source_maps):
     return [paths.replace_extension(f, ".js.map") for f in srcs if _is_supported_src(f)]
 
 def _impl(ctx):
-    binding = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.binding
+    swcinfo = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo
+    env = {
+        # Our patch for @swc/core uses this environment variable to locate the rust binding
+        "SWC_BINARY_PATH": "../../../" + swcinfo.binding,
+        "BAZEL_BINDIR": ctx.bin_dir.path,
+    }
+
     args = ctx.actions.args()
 
     # Add user specified arguments *before* rule supplied arguments
     args.add_all(ctx.attr.args)
-    args.add_all(["--source-maps", ctx.attr.source_maps])
-
-    output_sources = []
+    args.add("--source-maps", ctx.attr.source_maps)
 
     if ctx.attr.output_dir:
         if len(ctx.attr.srcs) != 1:
@@ -100,6 +104,9 @@ def _impl(ctx):
         if not ctx.files.srcs[0].is_directory:
             fail("Under output_dir, the srcs must be directories, not files")
         output_dir = ctx.actions.declare_directory(ctx.label.name)
+
+        output_sources = [output_dir]
+
         args.add_all([
             ctx.files.srcs[0].short_path,
             "--out-dir",
@@ -109,19 +116,13 @@ def _impl(ctx):
         ])
 
         ctx.actions.run(
-            inputs = copy_files_to_bin_actions(ctx, ctx.files.srcs) + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files,
+            inputs = copy_files_to_bin_actions(ctx, ctx.files.srcs) + swcinfo.tool_files,
             arguments = [args],
             outputs = [output_dir],
-            env = {
-                # Our patch for @swc/core uses this environment variable to locate the rust binding
-                "SWC_BINARY_PATH": "../../../" + binding,
-                "BAZEL_BINDIR": ctx.bin_dir.path,
-            },
+            env = env,
             executable = ctx.executable.swc_cli,
-            progress_message = "Transpiling with swc %s" % ctx.label,
+            progress_message = "Transpiling with swc %{label}",
         )
-
-        output_sources.append(output_dir)
     else:
         srcs = [_relative_to_package(src.path, ctx) for src in ctx.files.srcs]
 
@@ -133,26 +134,23 @@ def _impl(ctx):
             map_outs = ctx.outputs.map_outs
         else:
             map_outs = _declare_outputs(ctx, _calculate_map_outs(srcs, ctx.attr.source_maps))
-        outputs = []
-        outputs.extend(js_outs)
-        outputs.extend(map_outs)
+
+        output_sources = js_outs + map_outs
+
         for i, src in enumerate(ctx.files.srcs):
             src_args = ctx.actions.args()
 
             js_out = js_outs[i]
-            inputs = [copy_file_to_bin_action(ctx, src)] + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files
+            inputs = [copy_file_to_bin_action(ctx, src)] + swcinfo.tool_files
             outputs = [js_out]
-            if ctx.attr.source_maps in ["true", "both"]:
+            if map_outs:
                 outputs.append(map_outs[i])
 
             # Pass in the swcrc config if it is set
             if ctx.file.swcrc:
                 swcrc_path = ctx.file.swcrc.short_path
                 swcrc_directory = paths.dirname(swcrc_path)
-                src_args.add_all([
-                    "--config-file",
-                    swcrc_path,
-                ])
+                src_args.add("--config-file", swcrc_path)
                 inputs.append(copy_file_to_bin_action(ctx, ctx.file.swcrc))
             else:
                 src_args.add("--no-swcrc")
@@ -168,20 +166,11 @@ def _impl(ctx):
                 inputs = inputs,
                 arguments = [args, src_args],
                 outputs = outputs,
-                env = {
-                    # Our patch for @swc/core uses this environment variable to locate the rust binding
-                    "SWC_BINARY_PATH": "../../../" + binding,
-                    "BAZEL_BINDIR": ctx.bin_dir.path,
-                },
+                env = env,
                 executable = ctx.executable.swc_cli,
                 mnemonic = "SWCTranspile",
-                progress_message = "Transpiling with swc %s [swc %s]" % (
-                    ctx.label,
-                    src.short_path,
-                ),
+                progress_message = "Transpiling with swc %{label} [swc %{input}]",
             )
-
-            output_sources.extend(outputs)
 
     output_sources_depset = depset(output_sources)
 
