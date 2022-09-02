@@ -26,6 +26,13 @@ def _swc_repo_impl(repository_ctx):
         None,
     )
     if not integrity:
+        if repository_ctx.attr.swc_version not in TOOL_VERSIONS.keys():
+            fail("""\
+swc version {} does not have hashes mirrored in rules_swc, please either
+    - Set the integrity_hashes attribute to a dictionary of platform/hash
+    - Choose one of the mirrored versions: {}
+""".format(repository_ctx.attr.swc_version, TOOL_VERSIONS.keys()))
+
         integrity = TOOL_VERSIONS[repository_ctx.attr.swc_version][repository_ctx.attr.platform]
     bin = "package/swc{ext}".format(ext = ".exe" if False else "")  # FIXME: check for windows
 

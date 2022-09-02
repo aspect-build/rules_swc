@@ -3,6 +3,7 @@
 
 set -o errexit -o nounset -o pipefail
 
+
 pkgs=$(curl --silent https://registry.npmjs.org/@swc/core/latest | jq --raw-output '.dependencies | keys[]')
 version=$(curl --silent https://registry.npmjs.org/@swc/core/latest | jq --raw-output '.version')
 echo "    \"v$version\": {"
