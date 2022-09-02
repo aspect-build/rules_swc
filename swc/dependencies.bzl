@@ -1,5 +1,4 @@
 """Starlark helper to fetch rules_swc dependencies.
-
 Should be replaced by bzlmod for users of Bazel 6.0 and above.
 """
 
@@ -30,4 +29,11 @@ def rules_swc_dependencies():
         name = "rules_nodejs",
         sha256 = "08337d4fffc78f7fe648a93be12ea2fc4e8eb9795a4e6aa48595b66b34555626",
         urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.0/rules_nodejs-core-5.8.0.tar.gz"],
+    )
+
+    http_archive(
+        name = "socat",
+        build_file = "socat.BUILD",
+        sha256 = "d697245144731423ddbbceacabbd29447089ea223e9a439b28f9ff90d0dd216e",
+        urls = ["http://www.dest-unreach.org/socat/download/socat-1.7.4.3.tar.gz"],
     )

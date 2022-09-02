@@ -11,7 +11,14 @@ _attrs = {
         mandatory = True,
     ),
     "args": attr.string_list(
-        doc = "additional arguments to pass to swc cli, see https://swc.rs/docs/usage/cli",
+        doc = """Additional arguments to pass to swcx cli (NOT swc!).
+        
+        NB: this is not the same as the CLI arguments for @swc/cli npm package.
+        For performance, rules_swc does not call a Node.js program wrapping the swc rust binding.
+        Instead, we directly spawn the (somewhat experimental) native Rust binary shipped inside the
+        @swc/core npm package, which the swc project calls "swcx"
+        Tracking issue for feature parity: https://github.com/swc-project/swc/issues/4017
+        """,
     ),
     "source_maps": attr.string(
         doc = "see https://swc.rs/docs/usage/cli#--source-maps--s",
@@ -25,7 +32,6 @@ _attrs = {
     "swcrc": attr.label(
         doc = "label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc",
         allow_single_file = True,
-        # mandatory = True,
     ),
     "out_dir": attr.string(
         doc = "base directory for output files",
@@ -121,7 +127,9 @@ def _impl(ctx):
 
     # Add user specified arguments *before* rule supplied arguments
     args.add_all(ctx.attr.args)
-    args.add_all(["--source-maps", ctx.attr.source_maps])
+
+    # FIXME: swcx ignores this, it MUST be in the config file...
+    # args.add_all(["--source-maps", ctx.attr.source_maps])
 
     if ctx.attr.output_dir:
         if len(ctx.attr.srcs) != 1:
@@ -133,6 +141,7 @@ def _impl(ctx):
         output_sources = [output_dir]
 
         args.add_all([
+            ctx.files.srcs[0].short_path,
             "--out-dir",
             output_dir.path,
             # There is no longer such an option - the rust CLI doesn't go looking for it though
@@ -145,7 +154,22 @@ def _impl(ctx):
             inputs = ctx.files.srcs + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files,
             arguments = [args],
             outputs = output_sources,
-            command = binary + " $@ < " + ctx.files.srcs[0].path,
+
+            # command = "pwd > {}/help".format(output_dir.path), # /shared/cache/bazel/user_base/09a27d1eeea3b44d1580773090924b4d/sandbox/linux-sandbox/90/execroot/aspect_rules_swc
+            # command = "socat - SYSTEM:\"pwd > {}/help\",pty".format(output_dir.path),
+
+            #command = "socat - SYSTEM:\"pwd; ls --color\",pty,setsid,ctty > {}/help".format(output_dir.path),
+            # command = "(pwd; ls) > {}/help".format(output_dir.path),
+            command = "socat - SYSTEM:\"{} compile {} --out-dir {}\",pty".format(binary, ctx.files.srcs[0].path, output_dir.path),
+            #command = "python -c 'import os\n_, slave = os.openpty()\nsubprocess.run(\"{} compile {} --out-dir {}\", check=True, shell=True, stdin=slave, stdout=subprocess.PIPE)'".format(binary, ctx.files.srcs[0].path, output_dir.path),
+            #command = "python -c 'import os\n_, slave = os.openpty()'".format(binary, ctx.files.srcs[0].path, output_dir.path),
+
+            # /bin/bash -c 'socat - EXEC:"external/default_swc_linux-x64-gnu/package/swc --help",pty,setsid,ctty 2>&1 >bazel-out/k8-fastbuild/bin/examples/directory/minify/help' '' compile examples/directory/split_app --out-dir bazel-out/k8-fastbuild/bin/examples/directory/minify
+            # command = "socat - EXEC:\"{0} --help\",pty,setsid,ctty 2>&1 >{2}/help".format(binary, ctx.files.srcs[0].short_path, output_dir.path),
+
+            #command = binary + " $@",
+            #use_default_shell_env = True,
+            mnemonic = "SWCTranspile",
             progress_message = "Transpiling with swc %s" % ctx.label,
         )
     else:
@@ -186,7 +210,7 @@ def _impl(ctx):
                 inputs.append(ctx.file.swcrc)
 
             src_args.add_all([
-                "--out-file",
+                " --out-file",
                 js_out.path,
             ])
 
