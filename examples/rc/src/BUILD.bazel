@@ -1,5 +1,5 @@
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
-load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 
 # Runs `swc in.ts > ../../bazel-bin/examples/simple/in.js`
 # You can run `bazel build --subcommands //examples/simple:transpile`
@@ -11,14 +11,10 @@ swc(
     swcrc = "//examples/rc",
 )
 
-diff_test(
+write_source_files(
     name = "test",
-    file1 = "in.js",
-    file2 = "expected.js",
-)
-
-diff_test(
-    name = "test_map",
-    file1 = "in.js.map",
-    file2 = "expected.js.map",
+    files = {
+        "expected.js": ":in.js",
+        "expected.js.map": ":in.js.map",
+    },
 )

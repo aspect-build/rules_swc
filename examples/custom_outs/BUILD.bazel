@@ -1,5 +1,5 @@
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc_transpiler")
-load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 
 [
     swc_transpiler(
@@ -17,14 +17,10 @@ load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
     ]
 ]
 
-diff_test(
-    name = "test_commonjs",
-    file1 = "commonjs/out.cjs",
-    file2 = "expected.cjs",
-)
-
-diff_test(
-    name = "test_es6",
-    file1 = "es6/out.js",
-    file2 = "expected.js",
+write_source_files(
+    name = "tests",
+    files = {
+        "expected.cjs": ":commonjs/out.cjs",
+        "expected.js": ":es6/out.js",
+    },
 )
