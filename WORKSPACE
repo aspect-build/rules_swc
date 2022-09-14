@@ -20,6 +20,10 @@ swc_register_toolchains(
     swc_version = "v1.2.168",
 )
 
+load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
+
+aspect_bazel_lib_dependencies(override_local_config_platform = True)
+
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 
 nodejs_register_toolchains(
