@@ -40,7 +40,8 @@ def rules_swc_dependencies():
     )
 
     http_archive(
-        name = "rules_nodejs",
-        sha256 = "5aef09ed3279aa01d5c928e3beb248f9ad32dde6aafe6373a8c994c3ce643064",
-        urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.5.3/rules_nodejs-core-5.5.3.tar.gz"],
+        name = "aspect_rules_js",
+        sha256 = "db9f446752fe4100320cf8487e8fd476b9af0adf6b99b601bcfd70b289bb0598",
+        strip_prefix = "rules_js-1.1.2",
+        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.1.2.tar.gz",
     )
