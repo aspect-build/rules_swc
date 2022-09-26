@@ -1,6 +1,21 @@
 "Mirror of release info"
 
 TOOL_VERSIONS = {
+    "v1.3.3": {
+        "android-arm-eabi": "sha384-kM96Q3bMAsFaPIUM8lIh1s4HWtw9xKsEptqDpeT0HxrFgDGrDdBDWMdWZhhEg446",
+        "android-arm64": "sha384-mVBw2fHbUb5oibjz53PUPZbkPagQbMiqzghiI4Eg2E+UySbXZuTeEg1NnZV2bS9f",
+        "darwin-arm64": "sha384-Zc8/YNcpV2O+rLKSxLuUb39SyobTIKshA+qa59Ivogj/v+9YeAOTJvz/aduHA7DK",
+        "darwin-x64": "sha384-ZpHj2XNe61hFraONn2S5TIvq8pQU3vS6Q1fNYs2xc4uQ0nUgl3nGShMjI20E7Q4A",
+        "freebsd-x64": "sha384-2d2/PTNgYNRdfLvDHpIfJb6VEsozW2whlb3QIAKrnjMe9BekTlzEVp1es8WtKjZu",
+        "linux-arm-gnueabihf": "sha384-XRpa1ugucj0dJg7r3hG3uSQKbcZ5Jp8JABCttv/zfLMH0nel4Lae0d38YQjxb8dy",
+        "linux-arm64-gnu": "sha384-X9j2agciPQ8NpZw4z721DSMmGG03KTElVAuRjSidZbeJn4ZusUxRrZpxNWSAC+yj",
+        "linux-arm64-musl": "sha384-o0UCgxg4E5PLkTtqtgzHDeX9Oi7p3ZFAhJtnL2DBrn9KSrlaKjwyH6GLtNCxkHop",
+        "linux-x64-gnu": "sha384-XCuaAGs3W2Pjh3gVzGkwTp4MXx32yzoN3U5AUkiFmJwhPVw1QwBbJOKmTDphHQYk",
+        "linux-x64-musl": "sha384-T1Ub2wweNt23BqmtYpdeq+K2K932skoHxEX2sD8YRSm0g2ijwzYd37CGnbIs+MZj",
+        "win32-arm64-msvc": "sha384-jqbNj3f0Wf+XswGuIY+vng1qJu7Acyq1iOGJf4xU1QcRyhQ4uw/ONXITBZiQDSXE",
+        "win32-ia32-msvc": "sha384-pQ76wXrOP/IJ8mzslyc+cINpF1ChS8Lzc7w1tUIt0I6mqveE8ay1id0SYIQa/RI4",
+        "win32-x64-msvc": "sha384-32Tm7b5zaZUgiI7akdR9NS3uG98GfBAI86YEx43bInXyAXqkP/NFEO+sG+EOOOY5",
+    },
     "v1.2.241": {
         "android-arm-eabi": "sha384-sbYFwXf/ODwjpSXWB0CSnfrtNxKXr9g7L1y+IdgivpWqz/XVNttrtaP6mFc05Xo/",
         "android-arm64": "sha384-gGGZTW2mksz+9G9VWxyPTpTJEx/yPxCmMZ0VRZSCHW2CjhF3Wy8mfA2Lq6EvpzEv",
@@ -14,7 +29,7 @@ TOOL_VERSIONS = {
         "linux-x64-musl": "sha384-vHka+4h5y9T6v0Tr6rg4QDK22DXF5pcM2mO90H2SRni6Lk3VVZkK+bcnV3mBiJQh",
         "win32-arm64-msvc": "sha384-Q+CuDdX8k1vCU+O/vu5tEaLuRaRs+WSqDaKoDoH4pTdr6JecAOPBXJhHu50lgfeD",
         "win32-ia32-msvc": "sha384-+sLQw0nV10ez5Y11jBUoJg3l5f30fmNjfUitG1+9jaYXW89I04BcmKDy0KCtkrKx",
-        "win32-x64-msvc": "sha384-YZNKiTbRusW/ZMcu0ur0OmoU+2lr4pbuM88ah7NuawwCNQrMOyrL9cPx069dpBwL"
+        "win32-x64-msvc": "sha384-YZNKiTbRusW/ZMcu0ur0OmoU+2lr4pbuM88ah7NuawwCNQrMOyrL9cPx069dpBwL",
     },
     "v1.2.239": {
         "android-arm-eabi": "sha384-zN5B3ClOZk1DCXDbKhCprqPAfhEIypMjGKYvP34R//oLT461Bp1U8SVamXJjY/Tq",
@@ -29,7 +44,7 @@ TOOL_VERSIONS = {
         "linux-x64-musl": "sha384-RRJWDq4dZxIGo3YJEDSdj4BPzjhqB1j1YjJge27pUFh8+NbElQH/su8ZAqOVtX6w",
         "win32-arm64-msvc": "sha384-Gf5lz1GVCMF+5btFqvxMqy5S52wqJoPMkpnC/BZa4UIey0xPpCc7Ss3gSh67Lxdo",
         "win32-ia32-msvc": "sha384-CaRgeh4ayRyaqAbY3Y/IcJy7NPQLEbMLqiuPlOQDFNJasm6uMOJS7PJXbxrQ62Dy",
-        "win32-x64-msvc": "sha384-0Xf8eqdBc7TaShmTSiQT7/e22JSbHPNRur2A4h4Q9nDbHFeA7+PHVdvFtmk8pOAW"
+        "win32-x64-msvc": "sha384-0Xf8eqdBc7TaShmTSiQT7/e22JSbHPNRur2A4h4Q9nDbHFeA7+PHVdvFtmk8pOAW",
     },
     "v1.2.185": {
         "android-arm-eabi": "sha384-a9NRmV90j+tXV7xT3+LK+UBcUgKMVRp9k4yz29hKi7VRqwIQxuL3aKAcyP1mXCly",
