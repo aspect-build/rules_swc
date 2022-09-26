@@ -7,7 +7,7 @@ load("//swc/private:versions.bzl", "TOOL_VERSIONS")
 
 def _smoke_test_impl(ctx):
     env = unittest.begin(ctx)
-    asserts.equals(env, "v1.2.241", TOOL_VERSIONS.keys()[0])
+    asserts.equals(env, "v1.3.3", TOOL_VERSIONS.keys()[0])
     return unittest.end(env)
 
 # The unittest library requires that we export the test cases as named test rules,
