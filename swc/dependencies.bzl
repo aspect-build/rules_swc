@@ -26,10 +26,12 @@ def rules_swc_dependencies():
     )
 
     http_archive(
-        name = "aspect_bazel_lib",
-        sha256 = "a12740bcc1a1f47de850ff84f10d9eb4c930792f69309feb986fdbeb69f83cfe",
-        strip_prefix = "bazel-lib-1.11.8",
-        url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.11.8.tar.gz",
+        name = "bazel_skylib",
+        urls = [
+            "https://github.com/bazelbuild/bazel-skylib/releases/download/1.2.1/bazel-skylib-1.2.1.tar.gz",
+            "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.2.1/bazel-skylib-1.2.1.tar.gz",
+        ],
+        sha256 = "f7be3474d42aae265405a592bb7da8e171919d74c16f082a5457840f06054728",
     )
 
     http_archive(
