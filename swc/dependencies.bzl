@@ -33,10 +33,10 @@ def rules_swc_dependencies():
     )
 
     http_archive(
-        name = "aspect_rules_js",
-        sha256 = "db9f446752fe4100320cf8487e8fd476b9af0adf6b99b601bcfd70b289bb0598",
-        strip_prefix = "rules_js-1.1.2",
-        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.1.2.tar.gz",
+        name = "aspect_bazel_lib",
+        sha256 = "79381b0975ba7d2d5653239e5bab12cf54d89b10217fe771b8edd95047a2e44b",
+        strip_prefix = "bazel-lib-1.12.1",
+        url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.12.1.tar.gz",
     )
 
     http_archive(
