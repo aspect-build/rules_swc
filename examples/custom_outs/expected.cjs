@@ -2,9 +2,13 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.a = void 0;
+Object.defineProperty(exports, "a", {
+    enumerable: true,
+    get: function() {
+        return a;
+    }
+});
 var a = "a";
-exports.a = a;
 
 
 //# sourceMappingURL=out.cjs.map

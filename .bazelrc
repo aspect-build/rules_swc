@@ -3,9 +3,6 @@
 # Settings that apply only to CI are in .github/workflows/ci.bazelrc
 
 build --enable_runfiles
-# Workaround for https://github.com/swc-project/swc/issues/4057
-# Turn off sandboxing so SWC doesn't observe symlinked inputs.
-build --modify_execution_info=SWCTranspile=+no-sandbox
 
 # Load any settings specific to the current user.
 # .bazelrc.user should appear in .gitignore so that settings are not shared with team members
