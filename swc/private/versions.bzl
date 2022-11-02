@@ -1,5 +1,6 @@
 "Mirror of release info"
 
+# Versions should be descending order so TOOL_VERSIONS[0] is the latest version.
 TOOL_VERSIONS = {
     "v1.3.3": {
         "android-arm-eabi": "sha384-kM96Q3bMAsFaPIUM8lIh1s4HWtw9xKsEptqDpeT0HxrFgDGrDdBDWMdWZhhEg446",
