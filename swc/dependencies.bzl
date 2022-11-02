@@ -3,11 +3,7 @@
 Should be replaced by bzlmod for users of Bazel 6.0 and above.
 """
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", _http_archive = "http_archive")
-load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
-
-def http_archive(name, **kwargs):
-    maybe(_http_archive, name = name, **kwargs)
+load("//swc/private:maybe.bzl", http_archive = "maybe_http_archive")
 
 # WARNING: any changes in this function may be BREAKING CHANGES for users
 # because we'll fetch a dependency which may be different from one that
@@ -18,29 +14,26 @@ def http_archive(name, **kwargs):
 def rules_swc_dependencies():
     http_archive(
         name = "bazel_skylib",
-        urls = [
-            "https://github.com/bazelbuild/bazel-skylib/releases/download/1.2.1/bazel-skylib-1.2.1.tar.gz",
-            "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.2.1/bazel-skylib-1.2.1.tar.gz",
-        ],
-        sha256 = "f7be3474d42aae265405a592bb7da8e171919d74c16f082a5457840f06054728",
+        sha256 = "74d544d96f4a5bb630d465ca8bbcfe231e3594e5aae57e1edbf17a6eb3ca2506",
+        urls = ["https://github.com/bazelbuild/bazel-skylib/releases/download/1.3.0/bazel-skylib-1.3.0.tar.gz"],
     )
 
     http_archive(
         name = "aspect_bazel_lib",
-        sha256 = "79381b0975ba7d2d5653239e5bab12cf54d89b10217fe771b8edd95047a2e44b",
-        strip_prefix = "bazel-lib-1.12.1",
-        url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.12.1.tar.gz",
+        sha256 = "eae670935704ce5f9d050b2c23d426b4ae453458830eebdaac1f11a6a9da150b",
+        strip_prefix = "bazel-lib-1.15.0",
+        url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.15.0.tar.gz",
     )
 
     http_archive(
         name = "aspect_rules_js",
-        sha256 = "db9f446752fe4100320cf8487e8fd476b9af0adf6b99b601bcfd70b289bb0598",
-        strip_prefix = "rules_js-1.1.2",
-        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.1.2.tar.gz",
+        sha256 = "02da7c546cd70751b7375b7e95f7298709f5a33fda2863c2b68dac7745bca66d",
+        strip_prefix = "rules_js-1.6.4",
+        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.6.4.tar.gz",
     )
 
     http_archive(
         name = "rules_nodejs",
-        sha256 = "5aef09ed3279aa01d5c928e3beb248f9ad32dde6aafe6373a8c994c3ce643064",
-        urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.5.3/rules_nodejs-core-5.5.3.tar.gz"],
+        sha256 = "50adf0b0ff6fc77d6909a790df02eefbbb3bc2b154ece3406361dda49607a7bd",
+        urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.7.1/rules_nodejs-core-5.7.1.tar.gz"],
     )
