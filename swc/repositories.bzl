@@ -89,6 +89,7 @@ def swc_register_toolchains(name, node_repository = "nodejs", register = True, *
     npm_translate_lock(
         name = "swc_cli",
         pnpm_lock = "@aspect_rules_swc//swc:pnpm-lock.yaml",
+        link_workspace = "aspect_rules_swc",
     )
 
     # We ALSO re-declare the results of the previous npm_translate_lock
