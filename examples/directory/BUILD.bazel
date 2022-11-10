@@ -19,6 +19,7 @@ swc(
     name = "minify",
     srcs = ["split_app"],
     output_dir = True,
+    source_maps = True,
 )
 
 sh_test(
