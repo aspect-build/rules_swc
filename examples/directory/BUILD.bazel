@@ -23,8 +23,31 @@ swc(
 )
 
 sh_test(
-    name = "test",
+    name = "minify_test",
     srcs = ["test.sh"],
+    args = [
+        "split_app",
+        "minify",
+    ],
     data = ["minify"],
+    deps = ["@bazel_tools//tools/bash/runfiles"],
+)
+
+swc(
+    name = "out_dir",
+    srcs = ["split_app"],
+    out_dir = "test-out_dir",
+    output_dir = True,
+    source_maps = True,
+)
+
+sh_test(
+    name = "out_dir_test",
+    srcs = ["test.sh"],
+    args = [
+        "split_app",
+        "test-out_dir",
+    ],
+    data = ["out_dir"],
     deps = ["@bazel_tools//tools/bash/runfiles"],
 )
