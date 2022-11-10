@@ -79,10 +79,15 @@ def _calculate_js_outs(srcs, out_dir = None):
 
     return js_outs
 
-def _calculate_map_outs(srcs, source_maps):
+def _calculate_map_outs(srcs, out_dir, source_maps):
     if source_maps in ["false", "inline"]:
         return []
-    return [paths.replace_extension(f, ".js.map") for f in srcs if _is_supported_src(f)]
+
+    map_outs = [paths.replace_extension(f, ".js.map") for f in srcs if _is_supported_src(f)]
+    if out_dir != None:
+        map_outs = [paths.join(out_dir, f) for f in map_outs]
+
+    return map_outs
 
 def _impl(ctx):
     swcinfo = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo
@@ -133,7 +138,7 @@ def _impl(ctx):
         if len(ctx.attr.map_outs):
             map_outs = ctx.outputs.map_outs
         else:
-            map_outs = _declare_outputs(ctx, _calculate_map_outs(srcs, ctx.attr.source_maps))
+            map_outs = _declare_outputs(ctx, _calculate_map_outs(srcs, ctx.attr.out_dir, ctx.attr.source_maps))
 
         output_sources = js_outs + map_outs
 
