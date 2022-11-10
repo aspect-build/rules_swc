@@ -19,3 +19,9 @@ if ! [[ -e $in_folder/directory/split_app/file1.js ]]; then
     ls -R $in_folder
     exit 1
 fi
+
+if ! [[ -e $in_folder/directory/split_app/file2.js ]]; then
+    echo >&2 "Missing expected output file in directory"
+    ls -R $in_folder
+    exit 1
+fi
