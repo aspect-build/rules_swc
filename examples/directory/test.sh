@@ -12,27 +12,27 @@ source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
 # --- end runfiles.bash initialization v2 ---
 
 set -o errexit
-readonly in_folder=$(rlocation $TEST_WORKSPACE/$(dirname $TEST_BINARY)/minify)
+readonly in_folder=$(rlocation $TEST_WORKSPACE/$(dirname $TEST_BINARY)/$2)
 
-if ! [[ -e $in_folder/directory/split_app/file1.js ]]; then
+if ! [[ -e $in_folder/directory/$1/file1.js ]]; then
     echo >&2 "Missing expected output file in directory"
     ls -R $in_folder
     exit 1
 fi
 
-if ! [[ -e $in_folder/directory/split_app/file2.js ]]; then
+if ! [[ -e $in_folder/directory/$1/file2.js ]]; then
     echo >&2 "Missing expected output file in directory"
     ls -R $in_folder
     exit 1
 fi
 
-if ! [[ -e $in_folder/directory/split_app/file1.js.map ]]; then
+if ! [[ -e $in_folder/directory/$1/file1.js.map ]]; then
     echo >&2 "Missing expected output file in directory"
     ls -R $in_folder
     exit 1
 fi
 
-if ! [[ -e $in_folder/directory/split_app/file2.js.map ]]; then
+if ! [[ -e $in_folder/directory/$1/file2.js.map ]]; then
     echo >&2 "Missing expected output file in directory"
     ls -R $in_folder
     exit 1

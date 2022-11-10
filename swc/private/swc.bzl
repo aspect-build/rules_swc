@@ -103,7 +103,7 @@ def _impl(ctx):
             fail("Under output_dir, there must be a single entry in srcs")
         if not ctx.files.srcs[0].is_directory:
             fail("Under output_dir, the srcs must be directories, not files")
-        output_dir = ctx.actions.declare_directory(ctx.label.name)
+        output_dir = ctx.actions.declare_directory(ctx.attr.out_dir if ctx.attr.out_dir else ctx.label.name)
 
         output_sources = [output_dir]
 
