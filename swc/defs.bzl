@@ -68,7 +68,7 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
 
     if not output_dir:
         js_outs = _swc_lib.calculate_js_outs(srcs, out_dir)
-        map_outs = _swc_lib.calculate_map_outs(srcs, out_dir, source_maps)
+        map_outs = _swc_lib.calculate_map_outs(srcs, source_maps, out_dir)
 
     swc_transpiler(
         name = name,

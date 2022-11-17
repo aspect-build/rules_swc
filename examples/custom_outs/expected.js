@@ -1,4 +1,4 @@
 export var a = "a";
 
 
-//# sourceMappingURL=out.js.map
+//# sourceMappingURL=a.js.map
