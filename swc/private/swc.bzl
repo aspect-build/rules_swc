@@ -53,9 +53,6 @@ _SUPPORTED_EXTENSIONS = [".ts", ".tsx", ".jsx", ".mjs", ".cjs", ".js"]
 def _is_supported_src(src):
     return paths.split_extension(src)[-1] in _SUPPORTED_EXTENSIONS
 
-def _declare_outputs(ctx, paths):
-    return [ctx.actions.declare_file(p) for p in paths]
-
 # TODO: aspect_bazel_lib should provide this?
 def _relative_to_package(path, ctx):
     for prefix in (ctx.bin_dir.path, ctx.label.package):
@@ -63,6 +60,21 @@ def _relative_to_package(path, ctx):
         if path.startswith(prefix):
             path = path[len(prefix):]
     return path
+
+def _calculate_js_out(src, out_dir = None, js_outs = []):
+    if not _is_supported_src(src):
+        return None
+    js_out = paths.replace_extension(src, ".js")
+    if out_dir:
+        js_out = paths.join(out_dir, js_out)
+
+    # Check if a custom out was requested with a potentially different extension
+    for maybe_out in js_outs:
+        no_ext = paths.replace_extension(js_out, "")
+        if no_ext == paths.replace_extension(maybe_out, ""):
+            js_out = maybe_out
+            break
+    return js_out
 
 def _calculate_js_outs(srcs, out_dir = None):
     if out_dir == None:
@@ -73,21 +85,20 @@ def _calculate_js_outs(srcs, out_dir = None):
         if len(js_srcs) > 0:
             fail("Detected swc rule with srcs=[{}, ...] and out_dir=None. Please set out_dir when compiling .js files.".format(", ".join(js_srcs[:3])))
 
-    js_outs = [paths.replace_extension(f, ".js") for f in srcs if _is_supported_src(f)]
-    if out_dir != None:
-        js_outs = [paths.join(out_dir, f) for f in js_outs]
+    return [f2 for f2 in [_calculate_js_out(f, out_dir) for f in srcs] if f2]
 
-    return js_outs
-
-def _calculate_map_outs(srcs, out_dir, source_maps):
+def _calculate_map_out(src, source_maps, out_dir = None):
     if source_maps in ["false", "inline"]:
-        return []
+        return None
+    if not _is_supported_src(src):
+        return None
+    map_out = paths.replace_extension(src, ".js.map")
+    if out_dir:
+        map_out = paths.join(out_dir, map_out)
+    return map_out
 
-    map_outs = [paths.replace_extension(f, ".js.map") for f in srcs if _is_supported_src(f)]
-    if out_dir != None:
-        map_outs = [paths.join(out_dir, f) for f in map_outs]
-
-    return map_outs
+def _calculate_map_outs(srcs, source_maps, out_dir = None):
+    return [f2 for f2 in [_calculate_map_out(f, source_maps, out_dir) for f in srcs] if f2]
 
 def _impl(ctx):
     swcinfo = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo
@@ -129,32 +140,27 @@ def _impl(ctx):
             progress_message = "Transpiling with swc %{label}",
         )
     else:
-        srcs = [_relative_to_package(src.path, ctx) for src in ctx.files.srcs]
+        output_sources = []
 
-        if len(ctx.attr.js_outs):
-            js_outs = ctx.outputs.js_outs
-        else:
-            js_outs = _declare_outputs(ctx, _calculate_js_outs(srcs, ctx.attr.out_dir))
-        if len(ctx.attr.map_outs):
-            map_outs = ctx.outputs.map_outs
-        else:
-            map_outs = _declare_outputs(ctx, _calculate_map_outs(srcs, ctx.attr.out_dir, ctx.attr.source_maps))
-
-        output_sources = js_outs + map_outs
-
-        for i, src in enumerate(ctx.files.srcs):
-            src_args = ctx.actions.args()
-
-            js_out = js_outs[i]
+        for src in ctx.files.srcs:
             inputs = [copy_file_to_bin_action(ctx, src)] + swcinfo.tool_files
+
+            src_path = _relative_to_package(src.path, ctx)
+            js_out_path = _calculate_js_out(src_path, ctx.attr.out_dir, [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs])
+            if not js_out_path:
+                # This source file is not a supported src
+                continue
+            js_out = ctx.actions.declare_file(js_out_path)
             outputs = [js_out]
-            if map_outs:
-                outputs.append(map_outs[i])
+            map_out_path = _calculate_map_out(src_path, ctx.attr.source_maps, ctx.attr.out_dir)
+            if map_out_path:
+                outputs.append(ctx.actions.declare_file(map_out_path))
+
+            src_args = ctx.actions.args()
 
             # Pass in the swcrc config if it is set
             if ctx.file.swcrc:
                 swcrc_path = ctx.file.swcrc.short_path
-                swcrc_directory = paths.dirname(swcrc_path)
                 src_args.add("--config-file", swcrc_path)
                 inputs.append(copy_file_to_bin_action(ctx, ctx.file.swcrc))
             else:
@@ -166,6 +172,8 @@ def _impl(ctx):
                 js_out.short_path,
                 "-q",
             ])
+
+            output_sources.extend(outputs)
 
             ctx.actions.run(
                 inputs = inputs,
@@ -227,6 +235,7 @@ swc = struct(
     attrs = dict(_attrs, **_outputs),
     toolchains = ["@aspect_rules_swc//swc:toolchain_type"],
     SUPPORTED_EXTENSIONS = _SUPPORTED_EXTENSIONS,
+    calculate_js_out = _calculate_js_out,
     calculate_js_outs = _calculate_js_outs,
     calculate_map_outs = _calculate_map_outs,
 )

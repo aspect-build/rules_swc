@@ -7,4 +7,4 @@ var a = "a";
 exports.a = a;
 
 
-//# sourceMappingURL=out.cjs.map
+//# sourceMappingURL=a.cjs.map
