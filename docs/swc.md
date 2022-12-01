@@ -81,4 +81,8 @@ Execute the swc compiler
 | <a id="swc-out_dir"></a>out_dir |  base directory for output files relative to the output directory for this package   |  <code>None</code> |
 | <a id="swc-kwargs"></a>kwargs |  additional named parameters like tags or visibility   |  none |
 
+**RETURNS**
+
+subset of srcs which aren't transpiled by swc
+
 
