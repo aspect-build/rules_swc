@@ -100,9 +100,6 @@ def _calculate_map_out(src, source_maps, out_dir = None):
 def _calculate_map_outs(srcs, source_maps, out_dir = None):
     return [f2 for f2 in [_calculate_map_out(f, source_maps, out_dir) for f in srcs] if f2]
 
-def _calculate_unused_inputs(srcs):
-    return [s for s in srcs if not _is_supported_src(s)]
-
 def _impl(ctx):
     swcinfo = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo
     env = {
@@ -241,5 +238,4 @@ swc = struct(
     calculate_js_out = _calculate_js_out,
     calculate_js_outs = _calculate_js_outs,
     calculate_map_outs = _calculate_map_outs,
-    calculate_unused_inputs = _calculate_unused_inputs,
 )
