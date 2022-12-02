@@ -50,9 +50,6 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
         swcrc: label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc
         out_dir: base directory for output files relative to the output directory for this package
         **kwargs: additional named parameters like tags or visibility
-
-    Returns:
-        subset of srcs which aren't transpiled by swc
     """
     if srcs == None:
         srcs = native.glob(["**/*.ts", "**/*.tsx"])
@@ -86,7 +83,3 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
         out_dir = out_dir,
         **kwargs
     )
-
-    # Newer rules_ts versions make use of this return value.
-    # See https://github.com/aspect-build/rules_ts/blob/08f14d4ff792ca6fe091a009557642f7b0e20994/docs/transpiler.md#ts_projecttranspiler
-    return _swc_lib.calculate_unused_inputs(srcs)
