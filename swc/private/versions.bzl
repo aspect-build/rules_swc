@@ -2,6 +2,18 @@
 
 # Versions should be descending order so TOOL_VERSIONS[0] is the latest version.
 TOOL_VERSIONS = {
+    "v1.3.21": {
+        "darwin-arm64": "sha384-vjo0iHSxOOUljwBLsdC+3rdBjGlV8gEydBQ1YPz6Cn0fbgZ6vI9Rw92mPk1759Ot",
+        "darwin-x64": "sha384-dkup9l8gyug0ldahKnREhQtUJRQanxrhGZ57gU6fbiE3drhleDGD/FmVmC2mSaDv",
+        "linux-arm-gnueabihf": "sha384-H5Viww3+E+6X5oDmPuYpy7aVS/D6joNHbO4iqmTE1WV9vZ0CXbJ7YS4Y6O+zcrIK",
+        "linux-arm64-gnu": "sha384-R/APcvetXI1yW6CFJm8/69iKFQBqD7IeQGMPUat7i/JDU+0332e9MkICcVNk6AUF",
+        "linux-arm64-musl": "sha384-udGBJW4k0xQ0TrVvGRBeW469/MrEpQReEhigHlMQUSZHt6kXPMGnoJRTYOmI0Iwp",
+        "linux-x64-gnu": "sha384-pzpZTMUDKKh2YaB0IzhtoRu2LdJBlDynESthz+v/H4qqIutKt9JNXLqufa47AMOf",
+        "linux-x64-musl": "sha384-ANc0/ag0mi4iK6EXrQL120iSvOt1AvP+DqrtHSKra+27w3NWn+X40xXnSpva790m",
+        "win32-arm64-msvc": "sha384-iW1F0kWq0NNCa0HxamAK7WsnjjvDdzAJC0U/XVPK7hNh0H0I3eau2E9toFmkghjn",
+        "win32-ia32-msvc": "sha384-28lElS2dm+JYqazvrlGXbAKeeQ80LD0zFmOcLmkfUD3FEwGJJLeEXQvpnuEk/YIu",
+        "win32-x64-msvc": "sha384-+iYXgW8+Hl3q8K8nVWZyIOFDZgXLVttNuBF8arA0aXLjB2MTEjjgppcAd2d9uBWu",
+    },
     "v1.3.3": {
         "android-arm-eabi": "sha384-kM96Q3bMAsFaPIUM8lIh1s4HWtw9xKsEptqDpeT0HxrFgDGrDdBDWMdWZhhEg446",
         "android-arm64": "sha384-mVBw2fHbUb5oibjz53PUPZbkPagQbMiqzghiI4Eg2E+UySbXZuTeEg1NnZV2bS9f",
