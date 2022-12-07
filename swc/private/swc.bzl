@@ -36,6 +36,9 @@ _attrs = {
     "out_dir": attr.string(
         doc = "base directory for output files",
     ),
+    "root_dir": attr.string(
+        doc = "a subdirectory under the input package which should be consider the root directory of all the input files",
+    ),
 }
 
 _outputs = {
@@ -61,10 +64,19 @@ def _relative_to_package(path, ctx):
             path = path[len(prefix):]
     return path
 
-def _calculate_js_out(src, out_dir = None, js_outs = []):
+def _strip_root_dir(path, root_dir):
+    replace_pattern = root_dir + "/"
+    if path.startswith("./"):
+        path = path[len("./"):]
+    return path.replace(replace_pattern, "", 1)
+
+def _calculate_js_out(src, out_dir = None, root_dir = None, js_outs = []):
     if not _is_supported_src(src):
         return None
+
     js_out = paths.replace_extension(src, ".js")
+    if root_dir:
+        js_out = _strip_root_dir(js_out, root_dir)
     if out_dir:
         js_out = paths.join(out_dir, js_out)
 
@@ -76,7 +88,7 @@ def _calculate_js_out(src, out_dir = None, js_outs = []):
             break
     return js_out
 
-def _calculate_js_outs(srcs, out_dir = None):
+def _calculate_js_outs(srcs, out_dir = None, root_dir = None):
     if out_dir == None:
         js_srcs = []
         for src in srcs:
@@ -85,20 +97,22 @@ def _calculate_js_outs(srcs, out_dir = None):
         if len(js_srcs) > 0:
             fail("Detected swc rule with srcs=[{}, ...] and out_dir=None. Please set out_dir when compiling .js files.".format(", ".join(js_srcs[:3])))
 
-    return [f2 for f2 in [_calculate_js_out(f, out_dir) for f in srcs] if f2]
+    return [f2 for f2 in [_calculate_js_out(f, out_dir, root_dir) for f in srcs] if f2]
 
-def _calculate_map_out(src, source_maps, out_dir = None):
+def _calculate_map_out(src, source_maps, out_dir = None, root_dir = None):
     if source_maps in ["false", "inline"]:
         return None
     if not _is_supported_src(src):
         return None
     map_out = paths.replace_extension(src, ".js.map")
+    if root_dir:
+        map_out = _strip_root_dir(map_out, root_dir)
     if out_dir:
         map_out = paths.join(out_dir, map_out)
     return map_out
 
-def _calculate_map_outs(srcs, source_maps, out_dir = None):
-    return [f2 for f2 in [_calculate_map_out(f, source_maps, out_dir) for f in srcs] if f2]
+def _calculate_map_outs(srcs, source_maps, out_dir = None, root_dir = None):
+    return [f2 for f2 in [_calculate_map_out(f, source_maps, out_dir, root_dir) for f in srcs] if f2]
 
 def _impl(ctx):
     swcinfo = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo
@@ -146,13 +160,13 @@ def _impl(ctx):
             inputs = [copy_file_to_bin_action(ctx, src)] + swcinfo.tool_files
 
             src_path = _relative_to_package(src.path, ctx)
-            js_out_path = _calculate_js_out(src_path, ctx.attr.out_dir, [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs])
+            js_out_path = _calculate_js_out(src_path, ctx.attr.out_dir, ctx.attr.root_dir, [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs])
             if not js_out_path:
                 # This source file is not a supported src
                 continue
             js_out = ctx.actions.declare_file(js_out_path)
             outputs = [js_out]
-            map_out_path = _calculate_map_out(src_path, ctx.attr.source_maps, ctx.attr.out_dir)
+            map_out_path = _calculate_map_out(src_path, ctx.attr.source_maps, ctx.attr.out_dir, ctx.attr.root_dir)
             if map_out_path:
                 outputs.append(ctx.actions.declare_file(map_out_path))
 

@@ -22,8 +22,8 @@ Known issues:
 ## swc_transpiler
 
 <pre>
-swc_transpiler(<a href="#swc_transpiler-name">name</a>, <a href="#swc_transpiler-args">args</a>, <a href="#swc_transpiler-data">data</a>, <a href="#swc_transpiler-js_outs">js_outs</a>, <a href="#swc_transpiler-map_outs">map_outs</a>, <a href="#swc_transpiler-out_dir">out_dir</a>, <a href="#swc_transpiler-output_dir">output_dir</a>, <a href="#swc_transpiler-source_maps">source_maps</a>, <a href="#swc_transpiler-srcs">srcs</a>, <a href="#swc_transpiler-swc_cli">swc_cli</a>,
-               <a href="#swc_transpiler-swcrc">swcrc</a>)
+swc_transpiler(<a href="#swc_transpiler-name">name</a>, <a href="#swc_transpiler-args">args</a>, <a href="#swc_transpiler-data">data</a>, <a href="#swc_transpiler-js_outs">js_outs</a>, <a href="#swc_transpiler-map_outs">map_outs</a>, <a href="#swc_transpiler-out_dir">out_dir</a>, <a href="#swc_transpiler-output_dir">output_dir</a>, <a href="#swc_transpiler-root_dir">root_dir</a>, <a href="#swc_transpiler-source_maps">source_maps</a>,
+               <a href="#swc_transpiler-srcs">srcs</a>, <a href="#swc_transpiler-swc_cli">swc_cli</a>, <a href="#swc_transpiler-swcrc">swcrc</a>)
 </pre>
 
 Underlying rule for the `swc` macro.
@@ -50,6 +50,7 @@ attribute.
 | <a id="swc_transpiler-map_outs"></a>map_outs |  list of expected source map output files.<br><br>Can be empty, meaning no source maps should be produced. If non-empty, there must be one for each entry in srcs, and in the same order.   | List of labels | optional |  |
 | <a id="swc_transpiler-out_dir"></a>out_dir |  base directory for output files   | String | optional | <code>""</code> |
 | <a id="swc_transpiler-output_dir"></a>output_dir |  whether to produce a directory output rather than individual files   | Boolean | optional | <code>False</code> |
+| <a id="swc_transpiler-root_dir"></a>root_dir |  a subdirectory under the input package which should be consider the root directory of all the input files   | String | optional | <code>""</code> |
 | <a id="swc_transpiler-source_maps"></a>source_maps |  see https://swc.rs/docs/usage/cli#--source-maps--s   | String | optional | <code>"false"</code> |
 | <a id="swc_transpiler-srcs"></a>srcs |  source files, typically .ts files in the source tree   | <a href="https://bazel.build/concepts/labels">List of labels</a> | required |  |
 | <a id="swc_transpiler-swc_cli"></a>swc_cli |  binary that executes the swc CLI   | <a href="https://bazel.build/concepts/labels">Label</a> | optional | <code>@aspect_rules_swc//swc:cli</code> |
@@ -61,7 +62,7 @@ attribute.
 ## swc
 
 <pre>
-swc(<a href="#swc-name">name</a>, <a href="#swc-srcs">srcs</a>, <a href="#swc-args">args</a>, <a href="#swc-data">data</a>, <a href="#swc-output_dir">output_dir</a>, <a href="#swc-swcrc">swcrc</a>, <a href="#swc-source_maps">source_maps</a>, <a href="#swc-out_dir">out_dir</a>, <a href="#swc-kwargs">kwargs</a>)
+swc(<a href="#swc-name">name</a>, <a href="#swc-srcs">srcs</a>, <a href="#swc-args">args</a>, <a href="#swc-data">data</a>, <a href="#swc-output_dir">output_dir</a>, <a href="#swc-swcrc">swcrc</a>, <a href="#swc-source_maps">source_maps</a>, <a href="#swc-out_dir">out_dir</a>, <a href="#swc-root_dir">root_dir</a>, <a href="#swc-kwargs">kwargs</a>)
 </pre>
 
 Execute the swc compiler
@@ -79,6 +80,7 @@ Execute the swc compiler
 | <a id="swc-swcrc"></a>swcrc |  label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc   |  <code>None</code> |
 | <a id="swc-source_maps"></a>source_maps |  If set, the --source-maps argument is passed to the swc cli with the value. See https://swc.rs/docs/usage/cli#--source-maps--s True/False are automaticaly converted to "true"/"false" string values the cli expects.   |  <code>False</code> |
 | <a id="swc-out_dir"></a>out_dir |  base directory for output files relative to the output directory for this package   |  <code>None</code> |
+| <a id="swc-root_dir"></a>root_dir |  a subdirectory under the input package which should be consider the root directory of all the input files   |  <code>None</code> |
 | <a id="swc-kwargs"></a>kwargs |  additional named parameters like tags or visibility   |  none |
 
 
