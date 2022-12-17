@@ -2,6 +2,30 @@
 
 # Versions should be descending order so TOOL_VERSIONS[0] is the latest version.
 TOOL_VERSIONS = {
+    "v1.3.23": {
+        "darwin-arm64": "sha384-CU8TEzeRt8w4N+EkWT0H93U1D+/IHb7XP05L9WKBs/hQun2kZJct8u/G3UeZzs+p",
+        "darwin-x64": "sha384-4XmxIXyeY3CYZXfMsFkPom/9Yf+UkyIKjDElFkI9rnIrBFftYSa4CByti8oy1dij",
+        "linux-arm-gnueabihf": "sha384-1TpB2QzIhlvy2x7XVIECWdqM9EYFIOHjx5eFttf+HBTjZl80/IEGqVikfCaLEeKN",
+        "linux-arm64-gnu": "sha384-cud8Tyu9vCQkMbeXceEmQ+BR+1uGwuBXBn1DkQOmoIjtJS2tW3E49gHJTPm4HuRE",
+        "linux-arm64-musl": "sha384-EaA++k3zWbcU5JJhRC8M67iqUl67mJLZAG0Hnp2B0R1+pXd/c4tHl51nhUdINOcD",
+        "linux-x64-gnu": "sha384-aqgAnnqxdg1UMh9WBfRib6naZkIo0SEtip6skJOPoDjn/Agj7BGxQNgbsP4PeoeQ",
+        "linux-x64-musl": "sha384-t+rd0wzNl6BXadEPxntwEr2waEowah0Xt3Xl6osoBl91d3Nk+tuL5uQWH7DtUs+E",
+        "win32-arm64-msvc": "sha384-gpBSLy5UhHFI5yvuIZjOsCmjvqFEd7B+lvfKTZw+i61Pdqkw/E6qp+hCgqA0EA0v",
+        "win32-ia32-msvc": "sha384-+9eGmD7sLoq5yTruIkNvDKufiXEgXBEqGXP+5+CO90LDGcBx1UZ9NrJWEys1PM/C",
+        "win32-x64-msvc": "sha384-ZRrXfgk9ocNJ5Rg3nhUdSOhoh7aWFfEPUiiK2iAgvi8fMnuGqDAbKmiJl11B49G6",
+    },
+    "v1.3.22": {
+        "darwin-arm64": "sha384-HQZgOh1Kzx3rIZRVaAljyE3m+tR82824lwAk/vszKPLDCF+8WeGNWSlPZSuhUhLX",
+        "darwin-x64": "sha384-pVVb4cNqqll6pFJdlZWcrlwLAlLQKMPa5Bq1WZNyzgbmiL3RDZmyk6LaA9t+FNtD",
+        "linux-arm-gnueabihf": "sha384-2PpgKzidOWd0Sb+g1wURTTXGfnPqtJyW6fdCBgVTztTRWZ0tq8PRhFC++a8+BEuH",
+        "linux-arm64-gnu": "sha384-R3u5JdrJIco6TuUrC7EskRPAdA1kUWpnDgcfM91N/xnvIaJCJfEkDUnp2FeYYvPF",
+        "linux-arm64-musl": "sha384-2OatRTzX2+5nTPGPN6wcmDTzHSRwmdYXX09+ZBjwEynBqpETZ8rdSvqcBWXQA4rq",
+        "linux-x64-gnu": "sha384-/FJ6KVkrWBgY4pJs4FEKDTzE8OuOcA8eUjdFdoG8HRomAQQWQrE4s/dssVr3bI0Q",
+        "linux-x64-musl": "sha384-73r/arl2M/kutzt06U+5+/EyfIXvOfhyWo0Z3x9DqSJZ+QG6gS02A+zcBrX8weL1",
+        "win32-arm64-msvc": "sha384-ILnXNhHVc6Nj8T2bbVEmszHgqMkW9pHhnuP1AR5Vkc6u9HvftRkAhhVK/baBNfqT",
+        "win32-ia32-msvc": "sha384-EACijvvOtIZP75lFBWtl8DKMui6Q7kF63azVHnCOSeCs1iAsRImOUwQFfYd0dGeY",
+        "win32-x64-msvc": "sha384-XJWyWUdLAK1fWtQEhFfiGSTvCSVkNKcA9g1oxJ08nYj9sWW6aFTtT1TBmIx3cicT",
+    },
     "v1.3.21": {
         "win32-x64-msvc": "sha384-+iYXgW8+Hl3q8K8nVWZyIOFDZgXLVttNuBF8arA0aXLjB2MTEjjgppcAd2d9uBWu",
         "darwin-x64": "sha384-dkup9l8gyug0ldahKnREhQtUJRQanxrhGZ57gU6fbiE3drhleDGD/FmVmC2mSaDv",
