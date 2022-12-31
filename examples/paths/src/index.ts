@@ -3,6 +3,8 @@
     it probably does not interpret .swcrc like it normally would a tsconfig.json,
     you should safely be able to ignore this
 */
-import { moduleA } from "@modules/moduleA";
+import { moduleA } from "@modules/moduleX";
 
 moduleA();
+
+//# sourceMappingURL=index.js.map

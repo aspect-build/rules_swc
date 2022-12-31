@@ -6,5 +6,5 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-const _moduleA = require("../../../../../../../shared/cache/bazel/user_base/09a27d1eeea3b44d1580773090924b4d/execroot/aspect_rules_swc/src/modules/moduleA");
-(0, _moduleA.moduleA)();
+const _moduleA = require("./modules/moduleA");
+(0, _moduleA.moduleA)(); //# sourceMappingURL=index.js.map
