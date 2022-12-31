@@ -6,10 +6,6 @@ Note that this example also depends on the setup in /WORKSPACE at the root of th
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
-# Note: this example depends on a .bazelrc setting
-# build --modify_execution_info=SWCTranspile=+no-sandbox
-# to turn off Bazel sandboxing as a workaround for an SWC bug
-# https://github.com/swc-project/swc/issues/4057
 swc(
     name = "transpile",
     swcrc = ".swcrc",

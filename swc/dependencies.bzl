@@ -17,23 +17,3 @@ def rules_swc_dependencies():
         strip_prefix = "bazel-lib-1.19.0",
         url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.19.0.tar.gz",
     )
-
-    http_archive(
-        name = "aspect_rules_js",
-        sha256 = "66ecc9f56300dd63fb86f11cfa1e8affcaa42d5300e2746dba08541916e913fd",
-        strip_prefix = "rules_js-1.13.0",
-        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.13.0.tar.gz",
-    )
-
-    http_archive(
-        name = "rules_nodejs",
-        sha256 = "08337d4fffc78f7fe648a93be12ea2fc4e8eb9795a4e6aa48595b66b34555626",
-        urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.0/rules_nodejs-core-5.8.0.tar.gz"],
-    )
-
-    http_archive(
-        name = "socat",
-        build_file = "socat.BUILD",
-        sha256 = "d697245144731423ddbbceacabbd29447089ea223e9a439b28f9ff90d0dd216e",
-        urls = ["http://www.dest-unreach.org/socat/download/socat-1.7.4.3.tar.gz"],
-    )

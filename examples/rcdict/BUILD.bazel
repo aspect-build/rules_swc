@@ -1,0 +1,32 @@
+"Showcases how to specify the SWC configuration file as a dict"
+
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+
+swc(
+    name = "es5",
+    out_dir = "es5",
+    swcrc = {
+        "jsc": {
+            "target": "es5",
+        },
+    },
+)
+
+swc(
+    name = "es2015",
+    out_dir = "es2015",
+    swcrc = {
+        "jsc": {
+            "target": "es2015",
+        },
+    },
+)
+
+write_source_files(
+    name = "test",
+    files = {
+        "expected_es5.js": ":es5/in.js",
+        "expected_es2015.js": ":es2015/in.js",
+    },
+)

@@ -115,70 +115,58 @@ def _calculate_map_outs(srcs, source_maps, out_dir = None, root_dir = None):
     return [f2 for f2 in [_calculate_map_out(f, source_maps, out_dir, root_dir) for f in srcs] if f2]
 
 def _impl(ctx):
-    outputs = []
-    binary = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.swc_binary
+    swc_toolchain = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"]
 
-    # Arguments to pure-rust CLI differ from the Node.js wrapper in @swc/cli.
-    # Feature parity issue: https://github.com/swc-project/swc/issues/4017
-    # To see what's available, you can run help:
-    # $(bazel info output_base)/execroot/aspect_rules_swc/external/default_swc_linux-x64-gnu/package/swc compile --help
+    inputs = []
+
     args = ctx.actions.args()
     args.add("compile")
 
     # Add user specified arguments *before* rule supplied arguments
     args.add_all(ctx.attr.args)
 
-    # FIXME: swcx ignores this, it MUST be in the config file...
-    # args.add_all(["--source-maps", ctx.attr.source_maps])
+    args.add_all(["--source-maps", ctx.attr.source_maps])
 
     if ctx.attr.output_dir:
         if len(ctx.attr.srcs) != 1:
             fail("Under output_dir, there must be a single entry in srcs")
         if not ctx.files.srcs[0].is_directory:
             fail("Under output_dir, the srcs must be directories, not files")
+        
+        inputs.extend(ctx.files.srcs)
+
         output_dir = ctx.actions.declare_directory(ctx.attr.out_dir if ctx.attr.out_dir else ctx.label.name)
-
-        output_sources = [output_dir]
-
         args.add_all([
-            ctx.files.srcs[0].short_path,
             "--out-dir",
             output_dir.path,
-            # There is no longer such an option - the rust CLI doesn't go looking for it though
-            #"--no-swcrc",
-            # There is no "quiet" flag to the rust CLI.
-            #"-q",
         ])
+        output_sources = [output_dir]
+
+        if ctx.attr.swcrc:
+            src_args.add_all([
+                "--config-file",
+                ctx.file.swcrc.path,
+            ])
+            inputs.append(ctx.file.swcrc)
 
         ctx.actions.run_shell(
-            inputs = ctx.files.srcs + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files,
-            arguments = [args],
+            inputs = inputs,
+            arguments = [
+                args,
+                ctx.files.srcs[0].path,
+            ],
             outputs = output_sources,
-
-            # command = "pwd > {}/help".format(output_dir.path), # /shared/cache/bazel/user_base/09a27d1eeea3b44d1580773090924b4d/sandbox/linux-sandbox/90/execroot/aspect_rules_swc
-            # command = "socat - SYSTEM:\"pwd > {}/help\",pty".format(output_dir.path),
-
-            #command = "socat - SYSTEM:\"pwd; ls --color\",pty,setsid,ctty > {}/help".format(output_dir.path),
-            # command = "(pwd; ls) > {}/help".format(output_dir.path),
-            command = "socat - SYSTEM:\"{} compile {} --out-dir {}\",pty".format(binary, ctx.files.srcs[0].path, output_dir.path),
-            #command = "python -c 'import os\n_, slave = os.openpty()\nsubprocess.run(\"{} compile {} --out-dir {}\", check=True, shell=True, stdin=slave, stdout=subprocess.PIPE)'".format(binary, ctx.files.srcs[0].path, output_dir.path),
-            #command = "python -c 'import os\n_, slave = os.openpty()'".format(binary, ctx.files.srcs[0].path, output_dir.path),
-
-            # /bin/bash -c 'socat - EXEC:"external/default_swc_linux-x64-gnu/package/swc --help",pty,setsid,ctty 2>&1 >bazel-out/k8-fastbuild/bin/examples/directory/minify/help' '' compile examples/directory/split_app --out-dir bazel-out/k8-fastbuild/bin/examples/directory/minify
-            # command = "socat - EXEC:\"{0} --help\",pty,setsid,ctty 2>&1 >{2}/help".format(binary, ctx.files.srcs[0].short_path, output_dir.path),
-
-            #command = binary + " $@",
-            #use_default_shell_env = True,
-            mnemonic = "SWCTranspile",
-            progress_message = "Transpiling with swc %s" % ctx.label,
+            command = swc_toolchain.swcinfo.swc_binary + " $@",
+            mnemonic = "SWCCompile",
+            progress_message = "Transpiling with swc %s into %s" % (ctx.label, output_dir.path),
         )
     else:
         output_sources = []
 
         for src in ctx.files.srcs:
-            inputs = [copy_file_to_bin_action(ctx, src)] + swcinfo.tool_files
-
+            src_args = ctx.actions.args()
             src_path = _relative_to_package(src.path, ctx)
+
             js_out_path = _calculate_js_out(src_path, ctx.attr.out_dir, ctx.attr.root_dir, [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs])
             if not js_out_path:
                 # This source file is not a supported src
@@ -186,31 +174,29 @@ def _impl(ctx):
             js_out = ctx.actions.declare_file(js_out_path)
             outputs = [js_out]
             map_out_path = _calculate_map_out(src_path, ctx.attr.source_maps, ctx.attr.out_dir, ctx.attr.root_dir)
+
             if map_out_path:
-                outputs.append(ctx.actions.declare_file(map_out_path))
+                js_map_out = ctx.actions.declare_file(map_out_path)
+                outputs.append(js_map_out)
 
-            src_args = ctx.actions.args()
+                if ctx.attr.source_maps in ["true", "both"]:
+                    src_args.add_all([
+                        "--source-map-target",
+                        js_map_out.path,
+                    ])
 
-            js_out = js_outs[i]
-            inputs = [src] + ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files
-            outs = [js_out]
-            if ctx.attr.source_maps in ["true", "both"]:
-                outs.append(map_outs[i])
-                src_args.add_all([
-                    "--source-map-target",
-                    map_outs[i].path,
-                ])
+            inputs = [src]
+            inputs.extend(ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files)
 
             if ctx.attr.swcrc:
-                swcrc_path = ctx.file.swcrc.path
                 src_args.add_all([
                     "--config-file",
-                    swcrc_path,
+                    ctx.file.swcrc.path,
                 ])
                 inputs.append(ctx.file.swcrc)
 
             src_args.add_all([
-                " --out-file",
+                "--out-file",
                 js_out.path,
             ])
 
@@ -224,13 +210,9 @@ def _impl(ctx):
                     "--filename",
                     src.path,
                 ],
-                outputs = outs,
-                # Workaround swc cli bug:
-                # https://github.com/swc-project/swc/blob/main/crates/swc_cli/src/commands/compile.rs#L241-L254
-                # under Bazel it will think there's no tty and so it always errors here
-                # https://github.com/swc-project/swc/blob/main/crates/swc_cli/src/commands/compile.rs#L301
-                command = binary + " $@ < " + src.path,
-                mnemonic = "SWCTranspile",
+                outputs = outputs,
+                command = swc_toolchain.swcinfo.swc_binary + " $@ < " + src.path,
+                mnemonic = "SWCCompile",
                 progress_message = "Transpiling with swc %s [swc %s]" % (
                     ctx.label,
                     src.path,
