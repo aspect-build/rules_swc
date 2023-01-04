@@ -14,16 +14,16 @@ def rules_swc_dependencies():
 
     http_archive(
         name = "aspect_bazel_lib",
-        sha256 = "be236556c7b9c7b91cb370e837fdcec62b6e8893408cd4465ae883c9d7c67024",
-        strip_prefix = "bazel-lib-1.18.0",
-        url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.18.0.tar.gz",
+        sha256 = "a7bfc7aed7b86a4caaba382116e0214ebbaa623f393a9e716d87a3e1bab29d78",
+        strip_prefix = "bazel-lib-1.19.0",
+        url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.19.0.tar.gz",
     )
 
     http_archive(
         name = "aspect_rules_js",
-        sha256 = "519c92af31ff856659dc48711110f69139b9c3a74511f5b0118c887dcf06e360",
-        strip_prefix = "rules_js-1.12.0",
-        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.12.0.tar.gz",
+        sha256 = "66ecc9f56300dd63fb86f11cfa1e8affcaa42d5300e2746dba08541916e913fd",
+        strip_prefix = "rules_js-1.13.0",
+        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.13.0.tar.gz",
     )
 
     http_archive(
