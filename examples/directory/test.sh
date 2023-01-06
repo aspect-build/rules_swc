@@ -13,27 +13,27 @@ source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
 
 set -o errexit
 
-readonly in_folder=$(rlocation $TEST_WORKSPACE/$(dirname $TEST_BINARY)/$2)
+readonly in_folder=$(rlocation $TEST_WORKSPACE/$(dirname $TEST_BINARY)/$2/$BAZEL_BINDIR)
 
-if ! [[ -e $in_folder/bazel-out/k8-fastbuild/bin/examples/directory/$1/file1.js ]]; then
+if ! [[ -e $in_folder/examples/directory/$1/file1.js ]]; then
     echo >&2 "Missing expected output file in directory"
     ls -R $in_folder
     exit 1
 fi
 
-if ! [[ -e $in_folder/bazel-out/k8-fastbuild/bin/examples/directory/$1/file2.js ]]; then
+if ! [[ -e $in_folder/examples/directory/$1/file2.js ]]; then
     echo >&2 "Missing expected output file in directory"
     ls -R $in_folder
     exit 1
 fi
 
-if ! [[ -e $in_folder/bazel-out/k8-fastbuild/bin/examples/directory/$1/file1.js.map ]]; then
+if ! [[ -e $in_folder/examples/directory/$1/file1.js.map ]]; then
     echo >&2 "Missing expected output file in directory"
     ls -R $in_folder
     exit 1
 fi
 
-if ! [[ -e $in_folder/bazel-out/k8-fastbuild/bin/examples/directory/$1/file2.js.map ]]; then
+if ! [[ -e $in_folder/examples/directory/$1/file2.js.map ]]; then
     echo >&2 "Missing expected output file in directory"
     ls -R $in_folder
     exit 1

@@ -7,7 +7,7 @@ Simplest usage:
 ```starlark
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
-swc(name = "transpile")
+swc(name = "compile")
 ```
 
 

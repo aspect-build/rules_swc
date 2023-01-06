@@ -52,7 +52,7 @@ copy the WORKSPACE snippet into your `WORKSPACE` file.
 
 ### From a BUILD file
 
-The simplest usage is with the [swc rule](/docs/swc.md), used to transpile TypeScript code to JavaScript in a tight developer loop. Each `.ts` or `.tsx` file is compiled to `bazel-bin/path/to/file.js` and available to downstream
+The simplest usage is with the [swc rule](/docs/swc.md), used to compile TypeScript code to JavaScript in a tight developer loop. Each `.ts` or `.tsx` file is compiled to `bazel-bin/path/to/file.js` and available to downstream
 tools such as bundlers, which are in their own Bazel rules.
 
 See the example in /examples/simple.

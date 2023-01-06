@@ -5,12 +5,11 @@ Simplest usage:
 ```starlark
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
-swc(name = "transpile")
+swc(name = "compile")
 ```
 """
 
 load("//swc/private:swc.bzl", _swc_lib = "swc")
-
 load("@bazel_skylib//lib:types.bzl", "types")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 
@@ -65,16 +64,16 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
 
     if type(swcrc) == type(dict()):
         swcrc.setdefault("sourceMaps", source_maps)
-
+        rcfile = "{}_swcrc.json".format(name)
         write_file(
-            name = "_gen_swcrc_%s" % name,
-            out = "swcrc_%s.json" % name,
-            content = [json.encode(swcrc)]
+            name = "_gen_swcrc_" + name,
+            out = rcfile,
+            content = [json.encode(swcrc)],
         )
 
-        # From here, the configuration becomes a file, the same as if the
+        # From here, the configuration becomes a file path, the same as if the
         # user supplied a .swcrc InputArtifact
-        swcrc = "swcrc_%s.json" % name
+        swcrc = rcfile
 
     # Convert source_maps True/False to "true"/"false" args value
     if source_maps == True:

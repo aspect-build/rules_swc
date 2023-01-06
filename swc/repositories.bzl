@@ -19,7 +19,7 @@ _ATTRS = {
 }
 
 def _swc_repo_impl(repository_ctx):
-    filename = "swc-%s" % repository_ctx.attr.platform
+    filename = "swc-" + repository_ctx.attr.platform
 
     # The binaries of the SWC cli releases for windows are suffixed with ".exe"
     if repository_ctx.attr.platform.startswith("win32"):

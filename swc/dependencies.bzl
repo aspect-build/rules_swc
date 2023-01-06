@@ -1,4 +1,5 @@
 """Starlark helper to fetch rules_swc dependencies.
+
 Should be replaced by bzlmod for users of Bazel 6.0 and above.
 """
 
@@ -20,7 +21,7 @@ def rules_swc_dependencies():
 
     http_archive(
         name = "aspect_rules_js",
-        sha256 = "eea90eb89681338758a66c8c835224c97745ae5e3d0e1126d51cd09b953e1392",
-        strip_prefix = "rules_js-1.13.2",
-        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.13.2.tar.gz",
+        sha256 = "66ecc9f56300dd63fb86f11cfa1e8affcaa42d5300e2746dba08541916e913fd",
+        strip_prefix = "rules_js-1.13.0",
+        url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.13.0.tar.gz",
     )

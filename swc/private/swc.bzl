@@ -124,7 +124,6 @@ def _impl(ctx):
 
     # Add user specified arguments *before* rule supplied arguments
     args.add_all(ctx.attr.args)
-
     args.add_all(["--source-maps", ctx.attr.source_maps])
 
     if ctx.attr.output_dir:
@@ -132,34 +131,36 @@ def _impl(ctx):
             fail("Under output_dir, there must be a single entry in srcs")
         if not ctx.files.srcs[0].is_directory:
             fail("Under output_dir, the srcs must be directories, not files")
+        output_dir = ctx.actions.declare_directory(ctx.attr.out_dir if ctx.attr.out_dir else ctx.label.name)
 
         inputs.extend(ctx.files.srcs)
 
-        output_dir = ctx.actions.declare_directory(ctx.attr.out_dir if ctx.attr.out_dir else ctx.label.name)
+        output_sources = [output_dir]
+
         args.add_all([
             "--out-dir",
             output_dir.path,
         ])
-        output_sources = [output_dir]
 
-        # FIXME: unused?
-        # if ctx.attr.swcrc:
-        #     src_args.add_all([
-        #         "--config-file",
-        #         ctx.file.swcrc.path,
-        #     ])
-        #     inputs.append(ctx.file.swcrc)
+        src_args = ctx.actions.args()
+        if ctx.attr.swcrc:
+            src_args.add_all([
+                "--config-file",
+                ctx.file.swcrc.path,
+            ])
+            inputs.append(ctx.file.swcrc)
 
-        ctx.actions.run_shell(
+        ctx.actions.run(
             inputs = inputs,
             arguments = [
                 args,
+                src_args,
                 ctx.files.srcs[0].path,
             ],
             outputs = output_sources,
-            command = swc_toolchain.swcinfo.swc_binary + " $@",
+            executable = swc_toolchain.swcinfo.swc_binary,
             mnemonic = "SWCCompile",
-            progress_message = "Transpiling with swc %s into %s" % (ctx.label, output_dir.path),
+            progress_message = "Compiling %{label} [swc %{input}]",
         )
     else:
         output_sources = []
@@ -203,21 +204,17 @@ def _impl(ctx):
 
             output_sources.extend(outputs)
 
-            ctx.actions.run_shell(
+            ctx.actions.run(
                 inputs = inputs,
                 arguments = [
                     args,
                     src_args,
-                    "--filename",
                     src.path,
                 ],
                 outputs = outputs,
-                command = swc_toolchain.swcinfo.swc_binary + " $@ < " + src.path,
+                executable = swc_toolchain.swcinfo.swc_binary,
                 mnemonic = "SWCCompile",
-                progress_message = "Transpiling with swc %s [swc %s]" % (
-                    ctx.label,
-                    src.path,
-                ),
+                progress_message = "Compiling %{label} [swc %{input}]",
             )
 
     output_sources_depset = depset(output_sources)
