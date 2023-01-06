@@ -3,7 +3,6 @@
 workspace(name = "aspect_rules_swc")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
 load(":internal_deps.bzl", "rules_swc_internal_deps")
 
 # Fetch deps needed only locally for development
@@ -20,12 +19,12 @@ swc_register_toolchains(
     name = "default_swc",
     # Demonstrates how users can choose ANY swc version, not just the ones we mirrored
     integrity_hashes = {
-        "darwin-arm64": "sha384-t6mE7ugjC2L7oD+y3KE69iQ2yQGMtUQ53CWA8Rr7rlXnGs2sZOXRoX4Fy32jT4YX",
-        "darwin-x64": "sha384-HdTY5k0gXRYdUlyYmRzbakrrXEmUtxPl5N4szXqGlySGa2qXsEVH8o/T8sVBq/tz",
-        "linux-arm64-gnu": "sha384-CZFkdTRDov52bg8+iET5mRvyQ4A/0daMg0+wRTma+1dfhdV/3Zl1Rm392r1mAhfr",
-        "linux-x64-gnu": "sha384-SRCQi073AFgw8Owfp0XUH8hsnjhZjjlXW/sZSQldZprg/FXf9OG1Wk0L61yC7vty",
+        "darwin-arm64": "sha384-4TRcW8Nb2g/3zQ0T4aS+NSjMbUaIHaGxofkA67CcAQZbeK1uDmjXFh5uJw69ZV07",
+        "darwin-x64": "sha384-uh5Pt06OgF/bhQaq09/SO0hNa9x/isZ3O9R+3uwseSdbL7OentceFHZ/zTr9Y+xL",
+        "linux-arm64-gnu": "sha384-2uYEohzUAAalEGiD0iEPEDWlR1BCM4q+DhsnIe5saa8B2+igdLzsQrbREimhu5TJ",
+        "linux-x64-gnu": "sha384-c46sYs/jCA4OjV7LeWT201dYQDTO76V6sZzdtOiGt+3Gls9n6QG+K4hkpIE+wy0k",
     },
-    swc_version = "v1.3.24",
+    swc_version = "v1.3.25",
 )
 
 load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
