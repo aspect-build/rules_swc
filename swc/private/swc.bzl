@@ -117,7 +117,7 @@ def _calculate_map_outs(srcs, source_maps, out_dir = None, root_dir = None):
 def _impl(ctx):
     swc_toolchain = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"]
 
-    inputs = []
+    inputs = swc_toolchain.swcinfo.tool_files[:]
 
     args = ctx.actions.args()
     args.add("compile")
@@ -132,7 +132,7 @@ def _impl(ctx):
             fail("Under output_dir, there must be a single entry in srcs")
         if not ctx.files.srcs[0].is_directory:
             fail("Under output_dir, the srcs must be directories, not files")
-        
+
         inputs.extend(ctx.files.srcs)
 
         output_dir = ctx.actions.declare_directory(ctx.attr.out_dir if ctx.attr.out_dir else ctx.label.name)
@@ -142,12 +142,13 @@ def _impl(ctx):
         ])
         output_sources = [output_dir]
 
-        if ctx.attr.swcrc:
-            src_args.add_all([
-                "--config-file",
-                ctx.file.swcrc.path,
-            ])
-            inputs.append(ctx.file.swcrc)
+        # FIXME: unused?
+        # if ctx.attr.swcrc:
+        #     src_args.add_all([
+        #         "--config-file",
+        #         ctx.file.swcrc.path,
+        #     ])
+        #     inputs.append(ctx.file.swcrc)
 
         ctx.actions.run_shell(
             inputs = inputs,

@@ -6,5 +6,5 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-const _moduleA = require("./modules/moduleA");
-(0, _moduleA.moduleA)(); //# sourceMappingURL=index.js.map
+const _moduleX = require("./modules/moduleX");
+(0, _moduleX.moduleA)(); //# sourceMappingURL=index.js.map
