@@ -4,8 +4,7 @@ These are needed for local dev, and users must install them as well.
 See https://docs.bazel.build/versions/main/skylark/deploying.html#dependencies
 """
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
+load("@bazel_skylib//lib:versions.bzl", "versions")
 load("//swc/private:toolchains_repo.bzl", "PLATFORMS", "toolchains_repo")
 load("//swc/private:versions.bzl", "TOOL_VERSIONS")
 
@@ -14,7 +13,7 @@ LATEST_VERSION = TOOL_VERSIONS.keys()[0]
 
 _DOC = "Fetch external dependencies needed to run the SWC cli"
 _ATTRS = {
-    "swc_version": attr.string(values = TOOL_VERSIONS.keys(), default = LATEST_VERSION),
+    "swc_version": attr.string(default = LATEST_VERSION),
     "platform": attr.string(mandatory = True, values = PLATFORMS.keys()),
     "integrity_hashes": attr.string_dict(),
 }
@@ -68,8 +67,18 @@ swc_repositories = repository_rule(
     attrs = _ATTRS,
 )
 
+_SWC_TOO_OLD = """
+
+FATAL: swc version must be at least 1.3.25, as prior versions had bugs in the pure-rust CLI.
+
+If you need swc version {}, then use rules_swc v0.20.2 or earlier.
+Those releases of rules_swc call the NodeJS @swc/cli to access the Rust binding,
+so they aren't affected by these bugs.
+
+"""
+
 # Wrapper macro around everything above, this is the primary API
-def swc_register_toolchains(name, register = True, **kwargs):
+def swc_register_toolchains(name, swc_version, register = True, **kwargs):
     """Convenience macro for users which does typical setup.
 
     - create a repository for each built-in platform like "swc_linux_amd64"
@@ -78,15 +87,20 @@ def swc_register_toolchains(name, register = True, **kwargs):
     Users can avoid this macro and do these steps themselves, if they want more control.
     Args:
         name: base name for all created repos, like "swc"
+        swc_version: version of the swc project, from https://github.com/swc-project/swc/releases
         register: whether to call through to native.register_toolchains.
             Should be True for WORKSPACE users, but false when used under bzlmod extension
         **kwargs: passed to each swc_repositories call
     """
 
+    if not versions.is_at_least("1.3.25", swc_version.lstrip("v")):
+        fail(_SWC_TOO_OLD.format(swc_version))
+
     for platform in PLATFORMS.keys():
         swc_repositories(
             name = name + "_" + platform,
             platform = platform,
+            swc_version = swc_version,
             **kwargs
         )
         if register:
