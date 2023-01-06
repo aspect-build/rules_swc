@@ -30,6 +30,9 @@ sh_test(
         "minify",
     ],
     data = ["minify"],
+    env = {
+        "BAZEL_BINDIR": "$(BINDIR)",
+    },
     deps = ["@bazel_tools//tools/bash/runfiles"],
 )
 
@@ -49,5 +52,18 @@ sh_test(
         "test-out_dir",
     ],
     data = ["out_dir"],
+    env = {
+        "BAZEL_BINDIR": "$(BINDIR)",
+    },
     deps = ["@bazel_tools//tools/bash/runfiles"],
+)
+
+swc(
+    name = "out_dir_w_config",
+    srcs = ["split_app"],
+    out_dir = "config-out_dir",
+    output_dir = True,
+    swcrc = {
+        "minify": False,
+    },
 )

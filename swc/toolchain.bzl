@@ -4,7 +4,7 @@
 SwcInfo = provider(
     doc = "Information about how to invoke the tool executable.",
     fields = {
-        "swc_binary": "Path to the native SWC cli for the target platform.",
+        "swc_binary": "Path to the rust-native 'swcx' cli for the target platform.",
         "tool_files": """Files required in runfiles to make the tool executable available.
 
 May be empty if the target_tool_path points to a locally installed tool binary.""",
@@ -62,12 +62,12 @@ swc_toolchain = rule(
     implementation = _swc_toolchain_impl,
     attrs = {
         "target_tool": attr.label(
-            doc = "A hermetically downloaded SWC cli for the target platform.",
+            doc = "A hermetically downloaded 'swcx' cli for the target platform.",
             mandatory = False,
             allow_single_file = True,
         ),
         "target_tool_path": attr.string(
-            doc = "Path to an existing SWC cli for the target platform.",
+            doc = "Path to an existing 'swcx' cli for the target platform.",
             mandatory = False,
         ),
     },

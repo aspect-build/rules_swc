@@ -2,7 +2,6 @@
 # This is *not* included in the published distribution.
 workspace(name = "aspect_rules_swc")
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load(":internal_deps.bzl", "rules_swc_internal_deps")
 
 # Fetch deps needed only locally for development
@@ -30,13 +29,6 @@ swc_register_toolchains(
 load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
 
 aspect_bazel_lib_dependencies(override_local_config_platform = True)
-
-http_archive(
-    name = "aspect_rules_js",
-    sha256 = "66ecc9f56300dd63fb86f11cfa1e8affcaa42d5300e2746dba08541916e913fd",
-    strip_prefix = "rules_js-1.13.0",
-    url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.13.0.tar.gz",
-)
 
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 
