@@ -2,7 +2,7 @@
 
 set -o errexit -o nounset -o pipefail
 
-releases=$(curl -sSL -H 'Accept: application/vnd.github.v3+json' https://api.github.com/repos/swc-project/swc/releases?per_page=5 | jq -f $(pwd)/scripts/filter.jq)
+releases=$(curl -sSL -H 'Accept: application/vnd.github.v3+json' https://api.github.com/repos/swc-project/swc/releases?per_page=1 | jq -f $(pwd)/scripts/filter.jq)
 versions=$(echo $releases | jq --raw-output 'keys[]')
 
 echo -n "TOOL_VERSIONS = {"

@@ -1,8 +1,8 @@
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
-load("@aspect_rules_swc//swc:defs.bzl", "swc_transpiler")
+load("@aspect_rules_swc//swc:defs.bzl", "swc_compile")
 
 [
-    swc_transpiler(
+    swc_compile(
         name = "transpile_" + format,
         srcs = ["a.ts"],
         args = [
