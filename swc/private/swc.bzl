@@ -58,7 +58,14 @@ def _is_supported_src(src):
 
 # TODO: aspect_bazel_lib should provide this?
 def _relative_to_package(path, ctx):
-    for prefix in (ctx.bin_dir.path, ctx.label.package):
+    package_path = ctx.label.package
+    if ctx.label.workspace_root:
+        # If the target label is external (like "@REPO_NAME//some/target")
+        # then it will be placed under "external/REPO_NAME/some/target",
+        # rather than just "some/target", so take that into account here.
+        package_path = ctx.label.workspace_root + "/" + package_path
+
+    for prefix in (ctx.bin_dir.path, package_path):
         prefix += "/"
         if path.startswith(prefix):
             path = path[len(prefix):]
