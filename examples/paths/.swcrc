@@ -6,7 +6,7 @@
     "target": "es2021",
     "baseUrl": "examples/paths",
     "paths": {
-      "@modules/*": ["src/modules/*"]
+      "@modules/*": ["./src/modules/*"]
     }
   },
   "module": {
