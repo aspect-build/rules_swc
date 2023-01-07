@@ -9,10 +9,8 @@ load("@aspect_rules_swc//swc:defs.bzl", "swc")
 # buildifier: disable=bzl-visibility
 load("@aspect_rules_swc//swc/private:testing.bzl", "matching_paths_test")
 
-swc(
-    name = "compile",
-    swcrc = ".swcrc",
-)
+# Note: .swcrc will be automatically found in the current folder
+swc(name = "compile")
 
 # Verify that the "paths" entry is agreed between swc and TS language service (in the editor)
 matching_paths_test(

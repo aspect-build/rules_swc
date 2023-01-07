@@ -70,7 +70,7 @@ Execute the SWC compiler
 | <a id="swc-args"></a>args |  Additional options to pass to SWC cli, see https://swc.rs/docs/usage/cli   |  <code>[]</code> |
 | <a id="swc-data"></a>data |  Files needed at runtime by binaries or tests that transitively depend on this target. See https://bazel.build/reference/be/common-definitions#typical-attributes   |  <code>[]</code> |
 | <a id="swc-output_dir"></a>output_dir |  Whether to produce a directory output rather than individual files   |  <code>False</code> |
-| <a id="swc-swcrc"></a>swcrc |  Label of a .swcrc configuration file for the SWC cli, see https://swc.rs/docs/configuration/swcrc Instead of a label, you can pass a dictionary matching the JSON schema.   |  <code>None</code> |
+| <a id="swc-swcrc"></a>swcrc |  Label of a .swcrc configuration file for the SWC cli, see https://swc.rs/docs/configuration/swcrc Instead of a label, you can pass a dictionary matching the JSON schema. If this attribute isn't specified, and a .swcrc file exists in the same folder as this rule, it is used.   |  <code>None</code> |
 | <a id="swc-source_maps"></a>source_maps |  If set, the --source-maps argument is passed to the SWC cli with the value, see https://swc.rs/docs/usage/cli#--source-maps--s True/False are automaticaly converted to "true"/"false" string values the cli expects.   |  <code>False</code> |
 | <a id="swc-out_dir"></a>out_dir |  The base directory for output files relative to the output directory for this package   |  <code>None</code> |
 | <a id="swc-root_dir"></a>root_dir |  A subdirectory under the input package which should be consider the root directory of all the input files   |  <code>None</code> |
