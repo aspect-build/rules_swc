@@ -10,7 +10,7 @@ swc(name = "compile")
 """
 
 load("//swc/private:swc.bzl", _swc_lib = "swc")
-load("@aspect_bazel_lib//lib:utils.bzl", "to_label")
+load("@aspect_bazel_lib//lib:utils.bzl", "file_exists", "to_label")
 load("@bazel_skylib//lib:types.bzl", "types")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 
@@ -30,17 +30,6 @@ attribute.
     attrs = _swc_lib.attrs,
     toolchains = _swc_lib.toolchains,
 )
-
-def _is_file_present(label):
-    """Check if a file is present by passing its relative path through a glob().
-
-    Args
-        label: the file's label
-    """
-    file_abs = "%s/%s" % (label.package, label.name)
-    file_rel = file_abs[len(native.package_name()) + 1:]
-    file_glob = native.glob([file_rel])
-    return len(file_glob) > 0
 
 def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = None, source_maps = False, out_dir = None, root_dir = None, **kwargs):
     """Execute the SWC compiler
@@ -76,7 +65,7 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
         fail("srcs must be a list, not a " + type(srcs))
 
     if swcrc == None:
-        if _is_file_present(to_label(":.swcrc")):
+        if file_exists(to_label(":.swcrc")):
             swcrc = ".swcrc"
     elif type(swcrc) == type(dict()):
         swcrc.setdefault("sourceMaps", source_maps)
