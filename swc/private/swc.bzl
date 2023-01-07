@@ -44,11 +44,11 @@ _attrs = {
 _outputs = {
     "js_outs": attr.output_list(doc = """list of expected JavaScript output files.
 
-There must be one for each entry in srcs, and in the same order."""),
+There should be one for each entry in srcs."""),
     "map_outs": attr.output_list(doc = """list of expected source map output files.
 
 Can be empty, meaning no source maps should be produced.
-If non-empty, there must be one for each entry in srcs, and in the same order."""),
+If non-empty, there should be one for each entry in srcs."""),
 }
 
 _SUPPORTED_EXTENSIONS = [".ts", ".mts", ".cts", ".tsx", ".jsx", ".mjs", ".cjs", ".js"]

@@ -1,6 +1,9 @@
 """Starlark helper to fetch rules_swc dependencies.
 
-Should be replaced by bzlmod for users of Bazel 6.0 and above.
+These are needed for local dev, and users must install them as well.
+See https://docs.bazel.build/versions/main/skylark/deploying.html#dependencies
+
+Replaced by bzlmod for users of Bazel 6.0 and above.
 """
 
 load("//swc/private:maybe.bzl", http_archive = "maybe_http_archive")

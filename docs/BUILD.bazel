@@ -7,4 +7,9 @@ stardoc_with_diff_test(
     bzl_library_target = "//swc:defs",
 )
 
+stardoc_with_diff_test(
+    name = "repositories",
+    bzl_library_target = "//swc:repositories",
+)
+
 update_docs(name = "update")

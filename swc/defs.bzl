@@ -1,6 +1,8 @@
 """API for running the SWC cli under Bazel
 
-Simplest usage:
+The simplest usage is a single line.
+It relies on the `swcrc` attribute automatically discovering `.swcrc`
+and the `srcs` attribute default of `glob(["**/*.ts", "**/*.tsx"])`:
 
 ```starlark
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
@@ -17,14 +19,11 @@ load("@bazel_skylib//rules:write_file.bzl", "write_file")
 swc_compile = rule(
     doc = """Underlying rule for the `swc` macro.
 
-Most users should just use [swc](#swc) instead.
+Most users should use [swc](#swc) instead, as it predicts the output files
+and has convenient default values.
 
 Use this if you need more control over how the rule is called,
 for example to set your own output labels for `js_outs`.
-
-This rule is also suitable for the
-[ts_project#transpiler](https://github.com/aspect-build/rules_ts/blob/main/docs/rules.md#ts_project-transpiler)
-attribute.
 """,
     implementation = _swc_lib.implementation,
     attrs = _swc_lib.attrs,
@@ -44,9 +43,11 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
 
         output_dir: Whether to produce a directory output rather than individual files
 
-        args: Additional options to pass to SWC cli, see https://swc.rs/docs/usage/cli
+        args: Additional options to pass to `swcx` cli, see https://github.com/swc-project/swc/discussions/3859
+            Note: we do **not** run the [NodeJS wrapper `@swc/cli`](https://swc.rs/docs/usage/cli)
 
-        source_maps: If set, the --source-maps argument is passed to the SWC cli with the value, see https://swc.rs/docs/usage/cli#--source-maps--s
+        source_maps: If set, the --source-maps argument is passed to the SWC cli with the value.
+          See https://swc.rs/docs/usage/cli#--source-maps--s.
           True/False are automaticaly converted to "true"/"false" string values the cli expects.
 
         swcrc: Label of a .swcrc configuration file for the SWC cli, see https://swc.rs/docs/configuration/swcrc
@@ -55,9 +56,9 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
 
         out_dir: The base directory for output files relative to the output directory for this package
 
-        root_dir: A subdirectory under the input package which should be consider the root directory of all the input files
+        root_dir: A subdirectory under the input package which should be considered the root directory of all the input files
 
-        **kwargs: passed through to underlying [`swc_compile`](#swc_compile), eg. `visibility`, `tags`
+        **kwargs: additional keyword arguments passed through to underlying [`swc_compile`](#swc_compile), eg. `visibility`, `tags`
     """
     if srcs == None:
         srcs = native.glob(["**/*.ts", "**/*.tsx"])
