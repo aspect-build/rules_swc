@@ -3,18 +3,20 @@
 Note that this example also depends on the setup in /WORKSPACE at the root of this repository.
 """
 
+load("@aspect_bazel_lib//lib:jq.bzl", "assert_json_matches")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
-
-# buildifier: disable=bzl-visibility
-load("@aspect_rules_swc//swc/private:testing.bzl", "matching_paths_test")
 
 # Note: .swcrc will be automatically found in the current folder
 swc(name = "compile")
 
 # Verify that the "paths" entry is agreed between swc and TS language service (in the editor)
-matching_paths_test(
+assert_json_matches(
     name = "check_paths",
+    file1 = "tsconfig.json",
+    file2 = ".swcrc",
+    filter1 = ".compilerOptions.paths",
+    filter2 = ".jsc.paths",
 )
 
 write_source_files(
