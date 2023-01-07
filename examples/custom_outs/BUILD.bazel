@@ -32,7 +32,7 @@ load("@bazel_skylib//rules:write_file.bzl", "write_file")
 
 [
     swc_compile(
-        name = "transpile_" + format,
+        name = "compile_" + format,
         srcs = ["a.ts"],
         # The extension of the outputs can be modified using js_outs
         js_outs = [format + "/a." + ("cjs" if format == "commonjs" else "js")],

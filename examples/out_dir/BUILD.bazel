@@ -2,7 +2,7 @@ load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load("@aspect_bazel_lib//lib:testing.bzl", "assert_outputs")
 
 swc(
-    name = "transpile",
+    name = "compile",
     srcs = [
         "a.ts",
         "b.ts",
@@ -13,11 +13,11 @@ swc(
 
 # Since the srcs were in a filegroup, the swc macro cannot pre-declare the outputs.
 # So there is no label ":a.js" that we can reference from the build file.
-# However, a.js is still produced as one of the default outputs of the transpile rule.
-# We can verify this in an action that depends on the ":transpile" rule and reads the files.
+# However, a.js is still produced as one of the default outputs of the compile rule.
+# We can verify this in an action that depends on the ":compile" rule and reads the files.
 assert_outputs(
     name = "check_outputs",
-    actual = "transpile",
+    actual = "compile",
     expected = [
         "examples/out_dir/out/a.js",
         "examples/out_dir/out/a.js.map",

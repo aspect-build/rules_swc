@@ -2,11 +2,11 @@ load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
 # Runs `swc in.ts > ../../bazel-bin/examples/simple/in.js`
-# You can run `bazel build --subcommands //examples/simple:transpile`
+# You can run `bazel build --subcommands //examples/simple:compile`
 # to see the exact command line Bazel runs.
 # Note that by default, sources are found by glob(["**/*.ts"])
 swc(
-    name = "transpile",
+    name = "compile",
     source_maps = True,
     swcrc = "//examples/rc:.swcrc",
 )

@@ -7,7 +7,7 @@ load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
 swc(
-    name = "transpile",
+    name = "compile",
     swcrc = ".swcrc",
 )
 

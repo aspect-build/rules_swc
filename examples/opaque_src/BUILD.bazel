@@ -14,7 +14,7 @@ filegroup(
 
 # In this case we pass a target containing sources so the swc macro can't pre-declare the .js output targets
 swc(
-    name = "transpile",
+    name = "compile",
     srcs = [":opaque_src"],
 )
 
@@ -22,10 +22,10 @@ swc(
 output_files(
     name = "in.js",
     paths = ["%s/in.js" % package_name()],
-    target = ":transpile",
+    target = ":compile",
 )
 
-# Assert that the output of "transpile" rule matches the expected file.
+# Assert that this predeclared output of "compile" rule matches the expected file.
 write_source_files(
     name = "test",
     files = {"expected.js": ":in.js"},
