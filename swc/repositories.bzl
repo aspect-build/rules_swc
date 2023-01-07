@@ -13,12 +13,49 @@ LATEST_VERSION = TOOL_VERSIONS.keys()[0]
 
 _DOC = "Fetch external dependencies needed to run the SWC cli"
 _ATTRS = {
-    "swc_version": attr.string(default = LATEST_VERSION),
+    "swc_version": attr.string(doc = "Explicit version. If provided, the package.json is not read."),
+    "swc_version_from": attr.label(doc = "Location of package.json which may have a version for @swc/core."),
     "platform": attr.string(mandatory = True, values = PLATFORMS.keys()),
     "integrity_hashes": attr.string_dict(),
 }
 
+# This package is versioned the same as the underlying rust binary we download
+_NPM_PKG = "@swc/core"
+
+_SWC_TOO_OLD = """
+
+FATAL: swc version must be at least 1.3.25, as prior versions had bugs in the pure-rust CLI.
+
+If you need swc version {}, then use rules_swc v0.20.2 or earlier.
+Those releases of rules_swc call the NodeJS @swc/cli to access the Rust binding,
+so they aren't affected by these bugs.
+
+"""
+
+# Read the swc version from package.json if requested
+def _determine_version(rctx):
+    if rctx.attr.swc_version:
+        return rctx.attr.swc_version
+
+    json_path = rctx.path(rctx.attr.swc_version_from)
+    p = json.decode(rctx.read(json_path))
+    if "devDependencies" in p.keys() and _NPM_PKG in p["devDependencies"]:
+        v = p["devDependencies"][_NPM_PKG]
+    elif "dependencies" in p.keys() and _NPM_PKG in p["dependencies"]:
+        v = p["dependencies"][_NPM_PKG]
+    else:
+        fail("key '{}' not found in either dependencies or devDependencies of {}".format(_NPM_PKG, json_path))
+    if any([not seg.isdigit() for seg in v.split(".")]):
+        fail("{} version in package.json must be exactly specified, not a semver range: {}.\n".format(_NPM_PKG, v) +
+             "You can supply an exact 'swc_version' attribute to 'swc_register_toolchains' to bypass this check.")
+
+    # package.json versions don't have a "v" prefix, but github distribution/tag does.
+    return "v" + v
+
 def _swc_repo_impl(repository_ctx):
+    version = _determine_version(repository_ctx)
+    if not versions.is_at_least("1.3.25", version.lstrip("v")):
+        fail(_SWC_TOO_OLD.format(version))
     filename = "swc-" + repository_ctx.attr.platform
 
     # The binaries of the SWC cli releases for windows are suffixed with ".exe"
@@ -26,7 +63,7 @@ def _swc_repo_impl(repository_ctx):
         filename += ".exe"
 
     url = "https://github.com/swc-project/swc/releases/download/{0}/{1}".format(
-        repository_ctx.attr.swc_version,
+        version,
         filename,
     )
 
@@ -35,14 +72,14 @@ def _swc_repo_impl(repository_ctx):
         None,
     )
     if not integrity:
-        if repository_ctx.attr.swc_version not in TOOL_VERSIONS.keys():
+        if version not in TOOL_VERSIONS.keys():
             fail("""\
 swc version {} does not have hashes mirrored in aspect_rules_swc, please either
     - Set the integrity_hashes attribute to a dictionary of platform/hash
     - Choose one of the mirrored versions: {}
-""".format(repository_ctx.attr.swc_version, TOOL_VERSIONS.keys()))
+""".format(version, TOOL_VERSIONS.keys()))
 
-        integrity = TOOL_VERSIONS[repository_ctx.attr.swc_version][repository_ctx.attr.platform]
+        integrity = TOOL_VERSIONS[version][repository_ctx.attr.platform]
 
     repository_ctx.download(
         output = filename,
@@ -67,18 +104,8 @@ swc_repositories = repository_rule(
     attrs = _ATTRS,
 )
 
-_SWC_TOO_OLD = """
-
-FATAL: swc version must be at least 1.3.25, as prior versions had bugs in the pure-rust CLI.
-
-If you need swc version {}, then use rules_swc v0.20.2 or earlier.
-Those releases of rules_swc call the NodeJS @swc/cli to access the Rust binding,
-so they aren't affected by these bugs.
-
-"""
-
 # Wrapper macro around everything above, this is the primary API
-def swc_register_toolchains(name, swc_version, register = True, **kwargs):
+def swc_register_toolchains(name, swc_version = None, swc_version_from = None, register = True, **kwargs):
     """Convenience macro for users which does typical setup.
 
     - create a repository for each built-in platform like "swc_linux_amd64"
@@ -87,20 +114,25 @@ def swc_register_toolchains(name, swc_version, register = True, **kwargs):
     Users can avoid this macro and do these steps themselves, if they want more control.
     Args:
         name: base name for all created repos, like "swc"
+        swc_version_from: label of a json file (typically `package.json`) which declares an exact @swc/core version
+            in a dependencies or devDependencies property.
+            Exactly one of `swc_version` or `swc_version_from` must be set.
         swc_version: version of the swc project, from https://github.com/swc-project/swc/releases
+            Exactly one of `swc_version` or `swc_version_from` must be set.
         register: whether to call through to native.register_toolchains.
             Should be True for WORKSPACE users, but false when used under bzlmod extension
         **kwargs: passed to each swc_repositories call
     """
 
-    if not versions.is_at_least("1.3.25", swc_version.lstrip("v")):
-        fail(_SWC_TOO_OLD.format(swc_version))
+    if (swc_version and swc_version_from) or (not swc_version_from and not swc_version):
+        fail("Exactly one of 'swc_version' or 'swc_version_from' must be set.")
 
     for platform in PLATFORMS.keys():
         swc_repositories(
             name = name + "_" + platform,
             platform = platform,
             swc_version = swc_version,
+            swc_version_from = swc_version_from,
             **kwargs
         )
         if register:
