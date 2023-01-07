@@ -51,7 +51,7 @@ Can be empty, meaning no source maps should be produced.
 If non-empty, there must be one for each entry in srcs, and in the same order."""),
 }
 
-_SUPPORTED_EXTENSIONS = [".ts", ".tsx", ".jsx", ".mjs", ".cjs", ".js"]
+_SUPPORTED_EXTENSIONS = [".ts", ".mts", ".cts", ".tsx", ".jsx", ".mjs", ".cjs", ".js"]
 
 def _is_supported_src(src):
     return paths.split_extension(src)[-1] in _SUPPORTED_EXTENSIONS
@@ -70,11 +70,31 @@ def _strip_root_dir(path, root_dir):
         path = path[len("./"):]
     return path.replace(replace_pattern, "", 1)
 
+# Copied from ts_lib.bzl
+# https://github.com/aspect-build/rules_ts/blob/c2a9e1e476c45bb895c4445327471e29bc3e0474/ts/private/ts_lib.bzl
+# TODO: We should probably share code to avoid the implementations diverging and having different bugs
+def _replace_ext(f, ext_map):
+    cur_ext = f[f.rindex("."):]
+    new_ext = ext_map.get(cur_ext)
+    if new_ext != None:
+        return new_ext
+    new_ext = ext_map.get("*")
+    if new_ext != None:
+        return new_ext
+    return None
+
 def _calculate_js_out(src, out_dir = None, root_dir = None, js_outs = []):
     if not _is_supported_src(src):
         return None
 
-    js_out = paths.replace_extension(src, ".js")
+    exts = {
+        "*": ".js",
+        ".mts": ".mjs",
+        ".mjs": ".mjs",
+        ".cjs": ".cjs",
+        ".cts": ".cjs",
+    }
+    js_out = paths.replace_extension(src, _replace_ext(src, exts))
     if root_dir:
         js_out = _strip_root_dir(js_out, root_dir)
     if out_dir:
@@ -104,7 +124,14 @@ def _calculate_map_out(src, source_maps, out_dir = None, root_dir = None):
         return None
     if not _is_supported_src(src):
         return None
-    map_out = paths.replace_extension(src, ".js.map")
+    exts = {
+        "*": ".js.map",
+        ".mts": ".mjs.map",
+        ".cts": ".cjs.map",
+        ".mjs": ".mjs.map",
+        ".cjs": ".cjs.map",
+    }
+    map_out = paths.replace_extension(src, _replace_ext(src, exts))
     if root_dir:
         map_out = _strip_root_dir(map_out, root_dir)
     if out_dir:
