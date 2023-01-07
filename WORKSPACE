@@ -15,7 +15,7 @@ rules_swc_dependencies()
 load("//swc:repositories.bzl", "swc_register_toolchains")
 
 swc_register_toolchains(
-    name = "default_swc",
+    name = "swc",
     # Demonstrates how users can choose ANY swc version, not just the ones we mirrored
     integrity_hashes = {
         "darwin-arm64": "sha384-4TRcW8Nb2g/3zQ0T4aS+NSjMbUaIHaGxofkA67CcAQZbeK1uDmjXFh5uJw69ZV07",

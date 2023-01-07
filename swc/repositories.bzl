@@ -1,7 +1,6 @@
-"""Declare runtime dependencies
+"""Repository rules for fetching the swc toolchain.
 
-These are needed for local dev, and users must install them as well.
-See https://docs.bazel.build/versions/main/skylark/deploying.html#dependencies
+For typical usage, see the snippets provided in the rules_swc release notes.
 """
 
 load("@bazel_skylib//lib:versions.bzl", "versions")
@@ -112,9 +111,10 @@ def swc_register_toolchains(name, swc_version = None, swc_version_from = None, r
     - create a repository exposing toolchains for each platform like "swc_platforms"
     - register a toolchain pointing at each platform
     Users can avoid this macro and do these steps themselves, if they want more control.
+
     Args:
-        name: base name for all created repos, like "swc"
-        swc_version_from: label of a json file (typically `package.json`) which declares an exact @swc/core version
+        name: base name for all created repos; we recommend `swc`
+        swc_version_from: label of a json file (typically `package.json`) which declares an exact `@swc/core` version
             in a dependencies or devDependencies property.
             Exactly one of `swc_version` or `swc_version_from` must be set.
         swc_version: version of the swc project, from https://github.com/swc-project/swc/releases
