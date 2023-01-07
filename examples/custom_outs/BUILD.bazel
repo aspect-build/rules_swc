@@ -7,7 +7,7 @@ load("@bazel_skylib//rules:write_file.bzl", "write_file")
 # Note, --config is documented on swcx CLI but isn't functional. See
 # https://github.com/swc-project/swc/issues/4017#issuecomment-1374141572
 # In the call to swc_compile below, we ought to be able to use
-#   `args = ["--config", "module.format=" + format]`
+#   `args = ["--config", "module.type=" + format]`
 # As a workaround, write our config to an rc file. Can be changed back when swcx supports --config.
 [
     write_file(

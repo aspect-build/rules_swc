@@ -26,9 +26,11 @@ swc_register_toolchains(
     swc_version = "v1.3.25",
 )
 
-load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
+load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies", "register_jq_toolchains")
 
 aspect_bazel_lib_dependencies(override_local_config_platform = True)
+
+register_jq_toolchains()
 
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 

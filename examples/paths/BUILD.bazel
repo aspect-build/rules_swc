@@ -6,9 +6,17 @@ Note that this example also depends on the setup in /WORKSPACE at the root of th
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
+# buildifier: disable=bzl-visibility
+load("@aspect_rules_swc//swc/private:testing.bzl", "matching_paths_test")
+
 swc(
     name = "compile",
     swcrc = ".swcrc",
+)
+
+# Verify that the "paths" entry is agreed between swc and TS language service (in the editor)
+matching_paths_test(
+    name = "check_paths",
 )
 
 write_source_files(
