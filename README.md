@@ -36,14 +36,6 @@ This means we do not run `npm install` or `yarn`.
 
 ## Installation
 
-Runfiles need to be enabled in Bazel for the rules to work. On Windows, this is not enabled by default.
-
-Add this to the `.bazelrc` in your project:
-
-```
-build --enable_runfiles
-```
-
 From the release you wish to use:
 <https://github.com/aspect-build/rules_swc/releases>
 copy the WORKSPACE snippet into your `WORKSPACE` file.
