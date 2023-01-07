@@ -23,7 +23,7 @@ swc_register_toolchains(
         "linux-arm64-gnu": "sha384-2uYEohzUAAalEGiD0iEPEDWlR1BCM4q+DhsnIe5saa8B2+igdLzsQrbREimhu5TJ",
         "linux-x64-gnu": "sha384-c46sYs/jCA4OjV7LeWT201dYQDTO76V6sZzdtOiGt+3Gls9n6QG+K4hkpIE+wy0k",
     },
-    swc_version = "v1.3.25",
+    swc_version_from = "//:package.json",
 )
 
 load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
