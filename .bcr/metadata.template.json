@@ -1,5 +1,5 @@
 {
-  "homepage": "https://docs.aspect.dev/rules_swc",
+  "homepage": "https://docs.aspect.build/rules/aspect_rules_swc",
   "maintainers": [
     {
       "email": "hello@aspect.dev",
@@ -7,6 +7,7 @@
       "name": "Aspect team"
     }
   ],
+  "repository": ["github:aspect-build/rules_swc"],
   "versions": [],
   "yanked_versions": {}
 }
