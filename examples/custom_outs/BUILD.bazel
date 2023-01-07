@@ -1,9 +1,30 @@
-"""Demonstrate that js_outs can go to whatever file extensions you like."""
+"""Demonstrate that js_outs can go to the desired file extensions."""
 
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_outputs")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc_compile")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 
+###############################
+# Case 1: js extension variants
+# .mts -> .mjs
+swc_compile(
+    name = "esmodule",
+    srcs = ["b.mts"],
+    source_maps = "true",
+)
+
+assert_outputs(
+    name = "check_esmodule",
+    actual = "esmodule",
+    expected = [
+        "examples/custom_outs/b.mjs",
+        "examples/custom_outs/b.mjs.map",
+    ],
+)
+
+###############################
+# Case 2: user-defined js output paths
 # Note, --config is documented on swcx CLI but isn't functional. See
 # https://github.com/swc-project/swc/issues/4017#issuecomment-1374141572
 # In the call to swc_compile below, we ought to be able to use
