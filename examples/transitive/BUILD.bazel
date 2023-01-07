@@ -1,5 +1,5 @@
 """Test transitive dependencies between typescript files
-which are transpiled separately as "libraries" but which
+which are compiled separately as "libraries" but which
 have runtime dependencies.
 """
 

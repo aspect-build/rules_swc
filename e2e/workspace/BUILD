@@ -1,9 +1,9 @@
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
-swc(name = "transpile")
+swc(name = "compile")
 
 build_test(
     name = "test",
-    targets = [":transpile"],
+    targets = [":compile"],
 )
