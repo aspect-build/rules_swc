@@ -52,7 +52,12 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
 
         swcrc: Label of a .swcrc configuration file for the SWC cli, see https://swc.rs/docs/configuration/swcrc
             Instead of a label, you can pass a dictionary matching the JSON schema.
-            If this attribute isn't specified, and a .swcrc file exists in the same folder as this rule, it is used.
+            If this attribute isn't specified, and a file `.swcrc` exists in the same folder as this rule, it is used.
+
+            Note that some settings in `.swcrc` also appear in `tsconfig.json`.
+            We recommend adding an `assert_json_matches` rule to guarantee
+            these don't accidentally diverge.
+            See an example in `examples/paths/BUILD.bazel`.
 
         out_dir: The base directory for output files relative to the output directory for this package
 
