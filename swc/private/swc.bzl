@@ -177,7 +177,7 @@ def _impl(ctx):
             ])
             inputs.append(ctx.file.swcrc)
 
-        ctx.actions.run(
+        ctx.actions.run_shell(
             inputs = inputs,
             arguments = [
                 args,
@@ -185,7 +185,8 @@ def _impl(ctx):
                 ctx.files.srcs[0].path,
             ],
             outputs = output_sources,
-            executable = swc_toolchain.swcinfo.swc_binary,
+            # TODO: Remove the redirection of the null device (windows fix)
+            command = swc_toolchain.swcinfo.swc_binary + " $@ < /dev/null",
             mnemonic = "SWCCompile",
             progress_message = "Compiling %{label} [swc %{input}]",
         )
@@ -231,7 +232,7 @@ def _impl(ctx):
 
             output_sources.extend(outputs)
 
-            ctx.actions.run(
+            ctx.actions.run_shell(
                 inputs = inputs,
                 arguments = [
                     args,
@@ -239,7 +240,8 @@ def _impl(ctx):
                     src.path,
                 ],
                 outputs = outputs,
-                executable = swc_toolchain.swcinfo.swc_binary,
+                # TODO: Remove the redirection of the null device (windows fix)
+                command = swc_toolchain.swcinfo.swc_binary + " $@ < /dev/null",
                 mnemonic = "SWCCompile",
                 progress_message = "Compiling %{label} [swc %{input}]",
             )
