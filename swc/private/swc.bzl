@@ -94,6 +94,9 @@ def _calculate_js_out(src, out_dir = None, root_dir = None, js_outs = []):
         ".mjs": ".mjs",
         ".cjs": ".cjs",
         ".cts": ".cjs",
+        # TODO: does this need to be conditional on the value of jsc.parser.tsx ?
+        # https://swc.rs/blog/swc-1#typescript-support
+        ".tsx": ".jsx",
     }
     js_out = paths.replace_extension(src, _replace_ext(src, exts))
     if root_dir:
@@ -131,6 +134,9 @@ def _calculate_map_out(src, source_maps, out_dir = None, root_dir = None):
         ".cts": ".cjs.map",
         ".mjs": ".mjs.map",
         ".cjs": ".cjs.map",
+        # TODO: does this need to be conditional on the value of jsc.parser.tsx ?
+        # https://swc.rs/blog/swc-1#typescript-support
+        ".tsx": ".jsx.map",
     }
     map_out = paths.replace_extension(src, _replace_ext(src, exts))
     if root_dir:

@@ -8,9 +8,13 @@ load("@bazel_skylib//rules:write_file.bzl", "write_file")
 ###############################
 # Case 1: js extension variants
 # .mts -> .mjs
+# .tsx -> .jsx
 swc_compile(
     name = "esmodule",
-    srcs = ["b.mts"],
+    srcs = [
+        "b.mts",
+        "c.tsx",
+    ],
     source_maps = "true",
 )
 
@@ -20,6 +24,8 @@ assert_outputs(
     expected = [
         "examples/custom_outs/b.mjs",
         "examples/custom_outs/b.mjs.map",
+        "examples/custom_outs/c.jsx",
+        "examples/custom_outs/c.jsx.map",
     ],
 )
 
