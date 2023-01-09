@@ -1,5 +1,6 @@
 "Internal implementation details"
 
+load("@aspect_bazel_lib//lib:platform_utils.bzl", "platform_utils")
 load("@aspect_rules_js//js:libs.bzl", "js_lib_helpers")
 load("@aspect_rules_js//js:providers.bzl", "js_info")
 load("@bazel_skylib//lib:paths.bzl", "paths")
@@ -141,6 +142,20 @@ def _calculate_map_out(src, source_maps, out_dir = None, root_dir = None):
 def _calculate_map_outs(srcs, source_maps, out_dir = None, root_dir = None):
     return [f2 for f2 in [_calculate_map_out(f, source_maps, out_dir, root_dir) for f in srcs] if f2]
 
+def _swc_action(ctx, swc_binary, **kwargs):
+    # Workaround Rust SDK issue on Windows, see https://github.com/aspect-build/rules_swc/issues/141
+    if platform_utils.host_platform_is_windows():
+        run = ctx.actions.run_shell
+        kwargs["command"] = swc_binary + " $@ < /dev/null"
+    else:
+        run = ctx.actions.run
+        kwargs["executable"] = swc_binary
+    run(
+        mnemonic = "SWCCompile",
+        progress_message = "Compiling %{label} [swc %{input}]",
+        **kwargs
+    )
+
 def _impl(ctx):
     swc_toolchain = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"]
 
@@ -177,7 +192,9 @@ def _impl(ctx):
             ])
             inputs.append(ctx.file.swcrc)
 
-        ctx.actions.run_shell(
+        _swc_action(
+            ctx,
+            swc_toolchain.swcinfo.swc_binary,
             inputs = inputs,
             arguments = [
                 args,
@@ -185,10 +202,6 @@ def _impl(ctx):
                 ctx.files.srcs[0].path,
             ],
             outputs = output_sources,
-            # TODO: Remove the redirection of the null device (windows fix)
-            command = swc_toolchain.swcinfo.swc_binary + " $@ < /dev/null",
-            mnemonic = "SWCCompile",
-            progress_message = "Compiling %{label} [swc %{input}]",
         )
     else:
         output_sources = []
@@ -232,7 +245,9 @@ def _impl(ctx):
 
             output_sources.extend(outputs)
 
-            ctx.actions.run_shell(
+            _swc_action(
+                ctx,
+                swc_toolchain.swcinfo.swc_binary,
                 inputs = inputs,
                 arguments = [
                     args,
@@ -240,10 +255,6 @@ def _impl(ctx):
                     src.path,
                 ],
                 outputs = outputs,
-                # TODO: Remove the redirection of the null device (windows fix)
-                command = swc_toolchain.swcinfo.swc_binary + " $@ < /dev/null",
-                mnemonic = "SWCCompile",
-                progress_message = "Compiling %{label} [swc %{input}]",
             )
 
     output_sources_depset = depset(output_sources)
