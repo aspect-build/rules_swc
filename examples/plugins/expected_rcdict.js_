@@ -1,0 +1,5 @@
+import map from "lodash/map";
+import sort from "lodash/test/sort";
+const foo = "bar";
+let _m = map;
+let _s = sort;
