@@ -12,6 +12,7 @@ swc(name = "compile")
 """
 
 load("//swc/private:swc.bzl", _swc_lib = "swc")
+load("//swc/private:swc_plugin.bzl", _swc_plugin_lib = "swc_plugin")
 load("@aspect_bazel_lib//lib:utils.bzl", "file_exists", "to_label")
 load("@bazel_skylib//lib:types.bzl", "types")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
@@ -30,7 +31,7 @@ for example to set your own output labels for `js_outs`.
     toolchains = _swc_lib.toolchains,
 )
 
-def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = None, source_maps = False, out_dir = None, root_dir = None, **kwargs):
+def swc(name, srcs = None, args = [], data = [], plugins = [], output_dir = False, swcrc = None, source_maps = False, out_dir = None, root_dir = None, **kwargs):
     """Execute the SWC compiler
 
     Args:
@@ -56,6 +57,8 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
 
             Note that some settings in `.swcrc` also appear in `tsconfig.json`.
             See the notes in [/docs/tsconfig.md].
+
+        plugins: List of plugin labels created with `swc_plugin`.
 
         out_dir: The base directory for output files relative to the output directory for this package
 
@@ -101,6 +104,7 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
     swc_compile(
         name = name,
         srcs = srcs,
+        plugins = plugins,
         js_outs = js_outs,
         map_outs = map_outs,
         output_dir = output_dir,
@@ -110,5 +114,37 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
         swcrc = swcrc,
         out_dir = out_dir,
         root_dir = root_dir,
+        **kwargs
+    )
+
+_swc_plugin = rule(
+    doc = "Configure an SWC plugin",
+    implementation = _swc_plugin_lib.implementation,
+    attrs = _swc_plugin_lib.attrs,
+    provides = _swc_plugin_lib.provides,
+)
+
+def swc_plugin(name, src = None, config = {}, **kwargs):
+    """Configure an SWC plugin
+
+    Args:
+        name: A name for this target
+
+        src: Label for the plugin, either a directory containing a package.json pointing at a wasm file
+            as the main entrypoint, or a wasm file. Usually a linked npm package target via rules_js.
+
+        config: Optional configuration dict for the plugin. This is passed as a JSON object into the
+            `jsc.experimental.plugins` entry for the plugin.
+
+        **kwargs: additional keyword arguments passed through to underlying rule, eg. `visibility`, `tags`
+    """
+
+    if not types.is_dict(config):
+        fail("config must be a dict, not a " + type(config))
+
+    _swc_plugin(
+        name = name,
+        src = src,
+        config = json.encode(config),
         **kwargs
     )

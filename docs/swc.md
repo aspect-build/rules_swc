@@ -18,8 +18,8 @@ swc(name = "compile")
 ## swc_compile
 
 <pre>
-swc_compile(<a href="#swc_compile-name">name</a>, <a href="#swc_compile-args">args</a>, <a href="#swc_compile-data">data</a>, <a href="#swc_compile-js_outs">js_outs</a>, <a href="#swc_compile-map_outs">map_outs</a>, <a href="#swc_compile-out_dir">out_dir</a>, <a href="#swc_compile-output_dir">output_dir</a>, <a href="#swc_compile-root_dir">root_dir</a>, <a href="#swc_compile-source_maps">source_maps</a>, <a href="#swc_compile-srcs">srcs</a>,
-            <a href="#swc_compile-swcrc">swcrc</a>)
+swc_compile(<a href="#swc_compile-name">name</a>, <a href="#swc_compile-args">args</a>, <a href="#swc_compile-data">data</a>, <a href="#swc_compile-js_outs">js_outs</a>, <a href="#swc_compile-map_outs">map_outs</a>, <a href="#swc_compile-out_dir">out_dir</a>, <a href="#swc_compile-output_dir">output_dir</a>, <a href="#swc_compile-plugins">plugins</a>, <a href="#swc_compile-root_dir">root_dir</a>,
+            <a href="#swc_compile-source_maps">source_maps</a>, <a href="#swc_compile-srcs">srcs</a>, <a href="#swc_compile-swcrc">swcrc</a>)
 </pre>
 
 Underlying rule for the `swc` macro.
@@ -43,6 +43,7 @@ for example to set your own output labels for `js_outs`.
 | <a id="swc_compile-map_outs"></a>map_outs |  list of expected source map output files.<br><br>Can be empty, meaning no source maps should be produced. If non-empty, there should be one for each entry in srcs.   | List of labels | optional |  |
 | <a id="swc_compile-out_dir"></a>out_dir |  base directory for output files   | String | optional | <code>""</code> |
 | <a id="swc_compile-output_dir"></a>output_dir |  whether to produce a directory output rather than individual files   | Boolean | optional | <code>False</code> |
+| <a id="swc_compile-plugins"></a>plugins |  swc compilation plugins, created with swc_plugin rule   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional | <code>[]</code> |
 | <a id="swc_compile-root_dir"></a>root_dir |  a subdirectory under the input package which should be consider the root directory of all the input files   | String | optional | <code>""</code> |
 | <a id="swc_compile-source_maps"></a>source_maps |  see https://swc.rs/docs/usage/cli#--source-maps--s   | String | optional | <code>"false"</code> |
 | <a id="swc_compile-srcs"></a>srcs |  source files, typically .ts files in the source tree   | <a href="https://bazel.build/concepts/labels">List of labels</a> | required |  |
@@ -54,7 +55,7 @@ for example to set your own output labels for `js_outs`.
 ## swc
 
 <pre>
-swc(<a href="#swc-name">name</a>, <a href="#swc-srcs">srcs</a>, <a href="#swc-args">args</a>, <a href="#swc-data">data</a>, <a href="#swc-output_dir">output_dir</a>, <a href="#swc-swcrc">swcrc</a>, <a href="#swc-source_maps">source_maps</a>, <a href="#swc-out_dir">out_dir</a>, <a href="#swc-root_dir">root_dir</a>, <a href="#swc-kwargs">kwargs</a>)
+swc(<a href="#swc-name">name</a>, <a href="#swc-srcs">srcs</a>, <a href="#swc-args">args</a>, <a href="#swc-data">data</a>, <a href="#swc-plugins">plugins</a>, <a href="#swc-output_dir">output_dir</a>, <a href="#swc-swcrc">swcrc</a>, <a href="#swc-source_maps">source_maps</a>, <a href="#swc-out_dir">out_dir</a>, <a href="#swc-root_dir">root_dir</a>, <a href="#swc-kwargs">kwargs</a>)
 </pre>
 
 Execute the SWC compiler
@@ -68,11 +69,33 @@ Execute the SWC compiler
 | <a id="swc-srcs"></a>srcs |  List of labels of TypeScript source files.   |  <code>None</code> |
 | <a id="swc-args"></a>args |  Additional options to pass to <code>swcx</code> cli, see https://github.com/swc-project/swc/discussions/3859 Note: we do **not** run the [NodeJS wrapper <code>@swc/cli</code>](https://swc.rs/docs/usage/cli)   |  <code>[]</code> |
 | <a id="swc-data"></a>data |  Files needed at runtime by binaries or tests that transitively depend on this target. See https://bazel.build/reference/be/common-definitions#typical-attributes   |  <code>[]</code> |
+| <a id="swc-plugins"></a>plugins |  List of plugin labels created with <code>swc_plugin</code>.   |  <code>[]</code> |
 | <a id="swc-output_dir"></a>output_dir |  Whether to produce a directory output rather than individual files   |  <code>False</code> |
 | <a id="swc-swcrc"></a>swcrc |  Label of a .swcrc configuration file for the SWC cli, see https://swc.rs/docs/configuration/swcrc Instead of a label, you can pass a dictionary matching the JSON schema. If this attribute isn't specified, and a file <code>.swcrc</code> exists in the same folder as this rule, it is used.<br><br>Note that some settings in <code>.swcrc</code> also appear in <code>tsconfig.json</code>. See the notes in [/docs/tsconfig.md].   |  <code>None</code> |
 | <a id="swc-source_maps"></a>source_maps |  If set, the --source-maps argument is passed to the SWC cli with the value. See https://swc.rs/docs/usage/cli#--source-maps--s. True/False are automaticaly converted to "true"/"false" string values the cli expects.   |  <code>False</code> |
 | <a id="swc-out_dir"></a>out_dir |  The base directory for output files relative to the output directory for this package   |  <code>None</code> |
 | <a id="swc-root_dir"></a>root_dir |  A subdirectory under the input package which should be considered the root directory of all the input files   |  <code>None</code> |
 | <a id="swc-kwargs"></a>kwargs |  additional keyword arguments passed through to underlying [<code>swc_compile</code>](#swc_compile), eg. <code>visibility</code>, <code>tags</code>   |  none |
+
+
+<a id="swc_plugin"></a>
+
+## swc_plugin
+
+<pre>
+swc_plugin(<a href="#swc_plugin-name">name</a>, <a href="#swc_plugin-src">src</a>, <a href="#swc_plugin-config">config</a>, <a href="#swc_plugin-kwargs">kwargs</a>)
+</pre>
+
+Configure an SWC plugin
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="swc_plugin-name"></a>name |  A name for this target   |  none |
+| <a id="swc_plugin-src"></a>src |  Label for the plugin, either a directory containing a package.json pointing at a wasm file as the main entrypoint, or a wasm file. Usually a linked npm package target via rules_js.   |  <code>None</code> |
+| <a id="swc_plugin-config"></a>config |  Optional configuration dict for the plugin. This is passed as a JSON object into the <code>jsc.experimental.plugins</code> entry for the plugin.   |  <code>{}</code> |
+| <a id="swc_plugin-kwargs"></a>kwargs |  additional keyword arguments passed through to underlying rule, eg. <code>visibility</code>, <code>tags</code>   |  none |
 
 

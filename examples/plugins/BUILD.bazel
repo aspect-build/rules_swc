@@ -1,0 +1,86 @@
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_bazel_lib//lib:directory_path.bzl", "directory_path")
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+load("@aspect_rules_swc//swc:defs.bzl", "swc", "swc_plugin")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
+npm_link_all_packages(name = "node_modules")
+
+directory_path(
+    name = "plugin_wasm_path",
+    directory = ":node_modules/@swc/plugin-transform-imports/dir",
+    path = "swc_plugin_transform_imports.wasm",
+)
+
+copy_file(
+    name = "plugin_wasm",
+    src = ":plugin_wasm_path",
+    out = "plugin.wasm",
+)
+
+# plugin from an npm package, this will work if the package.json
+# includes a main entrypoint pointing at the plugin wasm file.
+swc_plugin(
+    name = "npm_plugin",
+    src = ":node_modules/@swc/plugin-transform-imports",
+    # optional plugin config, the JSON object for the plugin passed into jsc.experimental.plugins
+    # https://swc.rs/docs/configuration/compilation#jscexperimentalplugins
+    config = {
+        "lodash": {
+            "transform": "lodash/{{member}}",
+        },
+    },
+)
+
+# plugin referencing a wasm file directly,
+# for example a rust_binary target set up to build wasm
+swc_plugin(
+    name = "file_plugin",
+    src = ":plugin_wasm",
+    config = {
+        "lodash2": {
+            "transform": "lodash/test/{{member}}",
+        },
+    },
+)
+
+swc(
+    name = "simple",
+    out_dir = "simple",
+    plugins = [
+        ":npm_plugin",
+    ],
+)
+
+swc(
+    name = "rcdict",
+    out_dir = "rcdict",
+    plugins = [
+        ":npm_plugin",
+        ":file_plugin",
+    ],
+    swcrc = {
+        "jsc": {
+            "target": "es2015",
+        },
+    },
+)
+
+swc(
+    name = "rc",
+    out_dir = "rc",
+    plugins = [
+        ":npm_plugin",
+        ":file_plugin",
+    ],
+    swcrc = "minify.swcrc",
+)
+
+write_source_files(
+    name = "test",
+    files = {
+        "expected_simple.js_": ":simple/in.js",
+        "expected_rc.js_": ":rc/in.js",
+        "expected_rcdict.js_": ":rcdict/in.js",
+    },
+)

@@ -1,0 +1,5 @@
+import map from "lodash/map";
+import { sort } from "lodash2";
+var foo = "bar";
+var _m = map;
+var _s = sort;
