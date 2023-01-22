@@ -1,0 +1,59 @@
+lockfileVersion: 5.3
+
+importers:
+  generate_swcrc:
+    specifiers:
+      tsconfig-to-swcconfig: ~2.0.1
+    devDependencies:
+      tsconfig-to-swcconfig: registry.npmjs.org/tsconfig-to-swcconfig/2.0.1
+
+packages:
+  registry.npmjs.org/deepmerge/4.2.2:
+    resolution:
+      {
+        integrity: sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==,
+        registry: https://registry.npmjs.com/,
+        tarball: https://registry.npmjs.org/deepmerge/-/deepmerge-4.2.2.tgz,
+      }
+    name: deepmerge
+    version: 4.2.2
+    engines: { node: ">=0.10.0" }
+    dev: true
+
+  registry.npmjs.org/joycon/3.1.1:
+    resolution:
+      {
+        integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==,
+        registry: https://registry.npmjs.com/,
+        tarball: https://registry.npmjs.org/joycon/-/joycon-3.1.1.tgz,
+      }
+    name: joycon
+    version: 3.1.1
+    engines: { node: ">=10" }
+    dev: true
+
+  registry.npmjs.org/jsonc-parser/3.2.0:
+    resolution:
+      {
+        integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==,
+        registry: https://registry.npmjs.com/,
+        tarball: https://registry.npmjs.org/jsonc-parser/-/jsonc-parser-3.2.0.tgz,
+      }
+    name: jsonc-parser
+    version: 3.2.0
+    dev: true
+
+  registry.npmjs.org/tsconfig-to-swcconfig/2.0.1:
+    resolution:
+      {
+        integrity: sha512-GD4rQFgw2Vdi9D81eO7F0OfKZPiBPdyB5mwbUgnGqD3jWBT8dW9TDT9vLMkbyEYM+FSv09nqmbZpzAdRDni0WQ==,
+        registry: https://registry.npmjs.com/,
+        tarball: https://registry.npmjs.org/tsconfig-to-swcconfig/-/tsconfig-to-swcconfig-2.0.1.tgz,
+      }
+    name: tsconfig-to-swcconfig
+    version: 2.0.1
+    dependencies:
+      deepmerge: registry.npmjs.org/deepmerge/4.2.2
+      joycon: registry.npmjs.org/joycon/3.1.1
+      jsonc-parser: registry.npmjs.org/jsonc-parser/3.2.0
+    dev: true
