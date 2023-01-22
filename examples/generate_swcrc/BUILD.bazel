@@ -1,0 +1,45 @@
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_json_matches")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
+npm_link_all_packages(name = "node_modules")
+
+# Doesn't work: https://github.com/Songkeys/tswc/issues/1
+# load("@npm//examples/generate_swcrc:tswc/package_json.bzl", "bin")
+# bin.tswc(
+#     name = "convert",
+#     srcs = ["tsconfig.json"],
+#     stdout = ".swcrc0",
+#     args = ["--debug"],
+# )
+
+js_binary(
+    name = "converter",
+    data = [":node_modules/tsconfig-to-swcconfig"],
+    entry_point = "write_swcrc.js",
+)
+
+js_run_binary(
+    name = "write_swcrc",
+    srcs = ["tsconfig.json"],
+    args = ["./tsconfig.json"],
+    chdir = package_name(),
+    stdout = ".swcrc",
+    tool = "converter",
+)
+
+# Demonstrate that it works
+swc(
+    name = "compile",
+    swcrc = ".swcrc",
+)
+
+# Verify that our options got passed through
+assert_json_matches(
+    name = "test",
+    file1 = ".swcrc",
+    file2 = "tsconfig.json",
+    filter1 = ".jsc.target",
+    filter2 = ".compilerOptions.target",
+)

@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "devDependencies": {
+    "tsconfig-to-swcconfig": "~2.0.1"
+  }
+}
