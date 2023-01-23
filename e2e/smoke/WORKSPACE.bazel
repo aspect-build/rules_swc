@@ -4,7 +4,7 @@ local_repository(
     path = "../..",
 )
 
-#---SNIP--- Below here is re-used in the workspace snippet published on releases
+#---SNIP--- Below here is re-used in the snippet published on releases
 
 ###################
 # rules_swc setup #

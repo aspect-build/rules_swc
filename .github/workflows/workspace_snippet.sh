@@ -32,5 +32,5 @@ http_archive(
 )
 EOF
 
-awk 'f;/--SNIP--/{f=1}' e2e/workspace/WORKSPACE
+awk 'f;/--SNIP--/{f=1}' e2e/smoke/WORKSPACE.bazel
 echo "\`\`\`"
