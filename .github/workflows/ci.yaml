@@ -44,12 +44,16 @@ jobs:
         bazelversion: ${{ fromJSON(needs.matrix-prep-bazelversion.outputs.bazelversions) }}
         folder:
           - "."
-          - "e2e/bzlmod"
-          - "e2e/workspace"
+          - "e2e/smoke"
+        bzlmodEnabled: [true, false]
         exclude:
           # Don't test bzlmod with Bazel 5 (not supported)
           - bazelversion: 5.3.2
-            folder: e2e/bzlmod
+            bzlmodEnabled: true
+          # Broken due to stardoc usage, see
+          # https://github.com/bazelbuild/stardoc/issues/117#issuecomment-1380744704
+          - folder: .
+            bzlmodEnabled: true
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -72,9 +76,16 @@ jobs:
         # then use .bazelversion to determine which Bazel version to use
         run: echo "${{ matrix.bazelversion }}" > .bazelversion
 
+      - name: Set bzlmod flag
+        # Store the --enable_bzlmod flag that we add to the test command below
+        # only when we're running bzlmod in our test matrix.
+        id: set_bzlmod_flag
+        if: matrix.bzlmodEnabled
+        run: echo "bzlmod_flag=--enable_bzlmod" >> $GITHUB_OUTPUT
+
       - name: bazel test //...
         env:
           # Bazelisk will download bazel to here, ensure it is cached between runs.
           XDG_CACHE_HOME: ~/.cache/bazel-repo
         working-directory: ${{ matrix.folder }}
-        run: bazel --bazelrc=$GITHUB_WORKSPACE/.github/workflows/ci.bazelrc --bazelrc=.bazelrc test //...
+        run: bazel --bazelrc=$GITHUB_WORKSPACE/.github/workflows/ci.bazelrc --bazelrc=.bazelrc test ${{ steps.set_bzlmod_flag.outputs.bzlmod_flag }} //...
