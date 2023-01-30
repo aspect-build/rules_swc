@@ -23,7 +23,7 @@ _NPM_PKG = "@swc/core"
 
 _SWC_TOO_OLD = """
 
-FATAL: swc version must be at least 1.3.25, as prior versions had bugs in the pure-rust CLI.
+FATAL: swc version must be at least 1.3.31, as prior versions had bugs in the pure-rust CLI.
 
 If you need swc version {}, then use rules_swc v0.20.2 or earlier.
 Those releases of rules_swc call the NodeJS @swc/cli to access the Rust binding,
@@ -53,7 +53,7 @@ def _determine_version(rctx):
 
 def _swc_repo_impl(repository_ctx):
     version = _determine_version(repository_ctx)
-    if not versions.is_at_least("1.3.25", version.lstrip("v")):
+    if not versions.is_at_least("1.3.31", version.lstrip("v")):
         fail(_SWC_TOO_OLD.format(version))
     filename = "swc-" + repository_ctx.attr.platform
 

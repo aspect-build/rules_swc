@@ -7,3 +7,5 @@ Object.defineProperty(exports, "a", {
     get: ()=>a
 });
 const a = "foo";
+
+//# sourceMappingURL=in.js.map
