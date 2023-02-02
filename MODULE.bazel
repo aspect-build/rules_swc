@@ -6,9 +6,9 @@ module(
     version = "0.0.0",
 )
 
-bazel_dep(name = "aspect_bazel_lib", version = "1.23.3")
+bazel_dep(name = "aspect_bazel_lib", version = "1.24.2")
 # Note: only used for provider symbols, we don't spawn nodejs actions
-bazel_dep(name = "aspect_rules_js", version = "1.15.1")
+bazel_dep(name = "aspect_rules_js", version = "1.17.0")
 bazel_dep(name = "bazel_skylib", version = "1.3.0")
 bazel_dep(name = "platforms", version = "0.0.4")
 
