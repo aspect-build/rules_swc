@@ -70,7 +70,7 @@ def swc(name, srcs = None, args = [], data = [], output_dir = False, swcrc = Non
 
     if swcrc == None:
         if file_exists(to_label(":.swcrc")):
-            swcrc = ".swcrc"
+            swcrc = to_label(":.swcrc")
     elif type(swcrc) == type(dict()):
         swcrc.setdefault("sourceMaps", source_maps)
         rcfile = "{}_swcrc.json".format(name)

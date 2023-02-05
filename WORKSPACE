@@ -18,10 +18,10 @@ swc_register_toolchains(
     name = "swc",
     # Demonstrates how users can choose ANY swc version, not just the ones we mirrored
     integrity_hashes = {
-        "darwin-arm64": "sha384-4TRcW8Nb2g/3zQ0T4aS+NSjMbUaIHaGxofkA67CcAQZbeK1uDmjXFh5uJw69ZV07",
-        "darwin-x64": "sha384-uh5Pt06OgF/bhQaq09/SO0hNa9x/isZ3O9R+3uwseSdbL7OentceFHZ/zTr9Y+xL",
-        "linux-arm64-gnu": "sha384-2uYEohzUAAalEGiD0iEPEDWlR1BCM4q+DhsnIe5saa8B2+igdLzsQrbREimhu5TJ",
-        "linux-x64-gnu": "sha384-c46sYs/jCA4OjV7LeWT201dYQDTO76V6sZzdtOiGt+3Gls9n6QG+K4hkpIE+wy0k",
+        "darwin-arm64": "sha384-tSMDc6MG2llNW0PoEaWayHSia7YXDWVV+ceaiAl3Ew1xGA3lmfC2wTuKzaJU+16o",
+        "darwin-x64": "sha384-e9/dVt6KQTPVyH3y2Oy8J+Bz5XVI0hiK6fwknNsq/yTY+hftJ+SDqDW2YMkfCa3C",
+        "linux-arm64-gnu": "sha384-cipAIuV6Sa33feJMftOL56t3yEqr0/E6feFWkBnbIAtlSFsUEcv7LY+M7zLdn7Or",
+        "linux-x64-gnu": "sha384-s9hTnWi9jZM2MZJNnCn7Pg19vfSLnf8kCCYAgBN4UM4NFlN8+BpfGHG+jzq6BkaA",
     },
     swc_version_from = "//:package.json",
 )

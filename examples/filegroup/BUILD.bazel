@@ -12,7 +12,7 @@ swc(
     name = "compile",
     srcs = ["srcs"],
     source_maps = "true",
-    # We don't have to specify this. When .swcrc is present, it's used automatically.
+    # We don't have to specify this. When a .swcrc configuration file is present in the current directory, it's used automatically.
     # swcrc = ".swcrc",
 )
 

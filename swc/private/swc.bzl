@@ -229,12 +229,6 @@ def _impl(ctx):
                 js_map_out = ctx.actions.declare_file(map_out_path)
                 outputs.append(js_map_out)
 
-                if ctx.attr.source_maps in ["true", "both"]:
-                    src_args.add_all([
-                        "--source-map-target",
-                        js_map_out.path,
-                    ])
-
             inputs = [src]
             inputs.extend(ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files)
 
