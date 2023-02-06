@@ -36,9 +36,9 @@ def my_ts_project(name, srcs = []):
             cmd = "$(SWC_BINARY_PATH) compile --config-file $(location {}) --out-file $@ < $<".format(
                 "_{}_config".format(name),
             ),
-            toolchains = ["@swc_toolchains//:resolved_toolchain"],
+            toolchains = ["@aspect_rules_swc//swc:resolved_toolchain"],
             tools = [
                 "_{}_config".format(name),
-                "@swc_toolchains//:resolved_toolchain",
+                "@aspect_rules_swc//swc:resolved_toolchain",
             ],
         )
