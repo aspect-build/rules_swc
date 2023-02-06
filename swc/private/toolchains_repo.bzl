@@ -87,6 +87,13 @@ def _toolchains_repo_impl(repository_ctx):
 # By default all these toolchains are registered by the swc_register_toolchains macro
 # so you don't normally need to interact with these targets.
 
+# backward-compatibility, see
+# https://github.com/aspect-build/rules_swc/pull/157
+alias(
+    name = "resolved_toolchain",
+    actual = "@aspect_rules_swc//swc:resolved_toolchain",
+    visibility = ["//visibility:public"],
+)
 """
 
     for [platform, meta] in PLATFORMS.items():
