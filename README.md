@@ -66,7 +66,7 @@ This is a good choice if you need to integrate with other Bazel rules via
 You'll basically follow the example of /swc/private/swc.bzl in this repo, by using
 the `ctx.actions.run` Starlark API.
 
-- Use `@aspect_rules_swc//swc:swc_compile` as the binary tool to execute
+- Use `ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.swc_binary` to locate the binary tool to execute
 - To pass the relevant files to the action, `inputs` should include
   `ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files`
 
