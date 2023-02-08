@@ -36,15 +36,14 @@ This means we do not run `npm install` or `yarn`.
 
 ## Installation
 
-From the release you wish to use:
-<https://github.com/aspect-build/rules_swc/releases>
-copy the WORKSPACE snippet into your `WORKSPACE` file.
+Follow instructions from the release you wish to use:
+<https://github.com/aspect-build/rules_swc/releases>.
 
 ## Usage
 
 ### From a BUILD file
 
-The simplest usage is with the [swc rule](/docs/swc.md), used to compile TypeScript code to JavaScript in a tight developer loop. Each `.ts` or `.tsx` file is compiled to `bazel-bin/path/to/file.js` and available to downstream
+The simplest usage is with the [swc rule](/docs/swc.md), used to compile TypeScript code to JavaScript in a tight developer loop. Each `.ts` or `.tsx` file is compiled to `bazel-bin/[.../file].js` and available to downstream
 tools such as bundlers, which are in their own Bazel rules.
 
 See the example in /examples/simple.
@@ -54,7 +53,7 @@ See the example in /examples/simple.
 Often the repetition of hand-writing BUILD files needs to be overcome with a Bazel macro.
 This composes a few rules together into a common pattern which is shared in your repo.
 
-See the example in /examples/macro
+See the example in /examples/macro.
 
 ### In a custom rule
 

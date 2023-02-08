@@ -1,3 +1,8 @@
+"""Examples showing how to use SWC plugins
+
+See https://github.com/swc-project/plugins
+"""
+
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_bazel_lib//lib:directory_path.bzl", "directory_path")
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
@@ -6,20 +11,9 @@ load("@npm//:defs.bzl", "npm_link_all_packages")
 
 npm_link_all_packages(name = "node_modules")
 
-directory_path(
-    name = "plugin_wasm_path",
-    directory = ":node_modules/@swc/plugin-transform-imports/dir",
-    path = "swc_plugin_transform_imports.wasm",
-)
-
-copy_file(
-    name = "plugin_wasm",
-    src = ":plugin_wasm_path",
-    out = "plugin.wasm",
-)
-
-# plugin from an npm package, this will work if the package.json
-# includes a main entrypoint pointing at the plugin wasm file.
+# Example 1: Typical usage
+# Loads a plugin from an npm package.
+# This requires that the package.json includes a main entrypoint pointing at the plugin wasm file.
 swc_plugin(
     name = "npm_plugin",
     src = ":node_modules/@swc/plugin-transform-imports",
@@ -32,8 +26,32 @@ swc_plugin(
     },
 )
 
-# plugin referencing a wasm file directly,
-# for example a rust_binary target set up to build wasm
+# Now we just pass our swc_plugin target to the plugins attribute:
+swc(
+    name = "simple",
+    out_dir = "simple",
+    plugins = [":npm_plugin"],
+)
+
+# Example 2
+# Instead of a plugin from npm, you could reference a wasm file directly.
+# This would make sense if you use a rust_binary target to build wasm output.
+# However, we don't have an example that uses rules_rust yet,
+# see https://github.com/aspect-build/rules_swc/issues/159
+# To illustrate the example, we'll just extract the wasm file from the same package we used in
+# the previous example.
+directory_path(
+    name = "plugin_wasm_path",
+    directory = ":node_modules/@swc/plugin-transform-imports/dir",
+    path = "swc_plugin_transform_imports.wasm",
+)
+
+copy_file(
+    name = "plugin_wasm",
+    src = ":plugin_wasm_path",
+    out = "plugin.wasm",
+)
+
 swc_plugin(
     name = "file_plugin",
     src = ":plugin_wasm",
@@ -44,14 +62,7 @@ swc_plugin(
     },
 )
 
-swc(
-    name = "simple",
-    out_dir = "simple",
-    plugins = [
-        ":npm_plugin",
-    ],
-)
-
+# Illustrates that the plugins work with swcrc settings in BUILD.bazel.
 swc(
     name = "rcdict",
     out_dir = "rcdict",
@@ -66,6 +77,7 @@ swc(
     },
 )
 
+# Illustrates that the plugins work when using a .swcrc file.
 swc(
     name = "rc",
     out_dir = "rc",
@@ -76,6 +88,7 @@ swc(
     swcrc = "minify.swcrc",
 )
 
+# Test that the output of the swc targets above match our "golden" files.
 write_source_files(
     name = "test",
     files = {
