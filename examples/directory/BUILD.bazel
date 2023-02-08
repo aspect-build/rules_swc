@@ -6,6 +6,8 @@ Note that this example also depends on the setup in /WORKSPACE at the root of th
 """
 
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
+
+# gazelle:exclude *.bzl
 load(":mocks.bzl", "mock_codesplit")
 
 mock_codesplit(

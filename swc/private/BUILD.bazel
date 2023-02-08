@@ -29,3 +29,13 @@ bzl_library(
         "@bazel_skylib//lib:paths",
     ],
 )
+
+bzl_library(
+    name = "maybe",
+    srcs = ["maybe.bzl"],
+    visibility = ["//swc:__subpackages__"],
+    deps = [
+        "@bazel_tools//tools/build_defs/repo:http.bzl",
+        "@bazel_tools//tools/build_defs/repo:utils.bzl",
+    ],
+)
