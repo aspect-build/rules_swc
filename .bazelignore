@@ -1,3 +1,4 @@
 e2e/
 examples/node_modules
 examples/generate_swcrc/node_modules
+examples/plugins/node_modules
