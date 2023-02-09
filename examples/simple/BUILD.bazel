@@ -9,8 +9,10 @@ load("@aspect_rules_swc//swc:defs.bzl", "swc")
 # Runs `swc in.ts > ../../bazel-bin/examples/simple/in.js`
 # You can run `bazel build --subcommands //examples/simple:compile`
 # to see the exact command line Bazel runs.
-# Note that by default, sources are found by glob(["**/*.ts"])
-swc(name = "compile")
+swc(
+    name = "compile",
+    srcs = ["in.ts"],
+)
 
 # Assert that the output of "compile" rule matches the expected file.
 write_source_files(

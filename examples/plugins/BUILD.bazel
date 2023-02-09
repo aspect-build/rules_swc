@@ -29,6 +29,7 @@ swc_plugin(
 # Now we just pass our swc_plugin target to the plugins attribute:
 swc(
     name = "simple",
+    srcs = ["in.ts"],
     out_dir = "simple",
     plugins = [":npm_plugin"],
 )
@@ -65,6 +66,7 @@ swc_plugin(
 # Illustrates that the plugins work with swcrc settings in BUILD.bazel.
 swc(
     name = "rcdict",
+    srcs = ["in.ts"],
     out_dir = "rcdict",
     plugins = [
         ":npm_plugin",
@@ -80,6 +82,7 @@ swc(
 # Illustrates that the plugins work when using a .swcrc file.
 swc(
     name = "rc",
+    srcs = ["in.ts"],
     out_dir = "rc",
     plugins = [
         ":npm_plugin",

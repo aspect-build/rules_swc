@@ -5,6 +5,7 @@ load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
 swc(
     name = "es5",
+    srcs = ["in.ts"],
     out_dir = "es5",
     swcrc = {
         "jsc": {
@@ -15,6 +16,7 @@ swc(
 
 swc(
     name = "es2015",
+    srcs = ["in.ts"],
     out_dir = "es2015",
     swcrc = {
         "jsc": {

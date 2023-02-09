@@ -1,13 +1,14 @@
 """API for running the SWC cli under Bazel
 
-The simplest usage is a single line.
-It relies on the `swcrc` attribute automatically discovering `.swcrc`
-and the `srcs` attribute default of `glob(["**/*.ts", "**/*.tsx"])`:
+The simplest usage relies on the `swcrc` attribute automatically discovering `.swcrc`:
 
 ```starlark
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
-swc(name = "compile")
+swc(
+    name = "compile",
+    srcs = ["file.ts"],
+)
 ```
 """
 
@@ -31,7 +32,7 @@ for example to set your own output labels for `js_outs`.
     toolchains = _swc_lib.toolchains,
 )
 
-def swc(name, srcs = None, args = [], data = [], plugins = [], output_dir = False, swcrc = None, source_maps = False, out_dir = None, root_dir = None, **kwargs):
+def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcrc = None, source_maps = False, out_dir = None, root_dir = None, **kwargs):
     """Execute the SWC compiler
 
     Args:
@@ -66,9 +67,7 @@ def swc(name, srcs = None, args = [], data = [], plugins = [], output_dir = Fals
 
         **kwargs: additional keyword arguments passed through to underlying [`swc_compile`](#swc_compile), eg. `visibility`, `tags`
     """
-    if srcs == None:
-        srcs = native.glob(["**/*.ts", "**/*.tsx"])
-    elif not types.is_list(srcs):
+    if not types.is_list(srcs):
         fail("srcs must be a list, not a " + type(srcs))
 
     if swcrc == None:
