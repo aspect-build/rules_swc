@@ -3,7 +3,6 @@
 load("@aspect_bazel_lib//lib:testing.bzl", "assert_outputs")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc", "swc_compile")
-load("@bazel_skylib//rules:write_file.bzl", "write_file")
 
 ###############################
 # Case 1: js extension variants
@@ -25,31 +24,6 @@ assert_outputs(
 
 ###############################
 # Case 2: user-defined js output paths
-# Note, --config is documented on swcx CLI but isn't functional. See
-# https://github.com/swc-project/swc/issues/4017#issuecomment-1374141572
-# In the call to swc_compile below, we ought to be able to use
-#   `args = ["--config", "module.type=" + format]`
-# As a workaround, write our config to an rc file. Can be changed back when swcx supports --config.
-[
-    write_file(
-        name = "_write_swcrc_" + format,
-        out = "swcrc_" + format,
-        content = [json.encode({
-            "jsc": {
-                "parser": {
-                    "syntax": "typescript",
-                },
-            },
-            "module": {
-                "type": format,
-            },
-        })],
-    )
-    for format in [
-        "commonjs",
-        "es6",
-    ]
-]
 
 [
     # Here, we use the underlying rule rather than the macro, so that we can control what js output
@@ -57,10 +31,13 @@ assert_outputs(
     swc_compile(
         name = "compile_" + format,
         srcs = ["a.ts"],
+        args = [
+            "--config",
+            """{"module": {"type": "%s"}}""" % format,
+        ],
         # The extension of the outputs can be modified using js_outs
         js_outs = [format + "/a." + ("cjs" if format == "commonjs" else "js")],
         out_dir = format,
-        swcrc = "swcrc_" + format,
     )
     for format in [
         "commonjs",
