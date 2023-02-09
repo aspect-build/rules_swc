@@ -43,7 +43,10 @@ def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcr
         data: Files needed at runtime by binaries or tests that transitively depend on this target.
             See https://bazel.build/reference/be/common-definitions#typical-attributes
 
-        output_dir: Whether to produce a directory output rather than individual files
+        output_dir: Whether to produce a directory output rather than individual files.
+
+            If `out_dir` is set, then that is used as the name of the output directory.
+            Otherwise, the output directory is named the same as the target.
 
         args: Additional options to pass to `swcx` cli, see https://github.com/swc-project/swc/discussions/3859
             Note: we do **not** run the [NodeJS wrapper `@swc/cli`](https://swc.rs/docs/usage/cli)
@@ -61,7 +64,9 @@ def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcr
 
         plugins: List of plugin labels created with `swc_plugin`.
 
-        out_dir: The base directory for output files relative to the output directory for this package
+        out_dir: The base directory for output files relative to the output directory for this package.
+
+            If output_dir is True, then this is used as the name of the output directory.
 
         root_dir: A subdirectory under the input package which should be considered the root directory of all the input files
 

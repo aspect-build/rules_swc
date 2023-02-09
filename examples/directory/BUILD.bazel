@@ -38,6 +38,7 @@ sh_test(
     deps = ["@bazel_tools//tools/bash/runfiles"],
 )
 
+# Like above, but outputs to examples/directory/test-out_dir instead.
 swc(
     name = "out_dir",
     srcs = ["split_app"],

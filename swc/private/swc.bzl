@@ -28,7 +28,10 @@ _attrs = {
         default = "false",
     ),
     "output_dir": attr.bool(
-        doc = "whether to produce a directory output rather than individual files",
+        doc = """Whether to produce a directory output rather than individual files.
+        
+        If out_dir is also specified, it is used as the name of the output directory.
+        Otherwise, the directory is named the same as the target.""",
     ),
     "data": js_lib_helpers.JS_LIBRARY_DATA_ATTR,
     "swcrc": attr.label(
@@ -40,7 +43,9 @@ _attrs = {
         providers = [[DefaultInfo, SwcPluginConfigInfo]],
     ),
     "out_dir": attr.string(
-        doc = "base directory for output files",
+        doc = """With output_dir=False, output files will have this directory prefix.
+        
+        With output_dir=True, this is the name of the output directory.""",
     ),
     "root_dir": attr.string(
         doc = "a subdirectory under the input package which should be consider the root directory of all the input files",
