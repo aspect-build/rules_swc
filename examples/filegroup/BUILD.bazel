@@ -11,7 +11,7 @@ filegroup(
 swc(
     name = "compile",
     srcs = ["srcs"],
-    source_maps = "true",
+    source_maps = True,
     # We don't have to specify this. When a .swcrc configuration file is present in the current directory, it's used automatically.
     # swcrc = ".swcrc",
 )

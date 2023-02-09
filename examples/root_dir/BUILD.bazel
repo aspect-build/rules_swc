@@ -9,7 +9,7 @@ swc(
     ],
     out_dir = "out",
     root_dir = "src",
-    source_maps = "true",
+    source_maps = True,
 )
 
 # Since the srcs were in a filegroup, the swc macro cannot pre-declare the outputs.
