@@ -32,6 +32,7 @@ js_run_binary(
 # Demonstrate that it works
 swc(
     name = "compile",
+    srcs = ["some.ts"],
     swcrc = ".swcrc",
 )
 

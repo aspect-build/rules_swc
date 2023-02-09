@@ -8,7 +8,10 @@ load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
 # Note: The .swcrc configuration file will be automatically used, if it is present in the current directory
-swc(name = "compile")
+swc(
+    name = "compile",
+    srcs = glob(["**/*.ts"]),
+)
 
 # Verify that the "paths" entry is agreed between swc and TS language service (in the editor)
 assert_json_matches(

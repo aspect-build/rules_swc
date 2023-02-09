@@ -2,14 +2,15 @@
 
 API for running the SWC cli under Bazel
 
-The simplest usage is a single line.
-It relies on the `swcrc` attribute automatically discovering `.swcrc`
-and the `srcs` attribute default of `glob(["**/*.ts", "**/*.tsx"])`:
+The simplest usage relies on the `swcrc` attribute automatically discovering `.swcrc`:
 
 ```starlark
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
-swc(name = "compile")
+swc(
+    name = "compile",
+    srcs = ["file.ts"],
+)
 ```
 
 
@@ -66,7 +67,7 @@ Execute the SWC compiler
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="swc-name"></a>name |  A name for this target   |  none |
-| <a id="swc-srcs"></a>srcs |  List of labels of TypeScript source files.   |  <code>None</code> |
+| <a id="swc-srcs"></a>srcs |  List of labels of TypeScript source files.   |  none |
 | <a id="swc-args"></a>args |  Additional options to pass to <code>swcx</code> cli, see https://github.com/swc-project/swc/discussions/3859 Note: we do **not** run the [NodeJS wrapper <code>@swc/cli</code>](https://swc.rs/docs/usage/cli)   |  <code>[]</code> |
 | <a id="swc-data"></a>data |  Files needed at runtime by binaries or tests that transitively depend on this target. See https://bazel.build/reference/be/common-definitions#typical-attributes   |  <code>[]</code> |
 | <a id="swc-plugins"></a>plugins |  List of plugin labels created with <code>swc_plugin</code>.   |  <code>[]</code> |
