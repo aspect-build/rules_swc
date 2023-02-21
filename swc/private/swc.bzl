@@ -189,7 +189,7 @@ def _impl(ctx):
     plugin_args = []
     if ctx.attr.plugins:
         plugin_cache = [ctx.actions.declare_directory("{}_plugin_cache".format(ctx.label.name))]
-        plugin_args = ["--config", json.encode({
+        plugin_args = ["--config-json", json.encode({
             "jsc": {
                 "experimental": {
                     "cacheRoot": plugin_cache[0].path,

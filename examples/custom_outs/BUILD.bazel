@@ -32,7 +32,7 @@ assert_outputs(
         name = "compile_" + format,
         srcs = ["a.ts"],
         args = [
-            "--config",
+            "--config-json",
             """{"module": {"type": "%s"}}""" % format,
         ],
         # The extension of the outputs can be modified using js_outs
