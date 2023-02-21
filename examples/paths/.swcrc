@@ -4,9 +4,11 @@
       "syntax": "typescript"
     },
     "target": "es2021",
-    "baseUrl": "examples/paths",
+    "baseUrl": "./src",
     "paths": {
-      "@modules/*": ["./src/modules/*"]
+      "@modules/*": [
+        "./modules/*"
+      ]
     }
   },
   "module": {
