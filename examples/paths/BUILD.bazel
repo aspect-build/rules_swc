@@ -18,8 +18,8 @@ assert_json_matches(
     name = "check_paths",
     file1 = "tsconfig.json",
     file2 = ".swcrc",
-    filter1 = ".compilerOptions.paths",
-    filter2 = ".jsc.paths",
+    filter1 = ".compilerOptions.paths, .compilerOptions.baseUrl",
+    filter2 = ".jsc.paths, .jsc.baseUrl",
 )
 
 write_source_files(
