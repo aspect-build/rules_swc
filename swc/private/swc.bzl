@@ -183,7 +183,8 @@ def _impl(ctx):
 
     # Add user specified arguments *before* rule supplied arguments
     args.add_all(ctx.attr.args)
-    args.add_all(["--source-maps", ctx.attr.source_maps])
+
+    args.add("--source-maps", ctx.attr.source_maps)
 
     plugin_cache = []
     plugin_args = []
@@ -222,17 +223,11 @@ def _impl(ctx):
 
         output_sources = [output_dir]
 
-        args.add_all([
-            "--out-dir",
-            output_dir.path,
-        ])
+        args.add("--out-dir", output_dir.path)
 
         src_args = ctx.actions.args()
         if ctx.attr.swcrc:
-            src_args.add_all([
-                "--config-file",
-                ctx.file.swcrc.path,
-            ])
+            src_args.add("--config-file", ctx.file.swcrc.path)
             inputs.append(ctx.file.swcrc)
 
         _swc_action(
@@ -251,6 +246,9 @@ def _impl(ctx):
 
         for src in ctx.files.srcs:
             src_args = ctx.actions.args()
+            src_args.add("--source-file-name", src.basename)
+            src_args.add("--source-root", src.dirname)
+
             src_path = _relative_to_package(src.path, ctx)
 
             js_out_path = _calculate_js_out(src_path, ctx.attr.out_dir, ctx.attr.root_dir, [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs])
@@ -271,16 +269,10 @@ def _impl(ctx):
             inputs.extend(plugin_cache)
 
             if ctx.attr.swcrc:
-                src_args.add_all([
-                    "--config-file",
-                    ctx.file.swcrc.path,
-                ])
+                src_args.add("--config-file", ctx.file.swcrc.path)
                 inputs.append(ctx.file.swcrc)
 
-            src_args.add_all([
-                "--out-file",
-                js_out.path,
-            ])
+            src_args.add("--out-file", js_out.path)
 
             output_sources.extend(outputs)
 
