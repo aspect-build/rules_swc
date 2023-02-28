@@ -4,6 +4,51 @@ Repository rules for fetching the swc toolchain.
 
 For typical usage, see the snippets provided in the rules_swc release notes.
 
+### Version matching
+
+To keep the swc version in sync with non-Bazel tooling, use `swc_version_from`.
+
+Currently this only works when a single, pinned version appears, see:
+https://github.com/aspect-build/rules_ts/issues/308
+
+For example, `package.json`:
+
+```json
+{
+  "devDependencies": {
+    "@swc/core": "1.3.37"
+  }
+}
+```
+
+Allows this in `WORKSPACE`:
+
+```starlark
+swc_register_toolchains(
+    name = "swc",
+    swc_version_from = "//:package.json",
+)
+```
+
+### Other versions
+
+To use an swc version which is not mirrored to rules_swc, use `integrity_hashes`.
+
+For example in `WORKSPACE`:
+
+```starlark
+swc_register_toolchains(
+    name = "swc",
+    integrity_hashes = {
+        "darwin-arm64": "sha384-IhP/76Zi5PEfsrGwPJj/CLHu2afxSBO2Fehp/qo4uHVXez08dcfyd9UzrcUI1z1q",
+        "darwin-x64": "sha384-s2wH7hzaMbTbIkgPpP5rAYThH/+H+RBQ/5xKbpM4lfwPMS6cNBIpjKVnathrENm/",
+        "linux-arm64-gnu": "sha384-iaBhMLrnHTSfXa86AVHM6zHqYbH3Fh1dWwDeH7sW9HKvX2gbQb6LOpWN6Wp4ddud",
+        "linux-x64-gnu": "sha384-R/y9mcodpNt8l6DulUCG5JsNMrApP+vOAAh3bTRChh6LQKP0Z3Fwq86ztfObpAH8",
+    },
+    swc_version = "1.3.37",
+)
+```
+
 
 <a id="swc_repositories"></a>
 
@@ -21,11 +66,11 @@ Fetch external dependencies needed to run the SWC cli
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="swc_repositories-name"></a>name |  A unique name for this repository.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="swc_repositories-integrity_hashes"></a>integrity_hashes |  -   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional | <code>{}</code> |
+| <a id="swc_repositories-integrity_hashes"></a>integrity_hashes |  A mapping from platform to integrity hash.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional | <code>{}</code> |
 | <a id="swc_repositories-platform"></a>platform |  -   | String | required |  |
 | <a id="swc_repositories-repo_mapping"></a>repo_mapping |  A dictionary from local repository name to global repository name. This allows controls over workspace dependency resolution for dependencies of this repository.&lt;p&gt;For example, an entry <code>"@foo": "@bar"</code> declares that, for any time this repository depends on <code>@foo</code> (such as a dependency on <code>@foo//some:target</code>, it should actually resolve that dependency within globally-declared <code>@bar</code> (<code>@bar//some:target</code>).   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | required |  |
 | <a id="swc_repositories-swc_version"></a>swc_version |  Explicit version. If provided, the package.json is not read.   | String | optional | <code>""</code> |
-| <a id="swc_repositories-swc_version_from"></a>swc_version_from |  Location of package.json which may have a version for @swc/core.   | <a href="https://bazel.build/concepts/labels">Label</a> | optional | <code>None</code> |
+| <a id="swc_repositories-swc_version_from"></a>swc_version_from |  Location of package.json which has a version for @swc/core.   | <a href="https://bazel.build/concepts/labels">Label</a> | optional | <code>None</code> |
 
 
 <a id="swc_register_toolchains"></a>

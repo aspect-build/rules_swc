@@ -1,6 +1,0 @@
-{
-  "// this file only used for WORKSPACE to infer our version of swc": "",
-  "devDependencies": {
-    "@swc/core": "1.3.37"
-  }
-}

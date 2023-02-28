@@ -1,6 +1,51 @@
 """Repository rules for fetching the swc toolchain.
 
 For typical usage, see the snippets provided in the rules_swc release notes.
+
+### Version matching
+
+To keep the swc version in sync with non-Bazel tooling, use `swc_version_from`.
+
+Currently this only works when a single, pinned version appears, see:
+https://github.com/aspect-build/rules_ts/issues/308
+
+For example, `package.json`:
+
+```json
+{
+  "devDependencies": {
+    "@swc/core": "1.3.37"
+  }
+}
+```
+
+Allows this in `WORKSPACE`:
+
+```starlark
+swc_register_toolchains(
+    name = "swc",
+    swc_version_from = "//:package.json",
+)
+```
+
+### Other versions
+
+To use an swc version which is not mirrored to rules_swc, use `integrity_hashes`.
+
+For example in `WORKSPACE`:
+
+```starlark
+swc_register_toolchains(
+    name = "swc",
+    integrity_hashes = {
+        "darwin-arm64": "sha384-IhP/76Zi5PEfsrGwPJj/CLHu2afxSBO2Fehp/qo4uHVXez08dcfyd9UzrcUI1z1q",
+        "darwin-x64": "sha384-s2wH7hzaMbTbIkgPpP5rAYThH/+H+RBQ/5xKbpM4lfwPMS6cNBIpjKVnathrENm/",
+        "linux-arm64-gnu": "sha384-iaBhMLrnHTSfXa86AVHM6zHqYbH3Fh1dWwDeH7sW9HKvX2gbQb6LOpWN6Wp4ddud",
+        "linux-x64-gnu": "sha384-R/y9mcodpNt8l6DulUCG5JsNMrApP+vOAAh3bTRChh6LQKP0Z3Fwq86ztfObpAH8",
+    },
+    swc_version = "1.3.37",
+)
+```
 """
 
 load("@bazel_skylib//lib:versions.bzl", "versions")
@@ -13,9 +58,9 @@ LATEST_VERSION = TOOL_VERSIONS.keys()[0]
 _DOC = "Fetch external dependencies needed to run the SWC cli"
 _ATTRS = {
     "swc_version": attr.string(doc = "Explicit version. If provided, the package.json is not read."),
-    "swc_version_from": attr.label(doc = "Location of package.json which may have a version for @swc/core."),
+    "swc_version_from": attr.label(doc = "Location of package.json which has a version for @swc/core."),
     "platform": attr.string(mandatory = True, values = PLATFORMS.keys()),
-    "integrity_hashes": attr.string_dict(),
+    "integrity_hashes": attr.string_dict(doc = "A mapping from platform to integrity hash."),
 }
 
 # This package is versioned the same as the underlying rust binary we download
