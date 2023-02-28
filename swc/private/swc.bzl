@@ -227,7 +227,7 @@ def _impl(ctx):
 
         src_args = ctx.actions.args()
         if ctx.attr.swcrc:
-            src_args.add("--config-file", ctx.file.swcrc.path)
+            src_args.add("--config-file", ctx.file.swcrc)
             inputs.append(ctx.file.swcrc)
 
         _swc_action(
@@ -269,10 +269,10 @@ def _impl(ctx):
             inputs.extend(plugin_cache)
 
             if ctx.attr.swcrc:
-                src_args.add("--config-file", ctx.file.swcrc.path)
+                src_args.add("--config-file", ctx.file.swcrc)
                 inputs.append(ctx.file.swcrc)
 
-            src_args.add("--out-file", js_out.path)
+            src_args.add("--out-file", js_out)
 
             output_sources.extend(outputs)
 
