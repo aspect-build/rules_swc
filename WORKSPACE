@@ -12,18 +12,11 @@ load("//swc:dependencies.bzl", "rules_swc_dependencies")
 # Fetch our "runtime" dependencies which users need as well
 rules_swc_dependencies()
 
-load("//swc:repositories.bzl", "swc_register_toolchains")
+load("//swc:repositories.bzl", "LATEST_VERSION", "swc_register_toolchains")
 
 swc_register_toolchains(
     name = "swc",
-    # Demonstrates how users can choose ANY swc version, not just the ones we mirrored
-    integrity_hashes = {
-        "darwin-arm64": "sha384-IhP/76Zi5PEfsrGwPJj/CLHu2afxSBO2Fehp/qo4uHVXez08dcfyd9UzrcUI1z1q",
-        "darwin-x64": "sha384-s2wH7hzaMbTbIkgPpP5rAYThH/+H+RBQ/5xKbpM4lfwPMS6cNBIpjKVnathrENm/",
-        "linux-arm64-gnu": "sha384-iaBhMLrnHTSfXa86AVHM6zHqYbH3Fh1dWwDeH7sW9HKvX2gbQb6LOpWN6Wp4ddud",
-        "linux-x64-gnu": "sha384-R/y9mcodpNt8l6DulUCG5JsNMrApP+vOAAh3bTRChh6LQKP0Z3Fwq86ztfObpAH8",
-    },
-    swc_version_from = "//:package.json",
+    swc_version = LATEST_VERSION,
 )
 
 load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies", "register_jq_toolchains")
