@@ -10,7 +10,7 @@ def _smoke_test_impl(ctx):
 
     # TODO: assert instead that the TOOL_VERSIONS.keys()[0] is the newest version
     # and version numbers down from there are descending
-    asserts.equals(env, "v1.3.36", TOOL_VERSIONS.keys()[0])
+    asserts.equals(env, "v1.3.37", TOOL_VERSIONS.keys()[0])
     return unittest.end(env)
 
 # The unittest library requires that we export the test cases as named test rules,
