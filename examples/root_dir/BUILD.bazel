@@ -6,6 +6,7 @@ swc(
     srcs = [
         "src/a.ts",
         "src/b.ts",
+        "src/sub/c.ts",
     ],
     out_dir = "out",
     root_dir = "src",

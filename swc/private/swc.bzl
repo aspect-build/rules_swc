@@ -168,6 +168,25 @@ def _calculate_map_out(src, source_maps, out_dir = None, root_dir = None):
 def _calculate_map_outs(srcs, source_maps, out_dir = None, root_dir = None):
     return [f2 for f2 in [_calculate_map_out(f, source_maps, out_dir, root_dir) for f in srcs] if f2]
 
+def _calculate_source_file(ctx, src):
+    if not (ctx.attr.out_dir or ctx.attr.root_dir):
+        return src.basename
+
+    src_pkg = src.dirname[len(ctx.label.package)+1:] if ctx.label.package else ""
+    s = ""
+
+    # out of src subdir
+    if src_pkg:
+        s = paths.join(s, "/".join([".." for _ in src_pkg.split("/")]))
+
+    # out of the out dir
+    if ctx.attr.out_dir:
+        s = paths.join(s, "/".join([".." for _ in ctx.attr.out_dir.split("/")]))
+
+    # back into the src dir, including into the root_dir
+    return paths.join(s, src_pkg, src.basename)
+
+
 def _swc_action(ctx, swc_binary, **kwargs):
     # Workaround Rust SDK issue on Windows, see https://github.com/aspect-build/rules_swc/issues/141
     if platform_utils.host_platform_is_windows():
@@ -255,8 +274,9 @@ def _impl(ctx):
 
         for src in ctx.files.srcs:
             src_args = ctx.actions.args()
-            src_args.add("--source-file-name", src.basename)
-            src_args.add("--source-root", ctx.attr.source_root or src.dirname)
+            src_args.add("--source-file-name", _calculate_source_file(ctx, src))
+            src_args.add("--source-root", ctx.attr.source_root)
+
             src_path = _relative_to_package(src.path, ctx)
 
             js_out_path = _calculate_js_out(src_path, ctx.attr.out_dir, ctx.attr.root_dir, [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs])

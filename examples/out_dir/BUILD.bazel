@@ -6,6 +6,7 @@ swc(
     srcs = [
         "a.ts",
         "b.ts",
+        "sub/c.ts",
     ],
     out_dir = "out",
     source_maps = True,
@@ -19,5 +20,7 @@ write_source_files(
         "expected/a.js.map": ":out/a.js.map",
         "expected/b.js": ":out/b.js",
         "expected/b.js.map": ":out/b.js.map",
+        "expected/sub/c.js": ":out/sub/c.js",
+        "expected/sub/c.js.map": ":out/sub/c.js.map",
     },
 )
