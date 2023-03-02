@@ -7,8 +7,17 @@ swc(
     name = "compile",
     srcs = ["in.ts"],
     source_maps = True,
-    # The custom location can be a path or an URL
+    # The custom location can an URL
     source_root = "https://my-website.com/debug/source/",
+)
+
+swc(
+    name = "compile_subdir",
+    srcs = ["src/subdir.ts"],
+    root_dir = "src",
+    source_maps = True,
+    # The custom location can be a path
+    source_root = "../../../debug/source",
 )
 
 # Assert that the output of "compile" rule matches the expected file.
@@ -17,5 +26,14 @@ write_source_files(
     files = {
         "expected.js": ":in.js",
         "expected.js.map": ":in.js.map",
+    },
+)
+
+# Assert that the output of "compile_subdir" rule matches the expected file.
+write_source_files(
+    name = "test_subdir",
+    files = {
+        "expected_subdir.js": ":subdir.js",
+        "expected_subdir.js.map": ":subdir.js.map",
     },
 )
