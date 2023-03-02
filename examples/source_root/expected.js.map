@@ -1,0 +1,1 @@
+{"version":3,"sources":["in.ts"],"sourceRoot":"https://my-website.com/debug/source/","sourcesContent":["export const a: string = \"foo\";\n"],"names":["a"],"mappings":"AAAA,OAAO,IAAMA,IAAY,MAAM"}

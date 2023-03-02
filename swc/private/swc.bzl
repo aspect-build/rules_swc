@@ -23,9 +23,17 @@ _attrs = {
         """,
     ),
     "source_maps": attr.string(
-        doc = "see https://swc.rs/docs/usage/cli#--source-maps--s",
+        doc = """Create source map files for emitted JavaScript files.
+
+        see https://swc.rs/docs/usage/cli#--source-maps--s""",
         values = ["true", "false", "inline", "both"],
         default = "false",
+    ),
+    "source_root": attr.string(
+        doc = """Specify the root path for debuggers to find the reference source code.
+
+        see https://swc.rs/docs/usage/cli#--source-root""",
+        default = "",
     ),
     "output_dir": attr.bool(
         doc = """Whether to produce a directory output rather than individual files.
@@ -247,7 +255,7 @@ def _impl(ctx):
         for src in ctx.files.srcs:
             src_args = ctx.actions.args()
             src_args.add("--source-file-name", src.basename)
-            src_args.add("--source-root", src.dirname)
+            src_args.add("--source-root", src.dirname if ctx.attr.source_root == "" else ctx.attr.source_root)
 
             src_path = _relative_to_package(src.path, ctx)
 
