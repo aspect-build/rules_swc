@@ -47,7 +47,7 @@ for example to set your own output labels for `js_outs`.
 | <a id="swc_compile-plugins"></a>plugins |  swc compilation plugins, created with swc_plugin rule   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional | <code>[]</code> |
 | <a id="swc_compile-root_dir"></a>root_dir |  a subdirectory under the input package which should be consider the root directory of all the input files   | String | optional | <code>""</code> |
 | <a id="swc_compile-source_maps"></a>source_maps |  Create source map files for emitted JavaScript files.<br><br>        see https://swc.rs/docs/usage/cli#--source-maps--s   | String | optional | <code>"false"</code> |
-| <a id="swc_compile-source_root"></a>source_root |  Specify the root path for debuggers to find the reference source code.<br><br>        see https://swc.rs/docs/usage/cli#--source-root   | String | optional | <code>""</code> |
+| <a id="swc_compile-source_root"></a>source_root |  Specify the root path for debuggers to find the reference source code.<br><br>        see https://swc.rs/docs/usage/cli#--source-root<br><br>        If not set, then the directory containing the source file is used.   | String | optional | <code>""</code> |
 | <a id="swc_compile-srcs"></a>srcs |  source files, typically .ts files in the source tree   | <a href="https://bazel.build/concepts/labels">List of labels</a> | required |  |
 | <a id="swc_compile-swcrc"></a>swcrc |  label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc   | <a href="https://bazel.build/concepts/labels">Label</a> | optional | <code>None</code> |
 

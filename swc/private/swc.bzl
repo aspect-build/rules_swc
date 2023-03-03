@@ -32,8 +32,9 @@ _attrs = {
     "source_root": attr.string(
         doc = """Specify the root path for debuggers to find the reference source code.
 
-        see https://swc.rs/docs/usage/cli#--source-root""",
-        default = "",
+        see https://swc.rs/docs/usage/cli#--source-root
+        
+        If not set, then the directory containing the source file is used.""",
     ),
     "output_dir": attr.bool(
         doc = """Whether to produce a directory output rather than individual files.
@@ -255,8 +256,7 @@ def _impl(ctx):
         for src in ctx.files.srcs:
             src_args = ctx.actions.args()
             src_args.add("--source-file-name", src.basename)
-            src_args.add("--source-root", src.dirname if ctx.attr.source_root == "" else ctx.attr.source_root)
-
+            src_args.add("--source-root", ctx.attr.source_root or src.dirname)
             src_path = _relative_to_package(src.path, ctx)
 
             js_out_path = _calculate_js_out(src_path, ctx.attr.out_dir, ctx.attr.root_dir, [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs])
