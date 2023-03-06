@@ -1,1 +1,1 @@
-{"version":3,"sources":["../../sub/c.ts"],"sourceRoot":"","sourcesContent":["export const c: string = \"c\";\n"],"names":["c"],"mappings":"AAAA,OAAO,IAAMA,IAAY,IAAI"}
+{"version":3,"sources":["../../sub/c.ts"],"sourcesContent":["export const c: string = \"c\";\n"],"names":["c"],"mappings":"AAAA,OAAO,IAAMA,IAAY,IAAI"}
