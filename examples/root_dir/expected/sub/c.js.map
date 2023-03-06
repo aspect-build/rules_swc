@@ -1,1 +1,0 @@
-{"version":3,"sources":["c.ts"],"sourceRoot":"","sourcesContent":["export const c: string = \"c\";\n"],"names":["c"],"mappings":"AAAA,OAAO,IAAMA,IAAY,IAAI"}

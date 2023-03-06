@@ -1,4 +1,5 @@
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_json_matches")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 
 swc(
@@ -18,8 +19,17 @@ write_source_files(
     name = "test",
     files = {
         "expected/a.js": ":out/a.js",
-        "expected/a.js.map": ":out/a.js.map",
         "expected/b.js": ":out/b.js",
-        "expected/b.js.map": ":out/b.js.map",
     },
 )
+
+[
+    assert_json_matches(
+        name = "test_%s" % f.replace("/", "-"),
+        file1 = ":out/%s.js.map" % f,
+        file2 = "expected/%s.js.map.golden" % f,
+        filter1 = ".sourceRoot,.sources",
+        filter2 = ".sourceRoot,.sources",
+    )
+    for f in ["a", "b", "sub/c"]
+]

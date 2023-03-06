@@ -1,4 +1,5 @@
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_json_matches")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
 # Specifies a custom location where a debugger should locate source files instead of relative source 
@@ -25,8 +26,15 @@ write_source_files(
     name = "test",
     files = {
         "expected.js": ":in.js",
-        "expected.js.map": ":in.js.map",
     },
+)
+
+assert_json_matches(
+    name = "test_map",
+    file1 = "in.js.map",
+    file2 = "expected.js.map.golden",
+    filter1 = ".sourceRoot,.sources",
+    filter2 = ".sourceRoot,.sources",
 )
 
 # Assert that the output of "compile_subdir" rule matches the expected file.
@@ -34,6 +42,13 @@ write_source_files(
     name = "test_subdir",
     files = {
         "expected_subdir.js": ":subdir.js",
-        "expected_subdir.js.map": ":subdir.js.map",
     },
+)
+
+assert_json_matches(
+    name = "test_subdir_map",
+    file1 = "subdir.js.map",
+    file2 = "expected_subdir.js.map.golden",
+    filter1 = ".sourceRoot,.sources",
+    filter2 = ".sourceRoot,.sources",
 )
