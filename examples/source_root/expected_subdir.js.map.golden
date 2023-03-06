@@ -1,0 +1,6 @@
+{
+    "sources": [
+        "../src/subdir.ts"
+    ],
+    "sourceRoot": "../../../debug/source"
+}

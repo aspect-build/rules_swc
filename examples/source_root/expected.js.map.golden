@@ -1,0 +1,6 @@
+{
+    "sources": [
+        "in.ts"
+    ],
+    "sourceRoot": "https://my-website.com/debug/source/"
+}
