@@ -1,1 +1,1 @@
-{"version":3,"sources":["b.ts"],"sourceRoot":"examples/root_dir/src","sourcesContent":["export const b: string = \"b\";\n"],"names":["b"],"mappings":"AAAA,OAAO,IAAMA,IAAY,IAAI"}
+{"version":3,"sources":["../../src/b.ts"],"sourceRoot":"","sourcesContent":["export const b: string = \"b\";\n"],"names":["b"],"mappings":"AAAA,OAAO,IAAMA,IAAY,IAAI"}

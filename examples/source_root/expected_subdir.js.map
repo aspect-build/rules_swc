@@ -1,1 +1,1 @@
-{"version":3,"sources":["subdir.ts"],"sourceRoot":"../../../debug/source","sourcesContent":["export const a: string = \"a\";\n"],"names":["a"],"mappings":"AAAA,OAAO,IAAMA,IAAY,IAAI"}
+{"version":3,"sources":["../src/subdir.ts"],"sourceRoot":"../../../debug/source","sourcesContent":["export const a: string = \"a\";\n"],"names":["a"],"mappings":"AAAA,OAAO,IAAMA,IAAY,IAAI"}

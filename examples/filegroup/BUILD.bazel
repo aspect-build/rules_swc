@@ -5,6 +5,7 @@ filegroup(
     srcs = [
         "a.ts",
         "b.ts",
+        "sub/c.ts",
     ],
 )
 

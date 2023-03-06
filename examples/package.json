@@ -1,3 +1,6 @@
 {
-  "private": true
+  "private": true,
+  "dependencies": {
+    "source-map-support": "^0.5.21"
+  }
 }

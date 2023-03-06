@@ -1,8 +1,12 @@
 lockfileVersion: 5.4
 
 importers:
+
   .:
-    specifiers: {}
+    specifiers:
+      source-map-support: ^0.5.21
+    dependencies:
+      source-map-support: 0.5.21
 
   generate_swcrc:
     specifiers:
@@ -12,50 +16,48 @@ importers:
 
   plugins:
     specifiers:
-      "@swc/plugin-transform-imports": 1.5.41
+      '@swc/plugin-transform-imports': 1.5.41
     devDependencies:
-      "@swc/plugin-transform-imports": 1.5.41
+      '@swc/plugin-transform-imports': 1.5.41
 
 packages:
+
   /@swc/plugin-transform-imports/1.5.41:
-    resolution:
-      {
-        integrity: sha512-sywDxWfKg3Jqm7s7X81uN9P6HbrX9oBYF8lHYzT6/1c/ovVG3RGG/1bDOQpzb+IC7C/h2oI2ESOKMKibbKsq1Q==,
-      }
+    resolution: {integrity: sha512-sywDxWfKg3Jqm7s7X81uN9P6HbrX9oBYF8lHYzT6/1c/ovVG3RGG/1bDOQpzb+IC7C/h2oI2ESOKMKibbKsq1Q==}
     dev: true
 
+  /buffer-from/1.1.2:
+    resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
+    dev: false
+
   /deepmerge/4.2.2:
-    resolution:
-      {
-        integrity: sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==,
-        registry: https://registry.npmjs.com/,
-      }
-    engines: { node: ">=0.10.0" }
+    resolution: {integrity: sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==, registry: https://registry.npmjs.com/}
+    engines: {node: '>=0.10.0'}
     dev: true
 
   /joycon/3.1.1:
-    resolution:
-      {
-        integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==,
-        registry: https://registry.npmjs.com/,
-      }
-    engines: { node: ">=10" }
+    resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==, registry: https://registry.npmjs.com/}
+    engines: {node: '>=10'}
     dev: true
 
   /jsonc-parser/3.2.0:
-    resolution:
-      {
-        integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==,
-        registry: https://registry.npmjs.com/,
-      }
+    resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==, registry: https://registry.npmjs.com/}
     dev: true
 
+  /source-map-support/0.5.21:
+    resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
+    dependencies:
+      buffer-from: 1.1.2
+      source-map: 0.6.1
+    dev: false
+
+  /source-map/0.6.1:
+    resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
   /tsconfig-to-swcconfig/2.0.1:
-    resolution:
-      {
-        integrity: sha512-GD4rQFgw2Vdi9D81eO7F0OfKZPiBPdyB5mwbUgnGqD3jWBT8dW9TDT9vLMkbyEYM+FSv09nqmbZpzAdRDni0WQ==,
-        registry: https://registry.npmjs.com/,
-      }
+    resolution: {integrity: sha512-GD4rQFgw2Vdi9D81eO7F0OfKZPiBPdyB5mwbUgnGqD3jWBT8dW9TDT9vLMkbyEYM+FSv09nqmbZpzAdRDni0WQ==, registry: https://registry.npmjs.com/}
     dependencies:
       deepmerge: 4.2.2
       joycon: 3.1.1
