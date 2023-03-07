@@ -274,9 +274,11 @@ def _impl(ctx):
 
         for src in ctx.files.srcs:
             src_args = ctx.actions.args()
-            src_args.add("--source-file-name", _calculate_source_file(ctx, src))
-            if ctx.attr.source_root:
-                src_args.add("--source-root", ctx.attr.source_root)
+
+            if ctx.attr.source_maps != "false":
+                src_args.add("--source-file-name", _calculate_source_file(ctx, src))
+                if ctx.attr.source_root:
+                    src_args.add("--source-root", ctx.attr.source_root)
 
             src_path = _relative_to_package(src.path, ctx)
 
