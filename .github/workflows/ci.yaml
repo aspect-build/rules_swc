@@ -31,17 +31,35 @@ jobs:
       # Will look like ["<version from .bazelversion>", "5.3.2"]
       bazelversions: ${{ toJSON(steps.*.outputs.bazelversion) }}
 
+  matrix-prep-os:
+    # Prepares the 'os' axis of the test matrix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: linux
+        run: echo "os=ubuntu-latest" >> $GITHUB_OUTPUT
+      - id: windows
+        run: echo "os=windows-latest" >> $GITHUB_OUTPUT
+        # Only run on main branch (or PR branches that contain 'windows') to minimize Windows minutes (billed at 2X)
+        # https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#included-storage-and-minutes
+        if: ${{ github.ref == 'refs/heads/main' || contains(github.ref, 'windows') }}
+    outputs:
+      # Will look like ["ubuntu-latest", "windows-latest"]
+      os: ${{ toJSON(steps.*.outputs.os) }}
+
   test:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     needs:
       - matrix-prep-bazelversion
+      - matrix-prep-os
 
     strategy:
       fail-fast: false
       matrix:
         bazelversion: ${{ fromJSON(needs.matrix-prep-bazelversion.outputs.bazelversions) }}
+        os: ${{ fromJSON(needs.matrix-prep-os.outputs.os) }}
         folder:
           - "."
           - "e2e/smoke"
@@ -50,6 +68,9 @@ jobs:
           # Don't test bzlmod with Bazel 5 (not supported)
           - bazelversion: 5.3.2
             bzlmodEnabled: true
+          # Don't test Windows with Bazel 5 to minimize Windows minutes (billed at 2X)
+          - bazelversion: 5.3.2
+            os: windows-latest
           # Broken due to stardoc usage, see
           # https://github.com/bazelbuild/stardoc/issues/117#issuecomment-1380744704
           - folder: .
@@ -84,8 +105,8 @@ jobs:
         run: echo "bzlmod_flag=--enable_bzlmod" >> $GITHUB_OUTPUT
 
       - name: bazel test //...
+        working-directory: ${{ matrix.folder }}
+        run: bazel --bazelrc=${{ github.workspace }}/.github/workflows/ci.bazelrc --bazelrc=.bazelrc test ${{ steps.set_bzlmod_flag.outputs.bzlmod_flag }} //...
         env:
           # Bazelisk will download bazel to here, ensure it is cached between runs.
           XDG_CACHE_HOME: ~/.cache/bazel-repo
-        working-directory: ${{ matrix.folder }}
-        run: bazel --bazelrc=$GITHUB_WORKSPACE/.github/workflows/ci.bazelrc --bazelrc=.bazelrc test ${{ steps.set_bzlmod_flag.outputs.bzlmod_flag }} //...
