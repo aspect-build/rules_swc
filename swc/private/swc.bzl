@@ -171,7 +171,7 @@ def _calculate_source_file(ctx, src):
     if not (ctx.attr.out_dir or ctx.attr.root_dir):
         return src.basename
 
-    src_pkg = src.dirname[len(ctx.label.package)+1:] if ctx.label.package else ""
+    src_pkg = src.dirname[len(ctx.label.package) + 1:] if ctx.label.package else ""
     s = ""
 
     # out of src subdir
@@ -184,7 +184,6 @@ def _calculate_source_file(ctx, src):
 
     # back into the src dir, including into the root_dir
     return paths.join(s, src_pkg, src.basename)
-
 
 def _swc_action(ctx, swc_binary, **kwargs):
     ctx.actions.run(
