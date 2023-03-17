@@ -1,6 +1,5 @@
 "Internal implementation details"
 
-load("@aspect_bazel_lib//lib:platform_utils.bzl", "platform_utils")
 load("@aspect_rules_js//js:libs.bzl", "js_lib_helpers")
 load("@aspect_rules_js//js:providers.bzl", "js_info")
 load("@bazel_skylib//lib:paths.bzl", "paths")
@@ -188,16 +187,10 @@ def _calculate_source_file(ctx, src):
 
 
 def _swc_action(ctx, swc_binary, **kwargs):
-    # Workaround Rust SDK issue on Windows, see https://github.com/aspect-build/rules_swc/issues/141
-    if platform_utils.host_platform_is_windows():
-        run = ctx.actions.run_shell
-        kwargs["command"] = swc_binary + " $@ < /dev/null"
-    else:
-        run = ctx.actions.run
-        kwargs["executable"] = swc_binary
-    run(
+    ctx.actions.run(
         mnemonic = "SWCCompile",
         progress_message = "Compiling %{label} [swc %{input}]",
+        executable = swc_binary,
         **kwargs
     )
 
