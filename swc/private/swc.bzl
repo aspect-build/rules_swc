@@ -1,5 +1,6 @@
 "Internal implementation details"
 
+load("@aspect_bazel_lib//lib:platform_utils.bzl", "platform_utils")
 load("@aspect_rules_js//js:libs.bzl", "js_lib_helpers")
 load("@aspect_rules_js//js:providers.bzl", "js_info")
 load("@bazel_skylib//lib:paths.bzl", "paths")
@@ -219,11 +220,13 @@ def _impl(ctx):
             },
         })]
 
+        null_file = "NUL" if platform_utils.host_platform_is_windows() else "/dev/null"
+
         # run swc once with a null input to compile the plugins into the plugin cache
         _swc_action(
             ctx,
             swc_toolchain.swcinfo.swc_binary,
-            arguments = ["compile"] + plugin_args + ["--source-maps", "false", "--out-file", "/dev/null", "/dev/null"],
+            arguments = ["compile"] + plugin_args + ["--source-maps", "false", "--out-file", null_file, null_file],
             inputs = inputs + ctx.files.plugins,
             outputs = plugin_cache,
         )
