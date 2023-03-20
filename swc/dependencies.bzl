@@ -24,6 +24,8 @@ def rules_swc_dependencies():
 
     http_archive(
         name = "aspect_rules_js",
+        patch_args = ["-p1"],
+        patches = ["//:rules_js.patch"],
         sha256 = "3ad6684d744ebbc6592d404cc3aa81d0da634eccb3499f6fd198ae122fa28489",
         strip_prefix = "rules_js-1.19.0",
         url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.19.0.tar.gz",

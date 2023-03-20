@@ -1,0 +1,35 @@
+commit 3d9718fcdccc0707a5e8497b4650a9ab40a52f44
+Author: Alex Eagle <alex@aspect.dev>
+Date:   Mon Mar 20 07:37:14 2023 -0700
+
+    fix(windows): make bazelignore logic tolerate CRLF
+    
+    Tested in https://github.com/aspect-build/rules_swc/actions/runs/4469341198/jobs/7851318264
+
+diff --git a/npm/private/npm_translate_lock_generate.bzl b/npm/private/npm_translate_lock_generate.bzl
+index 042d9fc..3d49097 100644
+--- a/npm/private/npm_translate_lock_generate.bzl
++++ b/npm/private/npm_translate_lock_generate.bzl
+@@ -512,14 +512,20 @@ def _normalize_bazelignore(lines):
+ 
+     - strip trailing slash so that users can have either of equivalent
+         foo/node_modules or foo/node_modules/
++    - strip trailing carriage return on Windows
+     - strip leading ./ so users can have node_modules or ./node_modules
+     """
+     result = []
++
++    # Note, from https://bazel.build/rules/lib/string#rstrip:
++    # Returns a copy of the string where trailing characters that appear in chars are removed.
++    # Note that chars is not a suffix: all combinations of its value are removed:
++    strip_trailing_chars = "/\r"
+     for line in lines:
+         if line.startswith("./"):
+-            result.append(line[2:].rstrip("/"))
++            result.append(line[2:].rstrip(strip_trailing_chars))
+         else:
+-            result.append(line.rstrip("/"))
++            result.append(line.rstrip(strip_trailing_chars))
+     return result
+ 
+ def _find_missing_bazel_ignores(root_package, importer_paths, bazelignore):

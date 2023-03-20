@@ -1,0 +1,33 @@
+diff --git a/npm/private/npm_translate_lock_generate.bzl b/npm/private/npm_translate_lock_generate.bzl
+index 042d9fc..c7aaf9b 100644
+--- a/npm/private/npm_translate_lock_generate.bzl
++++ b/npm/private/npm_translate_lock_generate.bzl
+@@ -512,23 +512,26 @@ def _normalize_bazelignore(lines):
+ 
+     - strip trailing slash so that users can have either of equivalent
+         foo/node_modules or foo/node_modules/
++    - strip trailing carriage return on Windows
+     - strip leading ./ so users can have node_modules or ./node_modules
+     """
+     result = []
+     for line in lines:
+         if line.startswith("./"):
+-            result.append(line[2:].rstrip("/"))
++            result.append(line[2:].rstrip("/").rstrip("\r"))
+         else:
+-            result.append(line.rstrip("/"))
++            result.append(line.rstrip("/").rstrip("\r"))
+     return result
+ 
+ def _find_missing_bazel_ignores(root_package, importer_paths, bazelignore):
+     bazelignore = _normalize_bazelignore(bazelignore.split("\n"))
++    print("bazelignore", bazelignore)
+     missing_ignores = []
+ 
+     # The pnpm-lock.yaml file package needs to be prefixed on paths
+     for i in importer_paths:
+         expected = paths.normalize(paths.join(root_package, i, "node_modules"))
++        print("expected", expected)
+         if expected not in bazelignore:
+             missing_ignores.append(expected)
+     return missing_ignores
