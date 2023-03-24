@@ -1,6 +1,6 @@
 "Bazel dependencies"
 bazel_dep(name = "aspect_rules_swc", dev_dependency = True, version = "0.0.0")
-bazel_dep(name = "bazel_skylib", dev_dependency = True, version = "1.3.0")
+bazel_dep(name = "bazel_skylib", dev_dependency = True, version = "1.4.1")
 
 local_path_override(
     module_name = "aspect_rules_swc",
