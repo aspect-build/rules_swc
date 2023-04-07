@@ -11,102 +11,13 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+concurrency:
+  # Cancel previous actions from the same PR: https://stackoverflow.com/a/72408109
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  # matrix-prep-* steps dynamically generate a bit of JSON depending on whether our action has
-  # access to repository secrets. When running on a pull_request from a fork, the author is
-  # untrusted so the secret will be absent. Insanely complex for how simple this requirement is...
-  # inspired from
-  # https://stackoverflow.com/questions/65384420/how-to-make-a-github-action-matrix-element-conditional
-
-  matrix-prep-bazelversion:
-    # Prepares the 'bazelversion' axis of the test matrix
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - id: bazel_6
-        run: echo "bazelversion=$(head -n 1 .bazelversion)" >> $GITHUB_OUTPUT
-      - id: bazel_5
-        run: echo "bazelversion=5.3.2" >> $GITHUB_OUTPUT
-    outputs:
-      # Will look like ["<version from .bazelversion>", "5.3.2"]
-      bazelversions: ${{ toJSON(steps.*.outputs.bazelversion) }}
-
-  matrix-prep-os:
-    # Prepares the 'os' axis of the test matrix
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - id: linux
-        run: echo "os=ubuntu-latest" >> $GITHUB_OUTPUT
-      - id: windows
-        run: echo "os=windows-latest" >> $GITHUB_OUTPUT
-        # Only run on main branch (or PR branches that contain 'windows') to minimize Windows minutes (billed at 2X)
-        # https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#included-storage-and-minutes
-        if: ${{ github.ref == 'refs/heads/main' || contains(github.head_ref, 'windows') }}
-    outputs:
-      # Will look like ["ubuntu-latest", "windows-latest"]
-      os: ${{ toJSON(steps.*.outputs.os) }}
-
   test:
-    # The type of runner that the job will run on
-    runs-on: ${{ matrix.os }}
-
-    needs:
-      - matrix-prep-bazelversion
-      - matrix-prep-os
-
-    strategy:
-      fail-fast: false
-      matrix:
-        bazelversion: ${{ fromJSON(needs.matrix-prep-bazelversion.outputs.bazelversions) }}
-        os: ${{ fromJSON(needs.matrix-prep-os.outputs.os) }}
-        folder:
-          - "."
-          - "e2e/smoke"
-        bzlmodEnabled: [true, false]
-        exclude:
-          # Don't test bzlmod with Bazel 5 (not supported)
-          - bazelversion: 5.3.2
-            bzlmodEnabled: true
-          # Don't test Windows with Bazel 5 to minimize Windows minutes (billed at 2X)
-          - bazelversion: 5.3.2
-            os: windows-latest
-          # Broken due to stardoc usage, see
-          # https://github.com/bazelbuild/stardoc/issues/117#issuecomment-1380744704
-          - folder: .
-            bzlmodEnabled: true
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
-      - name: Mount bazel caches
-        uses: actions/cache@v3
-        with:
-          path: |
-            "~/.cache/bazel"
-            "~/.cache/bazel-repo"
-          key: bazel-cache-${{ hashFiles('**/BUILD.bazel', '**/*.bzl', 'WORKSPACE') }}
-          restore-keys: bazel-cache-
-
-      - name: Configure Bazel version
-        working-directory: ${{ matrix.folder }}
-        # Overwrite the .bazelversion instead of using USE_BAZEL_VERSION so that Bazelisk
-        # still bootstraps Aspect CLI from configuration in .bazeliskrc. Aspect CLI will
-        # then use .bazelversion to determine which Bazel version to use
-        run: echo "${{ matrix.bazelversion }}" > .bazelversion
-
-      - name: Set bzlmod flag
-        # Store the --enable_bzlmod flag that we add to the test command below
-        # only when we're running bzlmod in our test matrix.
-        id: set_bzlmod_flag
-        if: matrix.bzlmodEnabled
-        run: echo "bzlmod_flag=--enable_bzlmod" >> $GITHUB_OUTPUT
-
-      - name: bazel test //...
-        working-directory: ${{ matrix.folder }}
-        run: bazel --bazelrc=${{ github.workspace }}/.github/workflows/ci.bazelrc --bazelrc=.bazelrc test ${{ steps.set_bzlmod_flag.outputs.bzlmod_flag }} //...
-        env:
-          # Bazelisk will download bazel to here, ensure it is cached between runs.
-          XDG_CACHE_HOME: ~/.cache/bazel-repo
+    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v2
+    with:
+      folders: '[".", "e2e/smoke"]'
