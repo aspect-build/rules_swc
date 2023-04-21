@@ -53,7 +53,10 @@ load("//swc/private:toolchains_repo.bzl", "PLATFORMS", "toolchains_repo")
 load("//swc/private:versions.bzl", "TOOL_VERSIONS")
 
 # Expose as Public API
-LATEST_VERSION = TOOL_VERSIONS.keys()[0]
+LATEST_SWC_VERSION = TOOL_VERSIONS.keys()[0]
+
+# TODO(2.0): remove this alias
+LATEST_VERSION = LATEST_SWC_VERSION
 
 _DOC = "Fetch external dependencies needed to run the SWC cli"
 _ATTRS = {
