@@ -13,7 +13,7 @@ bazel_dep(name = "bazel_skylib", version = "1.4.1")
 bazel_dep(name = "platforms", version = "0.0.4")
 
 swc = use_extension("@aspect_rules_swc//swc:extensions.bzl", "swc")
-swc.toolchain(name = "swc", swc_version = "v1.3.41")
+swc.toolchain(name = "swc", swc_version = "v1.3.56")
 use_repo(swc, "swc_toolchains")
 
 register_toolchains("@swc_toolchains//:all")
