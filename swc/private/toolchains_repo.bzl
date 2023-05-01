@@ -18,18 +18,12 @@ with only the toolchain attribute pointing into the platform-specific repositori
 """
 
 # Based on the list of pre-compiled binaries at
-# https://github.com/swc-project/swc/releases/tag/v1.2.117
+# https://github.com/swc-project/swc/releases/tag/v1.3.56
 # TODO: how to represent these three?
 # linux-arm-gnueabihf
 # linux-arm64-musl
 # linux-x64-musl
 PLATFORMS = {
-    "android-arm64": struct(
-        compatible_with = [
-            "@platforms//os:android",
-            "@platforms//cpu:aarch64",
-        ],
-    ),
     "darwin-arm64": struct(
         compatible_with = [
             "@platforms//os:macos",
@@ -39,12 +33,6 @@ PLATFORMS = {
     "darwin-x64": struct(
         compatible_with = [
             "@platforms//os:macos",
-            "@platforms//cpu:x86_64",
-        ],
-    ),
-    "freebsd-x64": struct(
-        compatible_with = [
-            "@platforms//os:freebsd",
             "@platforms//cpu:x86_64",
         ],
     ),
