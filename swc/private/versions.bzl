@@ -1,7 +1,20 @@
 "Mirror of release info"
 
+# TODO: >1.3.42 tested up to 1.3.56 currently fails CI with segfault or panick errors during tests.
+#       See: https://github.com/swc-project/swc/issues/7304
+
 # Versions should be descending order so TOOL_VERSIONS[0] is the latest version.
 TOOL_VERSIONS = {
+    "v1.3.42": {
+        "darwin-arm64": "sha384-/vUIn83eXTGN7bksJNAblSUvegWXAZQdzNftBfry+6iHDQZ34mvzUoN23rMytP3m",
+        "darwin-x64": "sha384-LpBA7sdoAAZYjTzvz/uScsQ1Mnt6c8puzUfIh3nlBmI8ki9c39yVkiv8AISgn0OV",
+        "linux-arm-gnueabihf": "sha384-DbxqolZ1z70OvcDR8Ap7acmrsSQaEqecZDO/0EnF7Dz8+cqFPtYJh159Zoi6mG8a",
+        "linux-arm64-gnu": "sha384-grkDixIlT/GXssOGfCpYGOdKi/hRypnBrrNYpVQXymwpnmjxF3T89IY3ci5sdjRO",
+        "linux-x64-gnu": "sha384-J9c0c0OP5CGPfBqXfn03P1KQeREd9PVEJ+UjmyYOE/cca/Go8mx3m1ArtCxroycb",
+        "win32-arm64-msvc": "sha384-4pzTb2NsU0F4ypWlrlYZbDe7/pgq9++h+ABPvSYrichNhCj7wa1/oDuIgLXby0n9",
+        "win32-ia32-msvc": "sha384-fNJhkCEozxujc3UFLcyVxBthh+Lz0cJfkZnkIjXrM1wq4e6HHcLLP70usyPQVYDc",
+        "win32-x64-msvc": "sha384-ZCQxBaj1Nl7yYphtk7oJb6EPkQhRnz2KX1LJqXAhVy5snFBkuOj2MzzEhUklniv9",
+    },
     "v1.3.41": {
         "darwin-arm64": "sha384-GE1b8WauuT+UwqjbpkmALKuL8kr/P3QOFSnSLhXDLjMPnrthdGTuaL6TEAo5tPMi",
         "darwin-x64": "sha384-i/oe5SkdKPbknGRUeymnRy/W8+1CIJSiEscjuBY6GfoYmS/1Ih94LaOG6hoL+TxL",
