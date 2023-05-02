@@ -4,9 +4,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 Object.defineProperty(exports, "a", {
     enumerable: true,
-    get: function() {
-        return a;
-    }
+    get: ()=>a
 });
 const a = "foo";
 
