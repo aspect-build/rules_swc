@@ -31,5 +31,9 @@ write_source_files(
         filter1 = ".sourceRoot,.sources",
         filter2 = ".sourceRoot,.sources",
     )
-    for f in ["a", "b", "sub/c"]
+    for f in [
+        "a",
+        "b",
+        "sub/c",
+    ]
 ]
