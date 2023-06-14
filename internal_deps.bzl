@@ -4,6 +4,8 @@ Users should *not* need to install these. If users see a load()
 statement from these, that's a bug in our distribution.
 """
 
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
 # buildifier: disable=bzl-visibility
 load("//swc/private:maybe.bzl", http_archive = "maybe_http_archive")
 
@@ -34,11 +36,17 @@ def rules_swc_internal_deps():
         urls = ["https://github.com/bazelbuild/stardoc/releases/download/0.5.3/stardoc-0.5.3.tar.gz"],
     )
 
-    http_archive(
+    # http_archive(
+    #     name = "buildifier_prebuilt",
+    #     sha256 = "e46c16180bc49487bfd0f1ffa7345364718c57334fa0b5b67cb5f27eba10f309",
+    #     strip_prefix = "buildifier-prebuilt-6.1.0",
+    #     urls = [
+    #         "https://github.com/keith/buildifier-prebuilt/archive/6.1.0.tar.gz",
+    #     ],
+    # )
+
+    git_repository(
         name = "buildifier_prebuilt",
-        sha256 = "e46c16180bc49487bfd0f1ffa7345364718c57334fa0b5b67cb5f27eba10f309",
-        strip_prefix = "buildifier-prebuilt-6.1.0",
-        urls = [
-            "https://github.com/keith/buildifier-prebuilt/archive/6.1.0.tar.gz",
-        ],
+        remote = "https://github.com/jbedard/buildifier-prebuilt.git",
+        commit = "d5326303d222c00f395f31f63ba6df532fd94404",
     )
