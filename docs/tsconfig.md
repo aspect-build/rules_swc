@@ -40,33 +40,19 @@ Another option provided by the community is to convert the `tsconfig.json` file.
 
 The relevant package is [tsconfig-to-swcconfig](https://www.npmjs.com/package/tsconfig-to-swcconfig). Let's see how to wire it up.
 
-There's a corresponding CLI tool, tswc, but it doesn't work well to just generate the `.swcrc` file,
-see <https://github.com/Songkeys/tswc/issues/1>
+First, add the package to your devDependencies as usual.
 
-So we'll make our own tiny CLI for the underlying package, let's call it `write_swcrc.js`, containing:
-
-```javascript
-const {convert} = require('tsconfig-to-swcconfig');
-const [tsconfig] = process.argv.slice(2);
-console.log(JSON.stringify(convert(tsconfig), undefined, 2));
-```
-
-And a bit of BUILD file content to invoke it (you might wrap this in a macro for better developer experience):
+Then, invoke it in your `BUILD` file, replacing `[my/pkg]` with the Bazel package where the dependency appears:
 
 ```python
-js_binary(
-    name = "converter",
-    entry_point = "write_swcrc.js",
-    data = [":node_modules/tsconfig-to-swcconfig"],
-)
+load("@npm//[my/pkg]:tsconfig-to-swcconfig/package_json.bzl", tsconfig_to_swcconfig = "bin")
 
-js_run_binary(
+tsconfig_to_swcconfig.t2s(
     name = "write_swcrc",
-    tool = "converter",
-    chdir = package_name(),
-    args = ["./tsconfig.json"],
     srcs = ["tsconfig.json"],
+    args = ["--filename", "$(location tsconfig.json)"],
     stdout = ".swcrc",
+    visibility = ["//:__subpackages__"],
 )
 ```
 

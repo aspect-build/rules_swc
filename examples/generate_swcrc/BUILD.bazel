@@ -1,32 +1,19 @@
 load("@aspect_bazel_lib//lib:testing.bzl", "assert_json_matches")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
-load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@npm//examples/generate_swcrc:tsconfig-to-swcconfig/package_json.bzl", tsconfig_to_swcconfig = "bin")
 
 npm_link_all_packages(name = "node_modules")
 
-# Doesn't work: https://github.com/Songkeys/tswc/issues/1
-# load("@npm//examples/generate_swcrc:tswc/package_json.bzl", "bin")
-# bin.tswc(
-#     name = "convert",
-#     srcs = ["tsconfig.json"],
-#     stdout = ".swcrc0",
-#     args = ["--debug"],
-# )
-
-js_binary(
-    name = "converter",
-    data = [":node_modules/tsconfig-to-swcconfig"],
-    entry_point = "write_swcrc.js",
-)
-
-js_run_binary(
+tsconfig_to_swcconfig.t2s(
     name = "write_swcrc",
     srcs = ["tsconfig.json"],
-    args = ["./tsconfig.json"],
-    chdir = package_name(),
+    args = [
+        "--filename",
+        "$(location tsconfig.json)",
+    ],
     stdout = ".swcrc",
-    tool = "converter",
+    visibility = ["//:__subpackages__"],
 )
 
 # Demonstrate that it works
