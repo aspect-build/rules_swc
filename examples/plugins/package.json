@@ -1,6 +1,6 @@
 {
   "private": true,
   "devDependencies": {
-    "@swc/plugin-transform-imports": "1.5.41"
+    "@swc/plugin-transform-imports": "1.5.70"
   }
 }
