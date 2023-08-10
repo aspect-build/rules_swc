@@ -42,7 +42,7 @@ The relevant package is [tsconfig-to-swcconfig](https://www.npmjs.com/package/ts
 
 First, add the package to your devDependencies as usual.
 
-Then, invoke it in your `BUILD` file, replacing `[my/pkg]` with the Bazel package where the dependency appears:
+Then, invoke it in your `BUILD` file, replacing `[my/pkg]` with the Bazel package where the `package.json` appears:
 
 ```python
 load("@npm//[my/pkg]:tsconfig-to-swcconfig/package_json.bzl", tsconfig_to_swcconfig = "bin")
