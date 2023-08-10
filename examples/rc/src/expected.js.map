@@ -1,1 +1,1 @@
-{"version":3,"sources":["in.ts"],"sourcesContent":["export const a: string = \"foo\";\n"],"names":["a"],"mappings":";;;;+BAAaA;;aAAAA;;AAAN,MAAMA,IAAY"}
+{"version":3,"sources":["in.ts"],"sourcesContent":["export const a: string = \"foo\";\n"],"names":["a"],"mappings":";;;;+BAAaA;;;eAAAA;;;AAAN,MAAMA,IAAY"}
