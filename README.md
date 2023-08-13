@@ -3,14 +3,16 @@
 SWC (<https://swc.rs/>) is a fast JavaScript compiler, written in Rust.
 It performs the same work as Babel among other things, but is 20x faster.
 
+Many companies are successfully building with rules_swc. If you're getting value from the project, please let us know! Just comment on our [Adoption Discussion](https://github.com/aspect-build/rules_js/discussions/1000).
+
 SWC is a natural fit with Bazel.
 Bazel does best when it orchestrates the work of many short-lived compiler processes.
 NodeJS is not a good runtime for such tools, because it is an interpreter, and is only fast after the code has been running for a while and is Just-In-Time optimized.
 SWC is fast from the beginning since it is compiled to optimized machine code.
 This makes it a better choice for most developer workflows than tools like `tsc` or `babel`.
 
-At the same, Bazel is a good fit for SWC too. It has still-developing features like a bundler,
-but you might want to use something else as a bundler, like esbuild.
+At the same, Bazel is a good fit for SWC too. Instead of waiting for swc plugins,
+can already use whatever tools you like, for example you could choose any bundler, such as esbuild.
 Bazel's agnostic unix-pipeline-style composition of tools allows you to mix-and-match the best parts of
 the JS ecosystem, regardless what language they run on.
 With Bazel, you won't need to figure out SWC's plugin infrastructure.
