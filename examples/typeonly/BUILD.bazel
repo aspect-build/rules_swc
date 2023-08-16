@@ -1,0 +1,39 @@
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_json_matches")
+
+swc(
+    name = "compile",
+    srcs = [
+        "a.ts",
+        "b.ts",
+        "c.d.ts",
+        "e.ts",
+    ],
+    swcrc = "swcrc.json",
+    out_dir = "out",
+    source_maps = True,
+)
+
+# Assert that the output of "compile" rule matches the expected file.
+write_source_files(
+    name = "test",
+    files = {
+        "expected/a.js": ":out/a.js",
+        "expected/b.js": ":out/b.js",
+    },
+)
+
+[
+    assert_json_matches(
+        name = "test_%s" % f.replace("/", "-"),
+        file1 = ":out/%s.js.map" % f,
+        file2 = "expected/%s.js.map.golden" % f,
+        filter1 = ".sourceRoot,.sources",
+        filter2 = ".sourceRoot,.sources",
+    )
+    for f in [
+        "a",
+        "b",
+    ]
+]
