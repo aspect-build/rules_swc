@@ -39,8 +39,7 @@ bzl_library(
     srcs = ["dependencies.bzl"],
     visibility = ["//visibility:public"],
     deps = [
-        "@bazel_tools//tools/build_defs/repo:http.bzl",
-        "@bazel_tools//tools/build_defs/repo:utils.bzl",
+        "//swc/private:maybe",
     ],
 )
 
