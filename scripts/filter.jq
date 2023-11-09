@@ -1,3 +1,5 @@
+map(select(.tag_name | contains("nightly") | not))
+|
 map(
     {
         "key": .tag_name,
