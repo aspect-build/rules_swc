@@ -1,3 +1,4 @@
 docs/*.md
 **/expected.js
 **/expected.cjs
+**/expected_tsc

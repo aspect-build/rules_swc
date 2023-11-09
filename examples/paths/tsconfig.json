@@ -4,5 +4,6 @@
     "paths": {
       "@modules/*": ["./modules/*"]
     }
-  }
+  },
+  "include": ["src/**/*"]
 }
