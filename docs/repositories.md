@@ -30,40 +30,6 @@ swc_register_toolchains(
 )
 ```
 
-### Other versions
-
-To use an swc version which is not mirrored to rules_swc, use `integrity_hashes`.
-
-For example in `WORKSPACE`:
-
-```starlark
-swc_register_toolchains(
-    name = "swc",
-    integrity_hashes = {
-        "darwin-arm64": "sha384-IhP/76Zi5PEfsrGwPJj/CLHu2afxSBO2Fehp/qo4uHVXez08dcfyd9UzrcUI1z1q",
-        "darwin-x64": "sha384-s2wH7hzaMbTbIkgPpP5rAYThH/+H+RBQ/5xKbpM4lfwPMS6cNBIpjKVnathrENm/",
-        "linux-arm64-gnu": "sha384-iaBhMLrnHTSfXa86AVHM6zHqYbH3Fh1dWwDeH7sW9HKvX2gbQb6LOpWN6Wp4ddud",
-        "linux-x64-gnu": "sha384-R/y9mcodpNt8l6DulUCG5JsNMrApP+vOAAh3bTRChh6LQKP0Z3Fwq86ztfObpAH8",
-    },
-    swc_version = "v1.3.37",
-)
-```
-
-You can use the [`mirror_releases.sh` script](https://github.com/aspect-build/rules_swc/blob/main/scripts/mirror_releases.sh) to generate the expected shas. For example:
-```
-&gt; mirror_releases.sh v1.3.50
-    "v1.3.50": {
-        "darwin-arm64": "sha384-kXrPSxzwUCsB2y0ivQrCrBDULa+N9BwwtKzqo4hIgYmgZgBGP8cXfEWlM18Pe2mT",
-        "darwin-x64": "sha384-xRo3yRFsS8w5I7uWG7ZDpDiIhlJVUADpXzCWCNkYEsO4vJGD3izvTCUyWcF6HaRj",
-        "linux-arm-gnueabihf": "sha384-WoVw65RR2yq7fZGRpGKGDwyloteD2XjxMkqVDip2BkKuGVZMDjqldivLYx56Nhzq",
-        "linux-arm64-gnu": "sha384-f1pB/FU6PVYSW8KIFA799chHgXPeoaH2z8E82Mc2V21pQeJWITasy5h5wPHghZ9i",
-        "linux-x64-gnu": "sha384-MdR0sNOSZG4AfCBQFfqSGJ5A9Zi5mMgL7wdIeQpzqjkPICK2uDl5/MgJbO4D3kAM",
-        "win32-arm64-msvc": "sha384-PSmCSGrZBoFg8D+S7NqmlVr4HSedlWU2IsF0eci9jUQb+eBJeco3IO4V+IIhCiKw",
-        "win32-ia32-msvc": "sha384-HXRGllEV7LnLN/tgB5FfspniKG3y43C1bKIatDQIWk56gekAzm1ntV1W0qAYjz3M",
-        "win32-x64-msvc": "sha384-0oZDYXsh1Aeiqt9jA/HcWEM/yMXoC7fQvkPhDjUf0nVimZuPehj4BPWCyiIsrD1s",
-    },
-```
-
 
 
 <a id="swc_repositories"></a>
