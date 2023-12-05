@@ -5,6 +5,15 @@
 
 # Versions should be descending order so TOOL_VERSIONS[0] is the latest version.
 TOOL_VERSIONS = {
+    "v1.3.100": {
+        "darwin-arm64": "sha384-flEtNj+2VKch49/pQwSpCLmNf66AMhnwskd+hJlLc9csffEcplBJERqZpwdcCpUF",
+        "darwin-x64": "sha384-HG/fflvFdKvfBsyz65TzYzdcfQyhIUfmVDhHbChgkiQuWR3la6LtSB/8R8RgIJk2",
+        "linux-arm64-gnu": "sha384-lNMhn3MsT4fU2vSOziTP2h/3gDE7zUkD5gmnk4XvGr9AVuotsrVYYbq1LANFi1Fr",
+        "linux-x64-gnu": "sha384-auYv4jCrg7HoZqH351FsUMuGlumQv5r9opiEzZ8y4Isszt5/hP8u6TGVFbR01Z2C",
+        "win32-arm64-msvc": "sha384-uRQ7MBExic+v1Ch0oUM3vDH1fD0D8a2GripsLat5+kLc2ZKWcnOrVFaRfKGCmJsd",
+        "win32-ia32-msvc": "sha384-fO2jnuxfsqpkeVsJ/ZRozbdXM3GBDrUk5NNhqRc9aa99ymntalrRxT5DhiiBEN+P",
+        "win32-x64-msvc": "sha384-paKSwB5ds81xNozxD3AqOZkqduHcRLeCROrqT9vAQuz8gbywlRw9vLM/efWaODZ4",
+    },
     "v1.3.99": {
         "darwin-arm64": "sha384-yDt4K4hliZgYd+hCBFOpxLtqPWCOgoV9YIVcXaKxPJh5QMqKMlsHm+hQVfBeYVMH",
         "darwin-x64": "sha384-XfHE7nkarJWlJJUYw7VxaPOa5KQSwDJSy7Ib2AGPMHXutgo9Fr8Uxg5jt6u/3OP4",
@@ -23,15 +32,6 @@ TOOL_VERSIONS = {
         "win32-arm64-msvc": "sha384-hVuEHQnSEzltzcNRGVm+00kaXcxFLMl6ZM9m0HcC81vNXXFBRhSjTBQaAtzD070a",
         "win32-ia32-msvc": "sha384-CXUaXoNPuHV/M5V283WhWXMRk4Q0Ea5pDDOlf81s26e73Y7XzmgNebiYdtQ1zFw4",
         "win32-x64-msvc": "sha384-E2Gi9ApwaP8XLH7KL+9lVTlBiUqUTJ7CdI07bBH2WaohH4rGn82TgmdaRFh41O0N",
-    },
-    "v1.3.100": {
-        "darwin-arm64": "sha384-flEtNj+2VKch49/pQwSpCLmNf66AMhnwskd+hJlLc9csffEcplBJERqZpwdcCpUF",
-        "darwin-x64": "sha384-HG/fflvFdKvfBsyz65TzYzdcfQyhIUfmVDhHbChgkiQuWR3la6LtSB/8R8RgIJk2",
-        "linux-arm64-gnu": "sha384-lNMhn3MsT4fU2vSOziTP2h/3gDE7zUkD5gmnk4XvGr9AVuotsrVYYbq1LANFi1Fr",
-        "linux-x64-gnu": "sha384-auYv4jCrg7HoZqH351FsUMuGlumQv5r9opiEzZ8y4Isszt5/hP8u6TGVFbR01Z2C",
-        "win32-arm64-msvc": "sha384-uRQ7MBExic+v1Ch0oUM3vDH1fD0D8a2GripsLat5+kLc2ZKWcnOrVFaRfKGCmJsd",
-        "win32-ia32-msvc": "sha384-fO2jnuxfsqpkeVsJ/ZRozbdXM3GBDrUk5NNhqRc9aa99ymntalrRxT5DhiiBEN+P",
-        "win32-x64-msvc": "sha384-paKSwB5ds81xNozxD3AqOZkqduHcRLeCROrqT9vAQuz8gbywlRw9vLM/efWaODZ4",
     },
     "v1.3.95": {
         "darwin-arm64": "sha384-wG+vjOVGEjyv65V+OVpKmnITCw/PI5y7rwJb6O5usnQ6VpoWjzKCzw/j1aI3asFn",
