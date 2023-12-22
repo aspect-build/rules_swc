@@ -28,3 +28,10 @@ write_source_files(
         "expected.js": "src/index.js",
     },
 )
+
+write_source_files(
+    name = "test_module_a",
+    files = {
+        "moduleA.expected.js": "src/modules/moduleA/index.js",
+    },
+)
