@@ -15,7 +15,7 @@ _attrs = {
     ),
 }
 
-def _impl(ctx):
+def _swc_plugin_impl(ctx):
     return [
         DefaultInfo(
             files = ctx.attr.src[DefaultInfo].files,
@@ -28,6 +28,6 @@ def _impl(ctx):
 
 swc_plugin = struct(
     attrs = _attrs,
-    implementation = _impl,
+    implementation = _swc_plugin_impl,
     provides = [DefaultInfo, SwcPluginConfigInfo],
 )

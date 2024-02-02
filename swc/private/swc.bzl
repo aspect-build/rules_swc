@@ -194,7 +194,7 @@ def _swc_action(ctx, swc_binary, **kwargs):
         **kwargs
     )
 
-def _impl(ctx):
+def _swc_impl(ctx):
     swc_toolchain = ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"]
 
     inputs = swc_toolchain.swcinfo.tool_files[:]
@@ -360,7 +360,7 @@ def _impl(ctx):
     ]
 
 swc = struct(
-    implementation = _impl,
+    implementation = _swc_impl,
     attrs = dict(_attrs, **_outputs),
     toolchains = ["@aspect_rules_swc//swc:toolchain_type"],
     SUPPORTED_EXTENSIONS = _SUPPORTED_EXTENSIONS,
