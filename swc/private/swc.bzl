@@ -144,10 +144,15 @@ def _calculate_js_outs(srcs, out_dir = None, root_dir = None):
         if len(js_srcs) > 0:
             fail("Detected swc rule with srcs=[{}, ...] and out_dir=None. Please set out_dir when compiling .js files.".format(", ".join(js_srcs[:3])))
 
-    return [f2 for f2 in [_calculate_js_out(f, out_dir, root_dir) for f in srcs] if f2]
+    out = []
+    for f in srcs:
+        js_out = _calculate_js_out(f, out_dir, root_dir)
+        if js_out:
+            out.append(js_out)
+    return out
 
 def _calculate_map_out(src, source_maps, out_dir = None, root_dir = None):
-    if source_maps in ["false", "inline"]:
+    if source_maps == "false" or source_maps == "inline":
         return None
     if not _is_supported_src(src):
         return None
@@ -166,7 +171,15 @@ def _calculate_map_out(src, source_maps, out_dir = None, root_dir = None):
     return map_out
 
 def _calculate_map_outs(srcs, source_maps, out_dir = None, root_dir = None):
-    return [f2 for f2 in [_calculate_map_out(f, source_maps, out_dir, root_dir) for f in srcs] if f2]
+    if source_maps == "false" or source_maps == "inline":
+        return []
+
+    out = []
+    for f in srcs:
+        map_out = _calculate_map_out(f, source_maps, out_dir, root_dir)
+        if map_out:
+            out.append(map_out)
+    return out
 
 def _calculate_source_file(ctx, src):
     if not (ctx.attr.out_dir or ctx.attr.root_dir):
