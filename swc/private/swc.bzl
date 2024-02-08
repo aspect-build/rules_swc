@@ -74,7 +74,8 @@ If non-empty, there should be one for each entry in srcs."""),
 _SUPPORTED_EXTENSIONS = [".ts", ".mts", ".cts", ".tsx", ".jsx", ".mjs", ".cjs", ".js"]
 
 def _is_supported_src(src):
-    return paths.split_extension(src)[-1] in _SUPPORTED_EXTENSIONS
+    i = src.rfind(".")
+    return i > 0 and src[i:] in _SUPPORTED_EXTENSIONS
 
 # TODO: aspect_bazel_lib should provide this?
 def _relative_to_package(path, ctx):
@@ -110,6 +111,14 @@ def _replace_ext(f, ext_map):
         return new_ext
     return None
 
+def _replace_extension(f, ext):
+    i = f.rfind(".")
+    return f if i <= 0 else f[:-(len(f) - i)] + ext
+
+def _remove_extension(f):
+    i = f.rfind(".")
+    return f if i <= 0 else f[:-(len(f) - i)]
+
 def _calculate_js_out(src, out_dir = None, root_dir = None, js_outs = []):
     if not _is_supported_src(src):
         return None
@@ -121,16 +130,16 @@ def _calculate_js_out(src, out_dir = None, root_dir = None, js_outs = []):
         ".cjs": ".cjs",
         ".cts": ".cjs",
     }
-    js_out = paths.replace_extension(src, _replace_ext(src, exts))
+    js_out = _replace_extension(src, _replace_ext(src, exts))
     if root_dir:
         js_out = _strip_root_dir(js_out, root_dir)
     if out_dir:
         js_out = paths.join(out_dir, js_out)
 
     # Check if a custom out was requested with a potentially different extension
+    no_ext = _remove_extension(js_out)
     for maybe_out in js_outs:
-        no_ext = paths.replace_extension(js_out, "")
-        if no_ext == paths.replace_extension(maybe_out, ""):
+        if no_ext == _remove_extension(maybe_out):
             js_out = maybe_out
             break
     return js_out
@@ -158,7 +167,7 @@ def _calculate_map_out(src, source_maps, out_dir = None, root_dir = None):
         ".mjs": ".mjs.map",
         ".cjs": ".cjs.map",
     }
-    map_out = paths.replace_extension(src, _replace_ext(src, exts))
+    map_out = _replace_extension(src, _replace_ext(src, exts))
     if root_dir:
         map_out = _strip_root_dir(map_out, root_dir)
     if out_dir:
