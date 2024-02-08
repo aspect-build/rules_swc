@@ -78,24 +78,20 @@ def _is_supported_src(src):
 
 # TODO: aspect_bazel_lib should provide this?
 def _relative_to_package(path, ctx):
-    package_path = ctx.label.package
+    path = path.removeprefix(ctx.bin_dir.path + "/")
+
     if ctx.label.workspace_root:
         # If the target label is external (like "@REPO_NAME//some/target")
         # then it will be placed under "external/REPO_NAME/some/target",
         # rather than just "some/target", so take that into account here.
-        package_path = ctx.label.workspace_root + "/" + package_path
+        path.removeprefix(ctx.label.workspace_root + "/")
 
-    for prefix in (ctx.bin_dir.path, package_path):
-        prefix += "/"
-        if path.startswith(prefix):
-            path = path[len(prefix):]
+    path = path.removeprefix(ctx.label.package + "/")
+
     return path
 
 def _strip_root_dir(path, root_dir):
-    replace_pattern = root_dir + "/"
-    if path.startswith("./"):
-        path = path[len("./"):]
-    return path.replace(replace_pattern, "", 1)
+    return path.removeprefix("./").removeprefix(root_dir + "/")
 
 # Copied from ts_lib.bzl
 # https://github.com/aspect-build/rules_ts/blob/c2a9e1e476c45bb895c4445327471e29bc3e0474/ts/private/ts_lib.bzl
@@ -139,7 +135,7 @@ def _calculate_js_outs(srcs, out_dir = None, root_dir = None):
     if out_dir == None:
         js_srcs = []
         for src in srcs:
-            if paths.split_extension(src)[-1] == ".js":
+            if src.endswith(".js"):
                 js_srcs.append(src)
         if len(js_srcs) > 0:
             fail("Detected swc rule with srcs=[{}, ...] and out_dir=None. Please set out_dir when compiling .js files.".format(", ".join(js_srcs[:3])))
