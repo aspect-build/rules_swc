@@ -267,6 +267,8 @@ def _swc_impl(ctx):
     else:
         output_sources = []
 
+        js_outs_relative = [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs]
+
         for src in ctx.files.srcs:
             src_args = ctx.actions.args()
 
@@ -277,7 +279,7 @@ def _swc_impl(ctx):
 
             src_path = _relative_to_package(src.path, ctx)
 
-            js_out_path = _calculate_js_out(src_path, ctx.attr.out_dir, ctx.attr.root_dir, [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs])
+            js_out_path = _calculate_js_out(src_path, ctx.attr.out_dir, ctx.attr.root_dir, js_outs_relative)
             if not js_out_path:
                 # This source file is not a supported src
                 continue
