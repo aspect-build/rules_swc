@@ -225,8 +225,6 @@ def _swc_impl(ctx):
 
     args.add("--source-maps", ctx.attr.source_maps)
 
-    plugin_cache = []
-    plugin_args = []
     if ctx.attr.plugins:
         plugin_cache = [ctx.actions.declare_directory("{}_plugin_cache".format(ctx.label.name))]
         plugin_args = ["--config-json", json.encode({
@@ -249,7 +247,9 @@ def _swc_impl(ctx):
             outputs = plugin_cache,
         )
 
-    args.add_all(plugin_args)
+        inputs.extend(plugin_cache)
+        inputs.extend(ctx.files.plugins)
+        args.add_all(plugin_args)
 
     if ctx.attr.output_dir:
         if len(ctx.attr.srcs) != 1:
@@ -259,8 +259,6 @@ def _swc_impl(ctx):
         output_dir = ctx.actions.declare_directory(ctx.attr.out_dir if ctx.attr.out_dir else ctx.label.name)
 
         inputs.extend(ctx.files.srcs)
-        inputs.extend(ctx.files.plugins)
-        inputs.extend(plugin_cache)
 
         output_sources = [output_dir]
 
@@ -309,14 +307,11 @@ def _swc_impl(ctx):
                 js_map_out = ctx.actions.declare_file(map_out_path)
                 outputs.append(js_map_out)
 
-            inputs = [src]
-            inputs.extend(ctx.toolchains["@aspect_rules_swc//swc:toolchain_type"].swcinfo.tool_files)
-            inputs.extend(ctx.files.plugins)
-            inputs.extend(plugin_cache)
+            src_inputs = [src] + inputs
 
             if ctx.attr.swcrc:
                 src_args.add("--config-file", ctx.file.swcrc)
-                inputs.append(ctx.file.swcrc)
+                src_inputs.append(ctx.file.swcrc)
 
             src_args.add("--out-file", js_out)
 
@@ -325,7 +320,7 @@ def _swc_impl(ctx):
             _swc_action(
                 ctx,
                 swc_toolchain.swcinfo.swc_binary,
-                inputs = inputs,
+                inputs = src_inputs,
                 arguments = [
                     args,
                     src_args,
