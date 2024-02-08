@@ -135,9 +135,9 @@ def _calculate_js_out(src, out_dir = None, root_dir = None, js_outs = []):
     # Check if a custom out was requested with a potentially different extension
     no_ext = _remove_extension(js_out)
     for maybe_out in js_outs:
-        if no_ext == _remove_extension(maybe_out):
-            js_out = maybe_out
-            break
+        # Initial startswith() check to avoid the expensive _remove_extension()
+        if maybe_out.startswith(no_ext) and no_ext == _remove_extension(maybe_out):
+            return maybe_out
     return js_out
 
 def _calculate_js_outs(srcs, out_dir = None, root_dir = None):
