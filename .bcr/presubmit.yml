@@ -8,5 +8,13 @@ bcr_test_module:
       name: "Run test module"
       bazel: ${{ bazel }}
       platform: ${{ platform }}
+      shell_commands:
+        # Don't use Aspect CLI on Windows
+        # TODO: remove this block once we have Aspect CLI Windows releases
+        - |
+            if [[ "${{ platform }}" == "windows" ]]; then
+              rm -f .bazeliskrc
+            fi
+
       test_targets:
         - "//..."
