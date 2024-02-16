@@ -186,7 +186,7 @@ def _calculate_map_outs(srcs, source_maps, out_dir, root_dir):
 
 def _calculate_source_file(ctx, src):
     if not (ctx.attr.out_dir or ctx.attr.root_dir):
-        return src.basename
+        return src.short_path if ctx.attr.source_root else src.basename
 
     src_pkg = src.dirname[len(ctx.label.package) + 1:] if ctx.label.package else ""
     s = ""
