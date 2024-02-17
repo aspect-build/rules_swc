@@ -115,7 +115,7 @@ def _remove_extension(f):
     i = f.rfind(".")
     return f if i <= 0 else f[:-(len(f) - i)]
 
-def _calculate_js_out(src, out_dir = None, root_dir = None, js_outs = []):
+def _calculate_js_out(src, out_dir, root_dir, js_outs = []):
     if not _is_supported_src(src):
         return None
 
@@ -140,7 +140,7 @@ def _calculate_js_out(src, out_dir = None, root_dir = None, js_outs = []):
             return maybe_out
     return js_out
 
-def _calculate_js_outs(srcs, out_dir = None, root_dir = None):
+def _calculate_js_outs(srcs, out_dir, root_dir):
     if out_dir == None:
         js_srcs = []
         for src in srcs:
@@ -156,7 +156,7 @@ def _calculate_js_outs(srcs, out_dir = None, root_dir = None):
             out.append(js_out)
     return out
 
-def _calculate_map_out(src, source_maps, out_dir = None, root_dir = None):
+def _calculate_map_out(src, source_maps, out_dir, root_dir):
     if source_maps == "false" or source_maps == "inline":
         return None
     if not _is_supported_src(src):
@@ -175,7 +175,7 @@ def _calculate_map_out(src, source_maps, out_dir = None, root_dir = None):
         map_out = paths.join(out_dir, map_out)
     return map_out
 
-def _calculate_map_outs(srcs, source_maps, out_dir = None, root_dir = None):
+def _calculate_map_outs(srcs, source_maps, out_dir, root_dir):
     if source_maps == "false" or source_maps == "inline":
         return []
 
