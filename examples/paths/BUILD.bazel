@@ -6,11 +6,33 @@ Note that this example also depends on the setup in /WORKSPACE at the root of th
 load("@aspect_bazel_lib//lib:testing.bzl", "assert_json_matches")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
+load("@npm//examples:typescript/package_json.bzl", "bin")
 
 # Note: The .swcrc configuration file will be automatically used, if it is present in the current directory
 swc(
     name = "compile",
     srcs = glob(["**/*.ts"]),
+)
+
+# Produce a folder of the transpiled outputs of `tsc`.
+# This is useful when reporting a bug to the SWC project, as their goal is to emit the same.
+# For example, https://github.com/swc-project/swc/issues/8265
+bin.tsc(
+    name = "tsc",
+    srcs = [
+        "src/index.ts",
+        "tsconfig.json",
+    ] + glob(["src/modules/**/*.ts"]),
+    args = [
+        "--outDir",
+        package_name() + "/tsc_out",
+        "--listFiles",
+        "-p",
+        "$(execpath tsconfig.json)",
+    ],
+    out_dirs = [
+        "tsc_out",
+    ],
 )
 
 # Verify that the "paths" entry is agreed between swc and TS language service (in the editor)
@@ -26,5 +48,6 @@ write_source_files(
     name = "test",
     files = {
         "expected.js": "src/index.js",
+        "expected_tsc": ":tsc",
     },
 )
