@@ -8,4 +8,14 @@ local_path_override(
     path = "../..",
 )
 
+# Optional: specify a custom swc toolchain instead of the default
+swc = use_extension("@aspect_rules_swc//swc:extensions.bzl", "swc")
+swc.toolchain(
+    name = "swc",
+    swc_version = "v1.3.78",
+)
+use_repo(swc, "swc_toolchains")
+
+register_toolchains("@swc_toolchains//:all")
+
 #---SNIP--- Below here is re-used in the snippet published on releases
