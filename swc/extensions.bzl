@@ -9,11 +9,20 @@ swc_toolchain = tag_class(attrs = {
     # "swc_version_from": attr.string(doc = "Location of package.json which may have a version for @swc/core."),
 })
 
+default_repository = "swc"
+
 def _toolchain_extension(module_ctx):
     registrations = {}
     for mod in module_ctx.modules:
         for toolchain in mod.tags.toolchain:
+            if toolchain.name != default_repository and not mod.is_root:
+                fail("Only the root module may provide a name for the {} toolchain.".format(toolchain.name))
+
             if toolchain.name in registrations.keys():
+                if toolchain.name == default_repository:
+                    # Prioritize the root-most registration of the default toolchain version and
+                    # ignore any further registrations (modules are processed breadth-first)
+                    continue
                 if toolchain.swc_version == registrations[toolchain.name]:
                     # No problem to register a matching toolchain twice
                     continue
