@@ -78,24 +78,17 @@ def _is_supported_src(src):
     return i > 0 and src[i:] in _SUPPORTED_EXTENSIONS
 
 # TODO: aspect_bazel_lib should provide this?
+# https://github.com/aspect-build/rules_ts/blob/v2.2.0/ts/private/ts_lib.bzl#L167-L173
 def _relative_to_package(path, ctx):
-    path = path.removeprefix(ctx.bin_dir.path + "/")
-
-    if ctx.label.workspace_root:
-        # If the target label is external (like "@REPO_NAME//some/target")
-        # then it will be placed under "external/REPO_NAME/some/target",
-        # rather than just "some/target", so take that into account here.
-        path.removeprefix(ctx.label.workspace_root + "/")
-
-    path = path.removeprefix(ctx.label.package + "/")
-
+    # TODO: "external/" should only be needed to be removed once
+    path = path.removeprefix("external/").removeprefix(ctx.bin_dir.path + "/")
+    path = path.removeprefix("external/").removeprefix(ctx.label.workspace_name + "/")
+    if ctx.label.package:
+        path = path.removeprefix("external/").removeprefix(ctx.label.package + "/")
     return path
 
-def _strip_root_dir(path, root_dir):
-    return path.removeprefix("./").removeprefix(root_dir + "/")
-
 # Copied from ts_lib.bzl
-# https://github.com/aspect-build/rules_ts/blob/c2a9e1e476c45bb895c4445327471e29bc3e0474/ts/private/ts_lib.bzl
+# https://github.com/aspect-build/rules_ts/blob/v2.2.0/ts/private/ts_lib.bzl#L193-L229
 # TODO: We should probably share code to avoid the implementations diverging and having different bugs
 def _replace_ext(f, ext_map):
     cur_ext = f[f.rindex("."):]
@@ -107,15 +100,26 @@ def _replace_ext(f, ext_map):
         return new_ext
     return None
 
-def _replace_extension(f, ext):
-    i = f.rfind(".")
-    return f if i <= 0 else f[:-(len(f) - i)] + ext
+# https://github.com/aspect-build/rules_ts/blob/v2.2.0/ts/private/ts_lib.bzl#L203-L208
+def _to_out_path(f, out_dir, root_dir):
+    if root_dir:
+        f = f.removeprefix(root_dir + "/")
+    if out_dir:
+        f = _join(out_dir, f)
+    return f
+
+# https://github.com/aspect-build/rules_ts/blob/v2.2.0/ts/private/ts_lib.bzl#L161-L165
+def _join(*elements):
+    segments = [f for f in elements if f and f != "."]
+    if len(segments):
+        return "/".join(segments)
+    return "."
 
 def _remove_extension(f):
     i = f.rfind(".")
     return f if i <= 0 else f[:-(len(f) - i)]
 
-def _calculate_js_out(src, out_dir, root_dir, js_outs = []):
+def _to_js_out(src, out_dir, root_dir, js_outs = []):
     if not _is_supported_src(src):
         return None
 
@@ -126,11 +130,8 @@ def _calculate_js_out(src, out_dir, root_dir, js_outs = []):
         ".cjs": ".cjs",
         ".cts": ".cjs",
     }
-    js_out = _replace_extension(src, _replace_ext(src, exts))
-    if root_dir:
-        js_out = _strip_root_dir(js_out, root_dir)
-    if out_dir:
-        js_out = paths.join(out_dir, js_out)
+    js_out = src[:src.rindex(".")] + _replace_ext(src, exts)
+    js_out = _to_out_path(js_out, out_dir, root_dir)
 
     # Check if a custom out was requested with a potentially different extension
     no_ext = _remove_extension(js_out)
@@ -143,12 +144,12 @@ def _calculate_js_out(src, out_dir, root_dir, js_outs = []):
 def _calculate_js_outs(srcs, out_dir, root_dir):
     out = []
     for f in srcs:
-        js_out = _calculate_js_out(f, out_dir, root_dir)
+        js_out = _to_js_out(f, out_dir, root_dir)
         if js_out and js_out != f:
             out.append(js_out)
     return out
 
-def _calculate_map_out(src, source_maps, out_dir, root_dir):
+def _to_map_out(src, source_maps, out_dir, root_dir):
     if source_maps == "false" or source_maps == "inline":
         return None
     if not _is_supported_src(src):
@@ -160,11 +161,8 @@ def _calculate_map_out(src, source_maps, out_dir, root_dir):
         ".mjs": ".mjs.map",
         ".cjs": ".cjs.map",
     }
-    map_out = _replace_extension(src, _replace_ext(src, exts))
-    if root_dir:
-        map_out = _strip_root_dir(map_out, root_dir)
-    if out_dir:
-        map_out = paths.join(out_dir, map_out)
+    map_out = src[:src.rindex(".")] + _replace_ext(src, exts)
+    map_out = _to_out_path(map_out, out_dir, root_dir)
     return map_out
 
 def _calculate_map_outs(srcs, source_maps, out_dir, root_dir):
@@ -173,7 +171,7 @@ def _calculate_map_outs(srcs, source_maps, out_dir, root_dir):
 
     out = []
     for f in srcs:
-        map_out = _calculate_map_out(f, source_maps, out_dir, root_dir)
+        map_out = _to_map_out(f, source_maps, out_dir, root_dir)
         if map_out:
             out.append(map_out)
     return out
@@ -287,13 +285,13 @@ def _swc_impl(ctx):
 
             src_path = _relative_to_package(src.path, ctx)
 
-            js_out_path = _calculate_js_out(src_path, ctx.attr.out_dir, ctx.attr.root_dir, js_outs_relative)
+            js_out_path = _to_js_out(src_path, ctx.attr.out_dir, ctx.attr.root_dir, js_outs_relative)
             if not js_out_path:
                 # This source file is not a supported src
                 continue
             js_out = ctx.actions.declare_file(js_out_path)
             outputs = [js_out]
-            map_out_path = _calculate_map_out(src_path, ctx.attr.source_maps, ctx.attr.out_dir, ctx.attr.root_dir)
+            map_out_path = _to_map_out(src_path, ctx.attr.source_maps, ctx.attr.out_dir, ctx.attr.root_dir)
 
             if map_out_path:
                 js_map_out = ctx.actions.declare_file(map_out_path)
@@ -371,7 +369,6 @@ swc = struct(
     attrs = dict(_attrs, **_outputs),
     toolchains = ["@aspect_rules_swc//swc:toolchain_type"],
     SUPPORTED_EXTENSIONS = _SUPPORTED_EXTENSIONS,
-    calculate_js_out = _calculate_js_out,
     calculate_js_outs = _calculate_js_outs,
     calculate_map_outs = _calculate_map_outs,
 )
