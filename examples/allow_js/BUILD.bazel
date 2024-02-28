@@ -1,0 +1,19 @@
+"""Simple use case for swc: transpiling .js using the `swc` rule, similar to tsc with 'allowJs'
+"""
+
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+
+# Runs `swc in.js > ../../bazel-bin/examples/js_outs/in.js`
+swc(
+    name = "compile",
+    srcs = ["in.js"],
+)
+
+# Assert that the output of "compile" rule matches the expected file.
+write_source_files(
+    name = "test",
+    # There is no pre-declared output of the "compile" rule because the input is .js
+    # so the the target name is used instead of output file.
+    files = {"expected.js": ":compile"},
+)

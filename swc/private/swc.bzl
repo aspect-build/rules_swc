@@ -141,18 +141,10 @@ def _calculate_js_out(src, out_dir, root_dir, js_outs = []):
     return js_out
 
 def _calculate_js_outs(srcs, out_dir, root_dir):
-    if out_dir == None:
-        js_srcs = []
-        for src in srcs:
-            if src.endswith(".js"):
-                js_srcs.append(src)
-        if len(js_srcs) > 0:
-            fail("Detected swc rule with srcs=[{}, ...] and out_dir=None. Please set out_dir when compiling .js files.".format(", ".join(js_srcs[:3])))
-
     out = []
     for f in srcs:
         js_out = _calculate_js_out(f, out_dir, root_dir)
-        if js_out:
+        if js_out and js_out != f:
             out.append(js_out)
     return out
 
