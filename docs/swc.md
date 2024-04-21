@@ -37,7 +37,7 @@ for example to set your own output labels for `js_outs`.
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="swc_compile-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="swc_compile-srcs"></a>srcs |  source files, typically .ts files in the source tree   | <a href="https://bazel.build/concepts/labels">List of labels</a> | required |  |
-| <a id="swc_compile-data"></a>data |  Runtime dependencies to include in binaries/tests that depend on this target.<br><br>The transitive npm dependencies, transitive sources, default outputs and runfiles of targets in the `data` attribute are added to the runfiles of this target. They should appear in the '*.runfiles' area of any executable which has a runtime dependency on this target.<br><br>If this list contains linked npm packages, npm package store targets or other targets that provide `JsInfo`, `NpmPackageStoreInfo` providers are gathered from `JsInfo`. This is done directly from the `npm_package_store_deps` field of these. For linked npm package targets, the underlying `npm_package_store` target(s) that back the links is used. Gathered `NpmPackageStoreInfo` providers are propagated to the direct dependencies of downstream linked `npm_package` targets.<br><br>NB: Linked npm package targets that are "dev" dependencies do not forward their underlying `npm_package_store` target(s) through `npm_package_store_deps` and will therefore not be propagated to the direct dependencies of downstream linked `npm_package` targets. npm packages that come in from `npm_translate_lock` are considered "dev" dependencies if they are have `dev: true` set in the pnpm lock file. This should be all packages that are only listed as "devDependencies" in all `package.json` files within the pnpm workspace. This behavior is intentional to mimic how `devDependencies` work in published npm packages.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
+| <a id="swc_compile-data"></a>data |  Runtime dependencies to include in binaries/tests that depend on this target.<br><br>Follows the same semantics as `js_library` `data` attribute. See https://docs.aspect.build/rulesets/aspect_rules_js/docs/js_library#data for more info.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 | <a id="swc_compile-args"></a>args |  Additional arguments to pass to swcx cli (NOT swc!).<br><br>NB: this is not the same as the CLI arguments for @swc/cli npm package. For performance, rules_swc does not call a Node.js program wrapping the swc rust binding. Instead, we directly spawn the (somewhat experimental) native Rust binary shipped inside the @swc/core npm package, which the swc project calls "swcx" Tracking issue for feature parity: https://github.com/swc-project/swc/issues/4017   | List of strings | optional |  `[]`  |
 | <a id="swc_compile-js_outs"></a>js_outs |  list of expected JavaScript output files.<br><br>There should be one for each entry in srcs.   | List of labels | optional |  `[]`  |
 | <a id="swc_compile-map_outs"></a>map_outs |  list of expected source map output files.<br><br>Can be empty, meaning no source maps should be produced. If non-empty, there should be one for each entry in srcs.   | List of labels | optional |  `[]`  |
@@ -83,7 +83,7 @@ Execute the SWC compiler
 ## swc_plugin
 
 <pre>
-swc_plugin(<a href="#swc_plugin-name">name</a>, <a href="#swc_plugin-src">src</a>, <a href="#swc_plugin-config">config</a>, <a href="#swc_plugin-kwargs">kwargs</a>)
+swc_plugin(<a href="#swc_plugin-name">name</a>, <a href="#swc_plugin-srcs">srcs</a>, <a href="#swc_plugin-config">config</a>, <a href="#swc_plugin-kwargs">kwargs</a>)
 </pre>
 
 Configure an SWC plugin
@@ -94,7 +94,7 @@ Configure an SWC plugin
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="swc_plugin-name"></a>name |  A name for this target   |  none |
-| <a id="swc_plugin-src"></a>src |  Label for the plugin, either a directory containing a package.json pointing at a wasm file as the main entrypoint, or a wasm file. Usually a linked npm package target via rules_js.   |  `None` |
+| <a id="swc_plugin-srcs"></a>srcs |  Plugin files. Either a directory containing a package.json pointing at a wasm file as the main entrypoint, or a wasm file. Usually a linked npm package target via rules_js.   |  `[]` |
 | <a id="swc_plugin-config"></a>config |  Optional configuration dict for the plugin. This is passed as a JSON object into the `jsc.experimental.plugins` entry for the plugin.   |  `{}` |
 | <a id="swc_plugin-kwargs"></a>kwargs |  additional keyword arguments passed through to underlying rule, eg. `visibility`, `tags`   |  none |
 

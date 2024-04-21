@@ -15,20 +15,27 @@ def http_archive(**kwargs):
 def rules_swc_dependencies():
     http_archive(
         name = "bazel_skylib",
-        sha256 = "b8a1527901774180afc798aeb28c4634bdccf19c4d98e7bdd1ce79d1fe9aaad7",
-        urls = ["https://github.com/bazelbuild/bazel-skylib/releases/download/1.4.1/bazel-skylib-1.4.1.tar.gz"],
+        sha256 = "cd55a062e763b9349921f0f5db8c3933288dc8ba4f76dd9416aac68acee3cb94",
+        urls = ["https://github.com/bazelbuild/bazel-skylib/releases/download/1.5.0/bazel-skylib-1.5.0.tar.gz"],
     )
 
     http_archive(
         name = "aspect_bazel_lib",
-        sha256 = "0da75299c5a52737b2ac39458398b3f256e41a1a6748e5457ceb3a6225269485",
-        strip_prefix = "bazel-lib-1.31.2",
-        url = "https://github.com/aspect-build/bazel-lib/releases/download/v1.31.2/bazel-lib-v1.31.2.tar.gz",
+        sha256 = "87ab4ec479ebeb00d286266aca2068caeef1bb0b1765e8f71c7b6cfee6af4226",
+        strip_prefix = "bazel-lib-2.7.3",
+        url = "https://github.com/aspect-build/bazel-lib/releases/download/v2.7.3/bazel-lib-v2.7.3.tar.gz",
     )
 
     http_archive(
         name = "aspect_rules_js",
-        sha256 = "7b2a4d1d264e105eae49a27e2e78065b23e2e45724df2251eacdd317e95bfdfd",
-        strip_prefix = "rules_js-1.31.0",
-        url = "https://github.com/aspect-build/rules_js/releases/download/v1.31.0/rules_js-v1.31.0.tar.gz",
+        sha256 = "b2669ce908107570e5f552dbf9f133fd6c81e7a90c6083d8a1e03620657980d1",
+        strip_prefix = "rules_js-2.0.0-alpha.4",
+        url = "https://github.com/aspect-build/rules_js/releases/download/v2.0.0-alpha.4/rules_js-v2.0.0-alpha.4.tar.gz",
+    )
+
+    http_archive(
+        name = "rules_nodejs",
+        sha256 = "dddd60acc3f2f30359bef502c9d788f67e33814b0ddd99aa27c5a15eb7a41b8c",
+        strip_prefix = "rules_nodejs-6.1.0",
+        url = "https://github.com/bazelbuild/rules_nodejs/releases/download/v6.1.0/rules_nodejs-v6.1.0.tar.gz",
     )

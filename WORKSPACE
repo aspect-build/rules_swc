@@ -19,24 +19,11 @@ swc_register_toolchains(
     swc_version = LATEST_SWC_VERSION,
 )
 
-load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies", "register_jq_toolchains")
+load("@aspect_rules_js//js:toolchains.bzl", "DEFAULT_NODE_VERSION", "rules_js_register_toolchains")
 
-aspect_bazel_lib_dependencies(override_local_config_platform = True)
+rules_js_register_toolchains(node_version = DEFAULT_NODE_VERSION)
 
-register_jq_toolchains()
-
-load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
-
-rules_js_dependencies()
-
-load("@rules_nodejs//nodejs:repositories.bzl", "DEFAULT_NODE_VERSION", "nodejs_register_toolchains")
-
-nodejs_register_toolchains(
-    name = "nodejs",
-    node_version = DEFAULT_NODE_VERSION,
-)
-
-load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
+load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
 
 npm_translate_lock(
     name = "npm",

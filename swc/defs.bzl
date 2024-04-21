@@ -128,13 +128,13 @@ _swc_plugin = rule(
     provides = _swc_plugin_lib.provides,
 )
 
-def swc_plugin(name, src = None, config = {}, **kwargs):
+def swc_plugin(name, srcs = [], config = {}, **kwargs):
     """Configure an SWC plugin
 
     Args:
         name: A name for this target
 
-        src: Label for the plugin, either a directory containing a package.json pointing at a wasm file
+        srcs: Plugin files. Either a directory containing a package.json pointing at a wasm file
             as the main entrypoint, or a wasm file. Usually a linked npm package target via rules_js.
 
         config: Optional configuration dict for the plugin. This is passed as a JSON object into the
@@ -146,9 +146,14 @@ def swc_plugin(name, src = None, config = {}, **kwargs):
     if not types.is_dict(config):
         fail("config must be a dict, not a " + type(config))
 
+    # For backward compat
+    src = kwargs.pop("src", None)
+    if src:
+        srcs = srcs[:] + [src]
+
     _swc_plugin(
         name = name,
-        src = src,
+        srcs = srcs,
         config = json.encode(config),
         **kwargs
     )

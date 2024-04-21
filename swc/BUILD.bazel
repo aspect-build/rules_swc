@@ -1,5 +1,5 @@
+load("@aspect_bazel_lib//lib:utils.bzl", bazel_lib_utils = "utils")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("//swc/private:is_bazel_7_or_greater.bzl", "is_bazel_7_or_greater")
 load("//swc/private:resolved_toolchain.bzl", "resolved_toolchain")
 
 # For stardoc to reference the files
@@ -42,7 +42,7 @@ bzl_library(
     deps = [
         "@bazel_tools//tools/build_defs/repo:http.bzl",
         "@bazel_tools//tools/build_defs/repo:utils.bzl",
-    ] + (["@bazel_tools//tools/build_defs/repo:cache.bzl"] if is_bazel_7_or_greater() else []),
+    ] + (["@bazel_tools//tools/build_defs/repo:cache.bzl"] if bazel_lib_utils.is_bazel_7_or_greater() else []),
 )
 
 bzl_library(
@@ -54,7 +54,7 @@ bzl_library(
         "//swc/private:swc_plugin",
         "@bazel_skylib//lib:types",
         "@bazel_skylib//rules:write_file",
-    ] + (["@bazel_tools//tools/build_defs/repo:cache.bzl"] if is_bazel_7_or_greater() else []),
+    ] + (["@bazel_tools//tools/build_defs/repo:cache.bzl"] if bazel_lib_utils.is_bazel_7_or_greater() else []),
 )
 
 bzl_library(

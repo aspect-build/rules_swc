@@ -42,7 +42,14 @@ _attrs = {
         If out_dir is also specified, it is used as the name of the output directory.
         Otherwise, the directory is named the same as the target.""",
     ),
-    "data": js_lib_helpers.JS_LIBRARY_DATA_ATTR,
+    "data": attr.label_list(
+        doc = """Runtime dependencies to include in binaries/tests that depend on this target.
+
+Follows the same semantics as `js_library` `data` attribute. See
+https://docs.aspect.build/rulesets/aspect_rules_js/docs/js_library#data for more info.
+""",
+        allow_files = True,
+    ),
     "swcrc": attr.label(
         doc = "label of a configuration file for swc, see https://swc.rs/docs/configuration/swcrc",
         allow_single_file = True,
@@ -326,18 +333,18 @@ def _swc_impl(ctx):
         targets = ctx.attr.srcs,
     )
 
-    transitive_declarations = js_lib_helpers.gather_transitive_declarations(
-        declarations = [],
+    transitive_types = js_lib_helpers.gather_transitive_types(
+        types = [],
         targets = ctx.attr.srcs,
     )
 
-    npm_linked_packages = js_lib_helpers.gather_npm_linked_packages(
+    npm_sources = js_lib_helpers.gather_npm_sources(
         srcs = ctx.attr.srcs,
         deps = [],
     )
 
-    npm_package_store_deps = js_lib_helpers.gather_npm_package_store_deps(
-        targets = ctx.attr.data,
+    npm_package_store_infos = js_lib_helpers.gather_npm_package_store_infos(
+        targets = ctx.attr.srcs + ctx.attr.data,
     )
 
     runfiles = js_lib_helpers.gather_runfiles(
@@ -349,14 +356,13 @@ def _swc_impl(ctx):
 
     return [
         js_info(
-            npm_linked_package_files = npm_linked_packages.direct_files,
-            npm_linked_packages = npm_linked_packages.direct,
-            npm_package_store_deps = npm_package_store_deps,
+            target = ctx.label,
             sources = output_sources_depset,
-            transitive_declarations = transitive_declarations,
-            transitive_npm_linked_package_files = npm_linked_packages.transitive_files,
-            transitive_npm_linked_packages = npm_linked_packages.transitive,
+            types = depset(),  # swc does not emit types directly
             transitive_sources = transitive_sources,
+            transitive_types = transitive_types,
+            npm_sources = npm_sources,
+            npm_package_store_infos = npm_package_store_infos,
         ),
         DefaultInfo(
             files = output_sources_depset,
