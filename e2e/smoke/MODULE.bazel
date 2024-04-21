@@ -4,7 +4,7 @@ local_path_override(
     path = "../..",
 )
 
-bazel_dep(name = "bazel_skylib", version = "1.4.1", dev_dependency = True)
+bazel_dep(name = "bazel_skylib", version = "1.5.0", dev_dependency = True)
 
 # Optional: specify a custom swc toolchain instead of the default
 swc = use_extension("@aspect_rules_swc//swc:extensions.bzl", "swc", dev_dependency = True)
