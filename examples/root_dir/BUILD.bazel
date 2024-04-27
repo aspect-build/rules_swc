@@ -1,6 +1,6 @@
-load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load("@aspect_bazel_lib//lib:testing.bzl", "assert_json_matches")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
 swc(
     name = "compile",
