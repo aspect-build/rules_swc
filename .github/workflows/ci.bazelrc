@@ -1,4 +1,3 @@
-
 # Directories caches by GitHub actions
 common --disk_cache=~/.cache/bazel-disk-cache
 common --repository_cache=~/.cache/bazel-repository-cache
