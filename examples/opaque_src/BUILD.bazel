@@ -3,8 +3,8 @@
 Note that this example also depends on the setup in /WORKSPACE at the root of this repository.
 """
 
-load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_bazel_lib//lib:output_files.bzl", "output_files")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
 filegroup(

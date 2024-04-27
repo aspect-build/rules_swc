@@ -12,11 +12,11 @@ swc(
 ```
 """
 
-load("//swc/private:swc.bzl", _swc_lib = "swc")
-load("//swc/private:swc_plugin.bzl", _swc_plugin_lib = "swc_plugin")
 load("@aspect_bazel_lib//lib:utils.bzl", "file_exists", "to_label")
 load("@bazel_skylib//lib:types.bzl", "types")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
+load("//swc/private:swc.bzl", _swc_lib = "swc")
+load("//swc/private:swc_plugin.bzl", _swc_plugin_lib = "swc_plugin")
 
 swc_compile = rule(
     doc = """Underlying rule for the `swc` macro.
