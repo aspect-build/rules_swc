@@ -1,6 +1,6 @@
 name: CI
 
-# Controls when the action will run.
+# Controls when the action will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
@@ -17,7 +17,101 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Prepares dynamic test matrix values
+  matrix-prep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: bazel-version
+        name: Prepare 'bazel-version' matrix axis
+        run: |
+          v=$(head -n 1 .bazelversion)
+          m=${v::1}
+          a=(
+            "major:$m, version:\"$v\""
+            "major:6, version:\"6.5.0\""
+          )
+          printf -v j '{%s},' "${a[@]}"
+          echo "res=[${j%,}]" | tee -a $GITHUB_OUTPUT
+      - id: os
+        name: Prepare 'os' matrix axis
+        # Only run MacOS and Windows on main branch (not PRs) to minimize minutes (billed at 10X and 2X respectively)
+        # https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#included-storage-and-minutes
+        run: |
+          a=( ubuntu )
+          if [[ "${{ github.ref_name }}" == "main" ]] || [[ "${{ github.head_ref }}" == *"macos"* ]]; then
+            a+=( macos )
+          fi
+          if [[ "${{ github.ref_name }}" == "main" ]] || [[ "${{ github.head_ref }}" == *"windows"* ]]; then
+            a+=( windows )
+          fi
+          printf -v j '"%s",' "${a[@]}"
+          echo "res=[${j%,}]" | tee -a $GITHUB_OUTPUT
+    outputs:
+      bazel-version: ${{ steps.bazel-version.outputs.res }}
+      os: ${{ steps.os.outputs.res }}
+
   test:
-    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v2
-    with:
-      folders: '[".", "e2e/smoke"]'
+    runs-on: ${{ matrix.os }}-latest
+    needs:
+      - matrix-prep
+    strategy:
+      fail-fast: false
+      matrix:
+        bazel-version: ${{ fromJSON(needs.matrix-prep.outputs.bazel-version) }}
+        bzlmod: [1, 0]
+        os: ${{ fromJSON(needs.matrix-prep.outputs.os) }}
+        folder:
+          - "."
+          - "e2e/smoke"
+        exclude:
+          # Don't test MacOS and Windows against secondary bazel version to minimize minutes (billed at 10X and 2X respectively)
+          # https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#included-storage-and-minutes
+          - os: macos
+            bazel-version:
+              major: 6
+          - os: windows
+            bazel-version:
+              major: 6
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Mount bazel caches
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/bazel-disk-cache
+            ~/.cache/bazel-repository-cache
+            ~/.cache/xdg-cache
+          key: bazel-cache-${{ matrix.bazel-version.version }}-${{ matrix.bzlmod }}-${{ matrix.os }}-${{ matrix.folder }}-${{ hashFiles('.bazelrc', '.bazelversion', '.bazeliskrc', '**/BUILD', '**/BUILD.bazel', '**/*.bzl', 'WORKSPACE', 'WORKSPACE.bazel', 'WORKSPACE.bzlmod', 'MODULE.bazel', 'MODULE.bazel.lock') }}
+          restore-keys: bazel-cache-${{ matrix.bazel-version.version }}-${{ matrix.bzlmod }}-${{ matrix.os }}-${{ matrix.folder }}-
+
+      - name: Configure Bazel version
+        working-directory: ${{ matrix.folder }}
+        shell: bash
+        run: |
+          # Overwrite the .bazelversion instead of using USE_BAZEL_VERSION so that Bazelisk
+          # still bootstraps Aspect CLI from configuration in .bazeliskrc. Aspect CLI will
+          # then use .bazelversion to determine which Bazel version to use.
+          echo "${{ matrix.bazel-version.version }}" > .bazelversion
+
+      # TODO: remove this block once we have Aspect CLI Windows releases
+      - name: Don't use Aspect CLI on Windows
+        if: matrix.os == 'windows'
+        working-directory: ${{ matrix.folder }}
+        shell: bash
+        run: rm -f .bazeliskrc
+
+      - name: bazel test //...
+        working-directory: ${{ matrix.folder }}
+        shell: bash
+        run: |
+          bazel \
+            test \
+            --test_tag_filters=-skip-on-bazel${{ matrix.bazel-version.major }} \
+            --build_tag_filters=-skip-on-bazel${{ matrix.bazel-version.major }} \
+            --enable_bzlmod=${{ matrix.bzlmod }} \
+            //...
+        env:
+          XDG_CACHE_HOME: ~/.cache/xdg-cache # bazelisk will download bazel to here
