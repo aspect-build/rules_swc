@@ -1,15 +1,13 @@
-"Bazel dependencies"
-
 bazel_dep(name = "aspect_rules_swc", version = "0.0.0", dev_dependency = True)
-bazel_dep(name = "bazel_skylib", version = "1.4.1", dev_dependency = True)
-
 local_path_override(
     module_name = "aspect_rules_swc",
     path = "../..",
 )
 
+bazel_dep(name = "bazel_skylib", version = "1.4.1", dev_dependency = True)
+
 # Optional: specify a custom swc toolchain instead of the default
-swc = use_extension("@aspect_rules_swc//swc:extensions.bzl", "swc")
+swc = use_extension("@aspect_rules_swc//swc:extensions.bzl", "swc", dev_dependency = True)
 swc.toolchain(
     name = "swc",
     swc_version = "v1.3.78",
@@ -17,5 +15,3 @@ swc.toolchain(
 use_repo(swc, "swc_toolchains")
 
 register_toolchains("@swc_toolchains//:all")
-
-#---SNIP--- Below here is re-used in the snippet published on releases
