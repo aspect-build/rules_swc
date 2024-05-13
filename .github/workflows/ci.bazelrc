@@ -3,9 +3,7 @@ common --disk_cache=~/.cache/bazel-disk-cache
 common --repository_cache=~/.cache/bazel-repository-cache
 
 # Debug where options came from
-build --announce_rc
-# Don't rely on test logs being easily accessible from the test runner,
-# though it makes the log noisier.
-test --test_output=errors
+common --announce_rc
+
 # Allows tests to run bazelisk-in-bazel, since this is the cache folder used
-test --test_env=XDG_CACHE_HOME
+common --test_env=XDG_CACHE_HOME
