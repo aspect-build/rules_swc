@@ -21,9 +21,9 @@ def rules_swc_dependencies():
 
     http_archive(
         name = "aspect_bazel_lib",
-        sha256 = "0da75299c5a52737b2ac39458398b3f256e41a1a6748e5457ceb3a6225269485",
-        strip_prefix = "bazel-lib-1.31.2",
-        url = "https://github.com/aspect-build/bazel-lib/releases/download/v1.31.2/bazel-lib-v1.31.2.tar.gz",
+        sha256 = "d488d8ecca98a4042442a4ae5f1ab0b614f896c0ebf6e3eafff363bcc51c6e62",
+        strip_prefix = "bazel-lib-1.33.0",
+        url = "https://github.com/aspect-build/bazel-lib/releases/download/v1.33.0/bazel-lib-v1.33.0.tar.gz",
     )
 
     http_archive(
