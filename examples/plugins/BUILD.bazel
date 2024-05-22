@@ -16,7 +16,11 @@ npm_link_all_packages(name = "node_modules")
 # This requires that the package.json includes a main entrypoint pointing at the plugin wasm file.
 swc_plugin(
     name = "npm_plugin",
-    src = ":node_modules/@swc/plugin-transform-imports",
+    srcs = [
+        # reference the location where the "@swc/plugin-transform-imports" npm package was linked in our root Bazel package.
+        ":node_modules/@swc/plugin-transform-imports",
+        ":node_modules/@swc/plugin-transform-imports/dir",
+    ],
     # optional plugin config, the JSON object for the plugin passed into jsc.experimental.plugins
     # https://swc.rs/docs/configuration/compilation#jscexperimentalplugins
     config = {
