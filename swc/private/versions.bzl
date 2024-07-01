@@ -75,13 +75,6 @@ TOOL_VERSIONS = {
         "win32-ia32-msvc": "sha384-9nsyKFZ6mwsX18gVCQ3Y/kYAb+7cZqzPBg6PjNEnfT2+lRv7kHow4hCy7VNDwkXW",
         "win32-x64-msvc": "sha384-/MWfKTGTiigvVc7LsR1R0AdHlnWsh/ypVHlORLtYJRqE/OXq02+QPxR/fc5D88GL",
     },
-    "v1.5.28": {},
-    "v1.5.27": {},
-    "v1.5.25": {},
-    "v1.5.24": {},
-    "v1.5.23": {},
-    "v1.5.22": {},
-    "v1.5.11": {},
     "v1.4.12": {
         "darwin-arm64": "sha384-zTPDJvJK4W9Z5LLkef7KmTA/XDmgtNNnDnFrNHEBI1+/L9XOWFhVGdUPD1fwLrzs",
         "darwin-x64": "sha384-fMiLsMvlcBIiPThxwWiuXOhEpU26XAieX2BBAHkT/LqvPge8opbNdSq1JwXVQ7DD",
