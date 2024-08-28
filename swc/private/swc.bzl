@@ -217,10 +217,17 @@ def _swc_impl(ctx):
     args = ctx.actions.args()
     args.add("compile")
 
+    # The root config file. Config options may be overridden by additional args.
+    if ctx.attr.swcrc:
+        args.add("--config-file", ctx.file.swcrc)
+        inputs.append(ctx.file.swcrc)
+
     # Add user specified arguments *before* rule supplied arguments
     args.add_all(ctx.attr.args)
 
     args.add("--source-maps", ctx.attr.source_maps)
+    if ctx.attr.source_maps != "false" and ctx.attr.source_root:
+        args.add("--source-root", ctx.attr.source_root)
 
     if ctx.attr.plugins:
         plugin_cache = [ctx.actions.declare_directory("{}_plugin_cache".format(ctx.label.name))]
@@ -261,18 +268,12 @@ def _swc_impl(ctx):
 
         args.add("--out-dir", output_dir.path)
 
-        src_args = ctx.actions.args()
-        if ctx.attr.swcrc:
-            src_args.add("--config-file", ctx.file.swcrc)
-            inputs.append(ctx.file.swcrc)
-
         _swc_action(
             ctx,
             swc_toolchain.swcinfo.swc_binary,
             inputs = inputs,
             arguments = [
                 args,
-                src_args,
                 ctx.files.srcs[0].path,
             ],
             outputs = output_sources,
@@ -287,8 +288,6 @@ def _swc_impl(ctx):
 
             if ctx.attr.source_maps != "false":
                 src_args.add("--source-file-name", _calculate_source_file(ctx, src))
-                if ctx.attr.source_root:
-                    src_args.add("--source-root", ctx.attr.source_root)
 
             src_path = _relative_to_package(src.path, ctx)
 
@@ -305,10 +304,6 @@ def _swc_impl(ctx):
                 outputs.append(js_map_out)
 
             src_inputs = [src] + inputs
-
-            if ctx.attr.swcrc:
-                src_args.add("--config-file", ctx.file.swcrc)
-                src_inputs.append(ctx.file.swcrc)
 
             src_args.add("--out-file", js_out)
 
