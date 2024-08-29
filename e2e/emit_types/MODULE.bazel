@@ -1,0 +1,14 @@
+bazel_dep(name = "aspect_rules_swc", version = "0.0.0", dev_dependency = True)
+local_path_override(
+    module_name = "aspect_rules_swc",
+    path = "../..",
+)
+
+bazel_dep(name = "bazel_skylib", version = "1.5.0", dev_dependency = True)
+
+# Use a recent swc version which includes the experimental emitIsolatedDts feature.
+swc = use_extension("@aspect_rules_swc//swc:extensions.bzl", "swc", dev_dependency = True)
+swc.toolchain(
+    name = "swc",
+    swc_version = "v1.6.6",
+)

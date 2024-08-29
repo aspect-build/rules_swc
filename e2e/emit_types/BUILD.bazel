@@ -1,0 +1,34 @@
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+
+swc(
+    name = "compile",
+    srcs = [
+        "a.ts",
+        "b.ts",
+    ],
+)
+
+swc(
+    name = "compile_emit_dts",
+    srcs = [
+        "a.ts",
+        "b.ts",
+    ],
+    emit_isolated_dts = True,
+    out_dir = "dts_out",
+)
+
+build_test(
+    name = "test",
+    targets = [
+        ":compile",
+        ":compile_emit_dts",
+        "a.js",
+        "b.js",
+        "dts_out/a.js",
+        "dts_out/b.js",
+        "dts_out/a.d.ts",
+        "dts_out/b.d.ts",
+    ],
+)
