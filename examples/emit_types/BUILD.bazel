@@ -1,0 +1,96 @@
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+
+# No root/out
+swc(
+    name = "emit_dts",
+    srcs = [
+        "src/a.ts",
+        "src/b.ts",
+    ],
+    emit_isolated_dts = True,
+)
+
+build_test(
+    name = "emit_dts-test",
+    targets = [
+        "src/a.js",
+        "src/a.d.ts",
+        "src/b.js",
+        "src/b.d.ts",
+    ],
+)
+
+# With out_dir
+swc(
+    name = "emit_dts_outdir",
+    srcs = [
+        "src/a.ts",
+        "src/b.ts",
+    ],
+    emit_isolated_dts = True,
+    out_dir = "out",
+)
+
+build_test(
+    name = "emit_dts_outdir-test",
+    targets = [
+        "out/src/a.js",
+        "out/src/a.d.ts",
+        "out/src/b.js",
+        "out/src/b.d.ts",
+    ],
+)
+
+# With root_dir
+swc(
+    name = "emit_dts_rootdir",
+    srcs = [
+        "src/a.ts",
+        "src/b.ts",
+    ],
+    emit_isolated_dts = True,
+    root_dir = "src",
+)
+
+build_test(
+    name = "emit_dts_rootdir-test",
+    targets = [
+        "a.js",
+        "a.d.ts",
+        "b.js",
+        "b.d.ts",
+    ],
+)
+
+# With out_dir and root_dir
+swc(
+    name = "emit_dts_outdir_rootdir",
+    srcs = [
+        "src/a.ts",
+        "src/b.ts",
+    ],
+    emit_isolated_dts = True,
+    out_dir = "out_root",
+    root_dir = "src",
+)
+
+build_test(
+    name = "emit_dts_outdir_rootdir-test",
+    targets = [
+        "out_root/a.js",
+        "out_root/a.d.ts",
+        "out_root/b.js",
+        "out_root/b.d.ts",
+    ],
+)
+
+# Assert the output files are correct, have not changed etc.
+write_source_files(
+    name = "outputs_test",
+    files = {
+        "expected.a.d.ts": "src/a.d.ts",
+        "expected.b.d.ts": "src/b.d.ts",
+    },
+)
