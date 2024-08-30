@@ -13,6 +13,9 @@ import %workspace%/.aspect/bazelrc/performance.bazelrc
 # https://bazelbuild.slack.com/archives/C014RARENH0/p1691158021917459?thread_ts=1691156601.420349&cid=C014RARENH0
 common --check_direct_dependencies=off
 
+# Workaround SWC issue with symlinks
+common --modify_execution_info=SWCCompile=+no-sandbox
+
 # Load any settings & overrides specific to the current user from `.aspect/bazelrc/user.bazelrc`.
 # This file should appear in `.gitignore` so that settings are not shared with team members. This
 # should be last statement in this config so the user configuration is able to overwrite flags from

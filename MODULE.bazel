@@ -13,6 +13,7 @@ bazel_dep(name = "bazel_skylib", version = "1.5.0")
 bazel_dep(name = "platforms", version = "0.0.7")
 
 swc = use_extension("@aspect_rules_swc//swc:extensions.bzl", "swc")
+
 # default version used by users of this module
 swc.toolchain(
     name = "swc",
