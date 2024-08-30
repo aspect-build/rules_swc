@@ -12,6 +12,7 @@ load("@npm//examples:typescript/package_json.bzl", "bin")
 swc(
     name = "compile",
     srcs = glob(["**/*.ts"]),
+    tags = ["no-sandbox"],
 )
 
 # Produce a folder of the transpiled outputs of `tsc`.
