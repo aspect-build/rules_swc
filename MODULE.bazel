@@ -13,11 +13,19 @@ bazel_dep(name = "bazel_skylib", version = "1.5.0")
 bazel_dep(name = "platforms", version = "0.0.7")
 
 swc = use_extension("@aspect_rules_swc//swc:extensions.bzl", "swc")
+# default version used by users of this module
 swc.toolchain(
     name = "swc",
-    swc_version = "v1.3.75",
+    swc_version = "v1.6.6",
 )
 use_repo(swc, "swc_toolchains")
+
+# override the version for our own local dev, as we need to test newer features
+dev_swc = use_extension("@aspect_rules_swc//swc:extensions.bzl", "swc", dev_dependency = True)
+dev_swc.toolchain(
+    name = "swc",
+    swc_version = "v1.6.6",
+)
 
 register_toolchains("@swc_toolchains//:all")
 
