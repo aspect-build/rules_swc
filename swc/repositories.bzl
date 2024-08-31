@@ -38,7 +38,7 @@ load("//swc/private:versions.bzl", "TOOL_VERSIONS")
 # NB: we don't use the "most recent release" since swc has a history of often breaking Bazel usage
 # with subtle changes that get through their tests.
 # So instead, this reflects the latest version that is "known good" according to our test suite.
-LATEST_SWC_VERSION = "v1.7.9"
+LATEST_SWC_VERSION = "v1.6.6"
 
 # TODO(2.0): remove this alias
 LATEST_VERSION = LATEST_SWC_VERSION
