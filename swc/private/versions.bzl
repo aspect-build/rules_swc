@@ -2,10 +2,6 @@
 
 # Versions should be descending order so TOOL_VERSIONS[0] is the latest version.
 TOOL_VERSIONS = {
-    "v1.7.22": {},
-    "v1.7.21": {},
-    "v1.7.19": {},
-    "v1.7.18": {},
     "v1.7.14": {
         "darwin-arm64": "sha384-flD+FzYn3769xtZ78wpt3GUw5Q7Usubn66Bfg2x47xIR/CHZm15KZDTmjV3v+IVs",
         "darwin-x64": "sha384-DWEEIq3k5XRHjaUzwq8tutV3DtV6Iko9kWWxJjK2i2Lj7P5d598NHwYxOFQtbbSb",
