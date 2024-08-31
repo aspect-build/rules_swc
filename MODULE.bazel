@@ -15,7 +15,7 @@ bazel_dep(name = "platforms", version = "0.0.7")
 swc = use_extension("@aspect_rules_swc//swc:extensions.bzl", "swc")
 swc.toolchain(
     name = "swc",
-    swc_version = "v1.3.75",
+    swc_version = "v1.6.6",
 )
 use_repo(swc, "swc_toolchains")
 

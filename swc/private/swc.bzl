@@ -278,6 +278,14 @@ def _swc_impl(ctx):
             outputs = output_sources,
         )
     else:
+        # Disable sandboxing for the SWC action by default since there is normally only
+        # the source and config files as inputs and not complex dependency tree.
+        #
+        # This may be required for SWC issues with symlinks in the sandbox.
+        execution_requirements = {
+            "no-sandbox": "1",
+        }
+
         output_sources = []
 
         js_outs_relative = [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs]
@@ -324,6 +332,7 @@ def _swc_impl(ctx):
                     src.path,
                 ],
                 outputs = outputs,
+                execution_requirements = execution_requirements,
             )
 
     output_sources_depset = depset(output_sources)
