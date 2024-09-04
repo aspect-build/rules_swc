@@ -1,0 +1,99 @@
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+
+genrule(
+    name = "a",
+    outs = ["a.ts"],
+    cmd = "echo 'export const a: string = \"a\";' > $@",
+)
+
+genrule(
+    name = "b",
+    outs = ["b.ts"],
+    cmd = "echo 'export const b: string = \"b\";' > $@",
+)
+
+genrule(
+    name = "c",
+    outs = ["sub/c.ts"],
+    cmd = "echo 'export const c: string = \"c\";' > $@",
+)
+
+swc(
+    name = "compile",
+    srcs = [
+        "b.ts",
+        ":a",
+        ":sub/c.ts",
+    ],  # reference by label, output file, :outputfile
+    source_maps = True,
+    swcrc = ".swcrc",
+)
+
+build_test(
+    name = "predeclared_test",
+    targets = [
+        "b.js",
+        "b.js.map",
+        "sub/c.js",
+        "sub/c.js.map",
+    ],
+)
+
+# Since the srcs were in a filegroup, the swc macro cannot pre-declare the outputs.
+# So there is no label ":a.js" that we can reference from the build file.
+# However, a.js is still produced as one of the default outputs of the compile rule.
+# We can verify this in an action that depends on the ":compile" rule and reads the files.
+sh_test(
+    name = "check_outputs",
+    srcs = ["check_outputs.sh"],
+    data = [":compile"],
+)
+
+swc(
+    name = "compile2",
+    srcs = [
+        "b.ts",
+        ":a",
+        ":sub/c.ts",
+    ],
+    out_dir = "out2",
+    source_maps = True,
+    swcrc = ".swcrc",
+)
+
+build_test(
+    name = "out_dir_predeclared_test",
+    targets = [
+        "out2/b.js",
+        "out2/b.js.map",
+        "out2/sub/c.js",
+        "out2/sub/c.js.map",
+    ],
+)
+
+sh_test(
+    name = "check_out_dir_outputs",
+    srcs = ["check_outputs.sh"],
+    args = ["out2"],
+    data = [":compile"],
+)
+
+swc(
+    name = "compile3",
+    srcs = [
+        "sub/c.ts",
+    ],
+    out_dir = "out3",
+    root_dir = "sub",
+    source_maps = True,
+    swcrc = ".swcrc",
+)
+
+build_test(
+    name = "root_out_predeclared_test",
+    targets = [
+        "out3/c.js",
+        "out3/c.js.map",
+    ],
+)

@@ -95,7 +95,7 @@ def _relative_to_package(path, ctx):
     return path
 
 # Copied from ts_lib.bzl
-# https://github.com/aspect-build/rules_ts/blob/v2.2.0/ts/private/ts_lib.bzl#L193-L229
+# https://github.com/aspect-build/rules_ts/blob/v3.1.0/ts/private/ts_lib.bzl#L193C1-L202C16
 # TODO: We should probably share code to avoid the implementations diverging and having different bugs
 def _replace_ext(f, ext_map):
     cur_ext = f[f.rindex("."):]
@@ -107,15 +107,16 @@ def _replace_ext(f, ext_map):
         return new_ext
     return None
 
-# https://github.com/aspect-build/rules_ts/blob/v2.2.0/ts/private/ts_lib.bzl#L203-L208
+# https://github.com/aspect-build/rules_ts/blob/v3.1.0/ts/private/ts_lib.bzl#L204-L210
 def _to_out_path(f, out_dir, root_dir):
+    f = f[f.find(":") + 1:]
     if root_dir:
         f = f.removeprefix(root_dir + "/")
     if out_dir:
         f = _join(out_dir, f)
     return f
 
-# https://github.com/aspect-build/rules_ts/blob/v2.2.0/ts/private/ts_lib.bzl#L161-L165
+# https://github.com/aspect-build/rules_ts/blob/v3.1.0/ts/private/ts_lib.bzl#L162-L166
 def _join(*elements):
     segments = [f for f in elements if f and f != "."]
     if len(segments):
