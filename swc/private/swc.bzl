@@ -84,44 +84,25 @@ def _is_supported_src(src):
     i = src.rfind(".")
     return i > 0 and src[i:] in _SUPPORTED_EXTENSIONS
 
-# TODO: aspect_bazel_lib should provide this?
-# https://github.com/aspect-build/rules_ts/blob/v2.2.0/ts/private/ts_lib.bzl#L167-L173
+# TODO: vendored from rules_ts - aspect_bazel_lib should provide this?
+# https://github.com/aspect-build/rules_ts/blob/v3.2.1/ts/private/ts_lib.bzl#L194-L200
 def _relative_to_package(path, ctx):
-    # TODO: "external/" should only be needed to be removed once
-    path = path.removeprefix("external/").removeprefix(ctx.bin_dir.path + "/")
-    path = path.removeprefix("external/").removeprefix(ctx.label.workspace_name + "/")
+    path = path.removeprefix(ctx.bin_dir.path + "/")
+    path = path.removeprefix("external/")
+    path = path.removeprefix(ctx.label.workspace_name + "/")
     if ctx.label.package:
-        path = path.removeprefix("external/").removeprefix(ctx.label.package + "/")
+        path = path.removeprefix(ctx.label.package + "/")
     return path
 
-# Copied from ts_lib.bzl
-# https://github.com/aspect-build/rules_ts/blob/v3.1.0/ts/private/ts_lib.bzl#L193C1-L202C16
-# TODO: We should probably share code to avoid the implementations diverging and having different bugs
-def _replace_ext(f, ext_map):
-    cur_ext = f[f.rindex("."):]
-    new_ext = ext_map.get(cur_ext)
-    if new_ext != None:
-        return new_ext
-    new_ext = ext_map.get("*")
-    if new_ext != None:
-        return new_ext
-    return None
-
-# https://github.com/aspect-build/rules_ts/blob/v3.1.0/ts/private/ts_lib.bzl#L204-L210
+# TODO: vendored from rules_ts - aspect_bazel_lib should provide this?
+# https://github.com/aspect-build/rules_ts/blob/v3.2.1/ts/private/ts_lib.bzl#L220-L226
 def _to_out_path(f, out_dir, root_dir):
     f = f[f.find(":") + 1:]
     if root_dir:
         f = f.removeprefix(root_dir + "/")
-    if out_dir:
-        f = _join(out_dir, f)
+    if out_dir and out_dir != ".":
+        f = out_dir + "/" + f
     return f
-
-# https://github.com/aspect-build/rules_ts/blob/v3.1.0/ts/private/ts_lib.bzl#L162-L166
-def _join(*elements):
-    segments = [f for f in elements if f and f != "."]
-    if len(segments):
-        return "/".join(segments)
-    return "."
 
 def _remove_extension(f):
     i = f.rfind(".")
@@ -132,13 +113,13 @@ def _to_js_out(src, out_dir, root_dir, js_outs = []):
         return None
 
     exts = {
-        "*": ".js",
         ".mts": ".mjs",
         ".mjs": ".mjs",
         ".cjs": ".cjs",
         ".cts": ".cjs",
     }
-    js_out = src[:src.rindex(".")] + _replace_ext(src, exts)
+    ext_index = src.rindex(".")
+    js_out = src[:ext_index] + exts.get(src[ext_index:], ".js")
     js_out = _to_out_path(js_out, out_dir, root_dir)
 
     # Check if a custom out was requested with a potentially different extension
@@ -163,13 +144,13 @@ def _to_map_out(src, source_maps, out_dir, root_dir):
     if not _is_supported_src(src):
         return None
     exts = {
-        "*": ".js.map",
         ".mts": ".mjs.map",
         ".cts": ".cjs.map",
         ".mjs": ".mjs.map",
         ".cjs": ".cjs.map",
     }
-    map_out = src[:src.rindex(".")] + _replace_ext(src, exts)
+    ext_index = src.rindex(".")
+    map_out = src[:ext_index] + exts.get(src[ext_index:], ".js.map")
     map_out = _to_out_path(map_out, out_dir, root_dir)
     return map_out
 
