@@ -1,5 +1,5 @@
 {
     "sources": [
-        "../../../src/sub/c.ts"
+        "../../src/sub/c.ts"
     ]
 }
