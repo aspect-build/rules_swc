@@ -18,7 +18,6 @@ swc_plugin(
     name = "npm_plugin",
     srcs = [
         # reference the location where the "@swc/plugin-transform-imports" npm package was linked in our root Bazel package.
-        ":node_modules/@swc/plugin-transform-imports",
         ":node_modules/@swc/plugin-transform-imports/dir",
     ],
     # optional plugin config, the JSON object for the plugin passed into jsc.experimental.plugins
