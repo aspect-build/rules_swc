@@ -1,4 +1,5 @@
 docs/*.md
+examples/pnpm-lock.yaml
 **/expected.js
 **/expected.cjs
 **/expected_tsc
