@@ -66,6 +66,13 @@ https://docs.aspect.build/rulesets/aspect_rules_js/docs/js_library#data for more
     "root_dir": attr.string(
         doc = "a subdirectory under the input package which should be consider the root directory of all the input files",
     ),
+    "emit_isolated_dts": attr.bool(
+        doc = """Emit .d.ts files instead of .js for TypeScript sources
+
+EXPERIMENTAL: this API is undocumented, experimental and may change without notice
+""",
+        default = False,
+    ),
 }
 
 _outputs = {
@@ -75,6 +82,10 @@ There should be one for each entry in srcs."""),
     "map_outs": attr.output_list(doc = """list of expected source map output files.
 
 Can be empty, meaning no source maps should be produced.
+If non-empty, there should be one for each entry in srcs."""),
+    "dts_outs": attr.output_list(doc = """list of expected TypeScript declaration files.
+
+Can be empty, meaning no dts files should be produced.
 If non-empty, there should be one for each entry in srcs."""),
 }
 
@@ -165,6 +176,21 @@ def _calculate_map_outs(srcs, source_maps, out_dir, root_dir):
             out.append(map_out)
     return out
 
+def _to_dts_out(src, emit_isolated_dts, out_dir, root_dir):
+    if not _is_supported_src(src) or not emit_isolated_dts:
+        return None
+    dts_out = src[:src.rindex(".")] + ".d.ts"
+    dts_out = _to_out_path(dts_out, out_dir, root_dir)
+    return dts_out
+
+def _calculate_dts_outs(srcs, emit_isolated_dts, out_dir, root_dir):
+    out = []
+    for f in srcs:
+        dts_out = _to_dts_out(f, emit_isolated_dts, out_dir, root_dir)
+        if dts_out:
+            out.append(dts_out)
+    return out
+
 def _calculate_source_file(ctx, src):
     if not (ctx.attr.out_dir or ctx.attr.root_dir):
         return src.basename
@@ -240,6 +266,15 @@ def _swc_impl(ctx):
         inputs.extend(ctx.files.plugins)
         args.add_all(plugin_args)
 
+    if ctx.attr.emit_isolated_dts:
+        args.add_all(["--config-json", json.encode({
+            "jsc": {
+                "experimental": {
+                    "emitIsolatedDts": True,
+                },
+            },
+        })])
+
     if ctx.attr.output_dir:
         if len(ctx.attr.srcs) != 1:
             fail("Under output_dir, there must be a single entry in srcs")
@@ -290,13 +325,16 @@ def _swc_impl(ctx):
                 continue
             js_out = ctx.actions.declare_file(js_out_path)
             outputs = [js_out]
-            map_out_path = _to_map_out(src_path, ctx.attr.source_maps, ctx.attr.out_dir, ctx.attr.root_dir)
 
+            map_out_path = _to_map_out(src_path, ctx.attr.source_maps, ctx.attr.out_dir, ctx.attr.root_dir)
             if map_out_path:
                 js_map_out = ctx.actions.declare_file(map_out_path)
                 outputs.append(js_map_out)
 
-            src_inputs = [src] + inputs
+            dts_out_path = _to_dts_out(src_path, ctx.attr.emit_isolated_dts, ctx.attr.out_dir, ctx.attr.root_dir)
+            if dts_out_path:
+                dts_out = ctx.actions.declare_file(dts_out_path)
+                outputs.append(dts_out)
 
             src_args.add("--out-file", js_out)
 
@@ -305,7 +343,7 @@ def _swc_impl(ctx):
             _swc_action(
                 ctx,
                 swc_toolchain.swcinfo.swc_binary,
-                inputs = src_inputs,
+                inputs = [src] + inputs,
                 arguments = [
                     args,
                     src_args,
@@ -366,4 +404,5 @@ swc = struct(
     SUPPORTED_EXTENSIONS = _SUPPORTED_EXTENSIONS,
     calculate_js_outs = _calculate_js_outs,
     calculate_map_outs = _calculate_map_outs,
+    calculate_dts_outs = _calculate_dts_outs,
 )
