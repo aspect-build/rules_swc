@@ -32,7 +32,7 @@ for example to set your own output labels for `js_outs`.
     toolchains = _swc_lib.toolchains,
 )
 
-def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcrc = None, source_maps = False, out_dir = None, root_dir = None, **kwargs):
+def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcrc = None, source_maps = False, out_dir = None, root_dir = None, default_ext = ".js", **kwargs):
     """Execute the SWC compiler
 
     Args:
@@ -70,6 +70,8 @@ def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcr
 
         root_dir: A subdirectory under the input package which should be considered the root directory of all the input files
 
+        default_ext: The default extension to use for output files. If not set, the default is ".js".
+
         **kwargs: additional keyword arguments passed through to underlying [`swc_compile`](#swc_compile), eg. `visibility`, `tags`
     """
     if not types.is_list(srcs):
@@ -103,8 +105,8 @@ def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcr
     dts_outs = []
 
     if not output_dir:
-        js_outs = _swc_lib.calculate_js_outs(srcs, out_dir, root_dir)
-        map_outs = _swc_lib.calculate_map_outs(srcs, source_maps, out_dir, root_dir)
+        js_outs = _swc_lib.calculate_js_outs(default_ext, srcs, out_dir, root_dir)
+        map_outs = _swc_lib.calculate_map_outs(default_ext, srcs, source_maps, out_dir, root_dir)
         dts_outs = _swc_lib.calculate_dts_outs(srcs, kwargs.get("emit_isolated_dts", False), out_dir, root_dir)
 
     swc_compile(
@@ -121,6 +123,7 @@ def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcr
         swcrc = swcrc,
         out_dir = out_dir,
         root_dir = root_dir,
+        default_ext = default_ext,
         **kwargs
     )
 
