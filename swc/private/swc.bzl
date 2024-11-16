@@ -73,6 +73,14 @@ EXPERIMENTAL: this API is undocumented, experimental and may change without noti
 """,
         default = False,
     ),
+    "default_ext": attr.string(
+        doc = """Default extension for output files.
+
+If a source file does not indicate a specific module type, this extension is used.
+
+If unset, extensions will be determined based on the `js_outs` outputs attribute
+or source file extensions.""",
+    ),
 }
 
 _outputs = {
@@ -125,7 +133,7 @@ def _remove_extension(f):
     i = f.rfind(".")
     return f if i <= 0 else f[:-(len(f) - i)]
 
-def _to_js_out(src, out_dir, root_dir, js_outs = []):
+def _to_js_out(default_ext, src, out_dir, root_dir, js_outs = []):
     if not _is_supported_src(src) or _is_typings_src(src):
         return None
 
@@ -136,9 +144,17 @@ def _to_js_out(src, out_dir, root_dir, js_outs = []):
         ".cts": ".cjs",
     }
     ext_index = src.rindex(".")
-    js_out = src[:ext_index] + exts.get(src[ext_index:], ".js")
-    js_out = _to_out_path(js_out, out_dir, root_dir)
+    js_out_base = src[:ext_index]
+    js_out_ext = exts.get(src[ext_index:], default_ext if default_ext else ".js")
+    js_out = _to_out_path(js_out_base + js_out_ext, out_dir, root_dir)
 
+    # If a default extension was specified then use js_out with the defaults
+    if default_ext:
+        return js_out
+
+    # If no default_ext was provided allow customizing the output extension via js_outs.
+    # See https://github.com/aspect-build/rules_swc/commit/edc6421cf42a7174bcc38e91b0812abd0bfb0f09
+    # TODO(3.0): remove this feature in favour of standard logic above.
     alt_js_out = None
 
     # Check if a custom out was requested with a potentially different extension
@@ -156,15 +172,15 @@ def _to_js_out(src, out_dir, root_dir, js_outs = []):
     # Return the matched custom out if it exists otherwise fallback to the default
     return alt_js_out or js_out
 
-def _calculate_js_outs(srcs, out_dir, root_dir):
+def _calculate_js_outs(default_ext, srcs, out_dir = None, root_dir = None):
     out = []
     for f in srcs:
-        js_out = _to_js_out(f, out_dir, root_dir)
+        js_out = _to_js_out(default_ext, f, out_dir, root_dir)
         if js_out and js_out != f:
             out.append(js_out)
     return out
 
-def _to_map_out(src, source_maps, out_dir, root_dir):
+def _to_map_out(default_ext, src, source_maps, out_dir, root_dir):
     if source_maps == "false" or source_maps == "inline":
         return None
     if not _is_supported_src(src) or _is_typings_src(src):
@@ -176,17 +192,17 @@ def _to_map_out(src, source_maps, out_dir, root_dir):
         ".cjs": ".cjs.map",
     }
     ext_index = src.rindex(".")
-    map_out = src[:ext_index] + exts.get(src[ext_index:], ".js.map")
+    map_out = src[:ext_index] + exts.get(src[ext_index:], default_ext + ".map")
     map_out = _to_out_path(map_out, out_dir, root_dir)
     return map_out
 
-def _calculate_map_outs(srcs, source_maps, out_dir, root_dir):
+def _calculate_map_outs(default_ext, srcs, source_maps, out_dir, root_dir):
     if source_maps == "false" or source_maps == "inline":
         return []
 
     out = []
     for f in srcs:
-        map_out = _to_map_out(f, source_maps, out_dir, root_dir)
+        map_out = _to_map_out(default_ext, f, source_maps, out_dir, root_dir)
         if map_out:
             out.append(map_out)
     return out
@@ -343,14 +359,14 @@ def _swc_impl(ctx):
                     output_sources.append(src)
                 continue
 
-            js_out_path = _to_js_out(src_path, ctx.attr.out_dir, ctx.attr.root_dir, js_outs_relative)
+            js_out_path = _to_js_out(ctx.attr.default_ext, src_path, ctx.attr.out_dir, ctx.attr.root_dir, js_outs_relative)
             if not js_out_path:
                 # This source file is not a supported src
                 continue
             js_out = ctx.actions.declare_file(js_out_path)
             outputs = [js_out]
 
-            map_out_path = _to_map_out(src_path, ctx.attr.source_maps, ctx.attr.out_dir, ctx.attr.root_dir)
+            map_out_path = _to_map_out(ctx.attr.default_ext, src_path, ctx.attr.source_maps, ctx.attr.out_dir, ctx.attr.root_dir)
             if map_out_path:
                 js_map_out = ctx.actions.declare_file(map_out_path)
                 outputs.append(js_map_out)
