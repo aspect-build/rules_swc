@@ -78,11 +78,14 @@ Can be empty, meaning no source maps should be produced.
 If non-empty, there should be one for each entry in srcs."""),
 }
 
-_SUPPORTED_EXTENSIONS = [".ts", ".mts", ".cts", ".tsx", ".jsx", ".mjs", ".cjs", ".js"]
+def _is_ts_src(src):
+    return src.endswith(".ts") or src.endswith(".mts") or src.endswith(".cts") or src.endswith(".tsx") or src.endswith(".jsx")
+
+def _is_js_src(src):
+    return src.endswith(".mjs") or src.endswith(".cjs") or src.endswith(".js")
 
 def _is_supported_src(src):
-    i = src.rfind(".")
-    return i > 0 and src[i:] in _SUPPORTED_EXTENSIONS
+    return _is_ts_src(src) or _is_js_src(src)
 
 # TODO: vendored from rules_ts - aspect_bazel_lib should provide this?
 # https://github.com/aspect-build/rules_ts/blob/v3.2.1/ts/private/ts_lib.bzl#L194-L200
@@ -122,13 +125,22 @@ def _to_js_out(src, out_dir, root_dir, js_outs = []):
     js_out = src[:ext_index] + exts.get(src[ext_index:], ".js")
     js_out = _to_out_path(js_out, out_dir, root_dir)
 
+    alt_js_out = None
+
     # Check if a custom out was requested with a potentially different extension
     no_ext = _remove_extension(js_out)
     for maybe_out in js_outs:
+        # Always use an exact match if it exists
+        if maybe_out == js_out:
+            return js_out
+
+        # Try to match on a potential output with a different extension
         # Initial startswith() check to avoid the expensive _remove_extension()
         if maybe_out.startswith(no_ext) and no_ext == _remove_extension(maybe_out):
-            return maybe_out
-    return js_out
+            alt_js_out = maybe_out
+
+    # Return the matched custom out if it exists otherwise fallback to the default
+    return alt_js_out or js_out
 
 def _calculate_js_outs(srcs, out_dir, root_dir):
     out = []
@@ -363,7 +375,6 @@ swc = struct(
     implementation = _swc_impl,
     attrs = dict(_attrs, **_outputs),
     toolchains = ["@aspect_rules_swc//swc:toolchain_type"],
-    SUPPORTED_EXTENSIONS = _SUPPORTED_EXTENSIONS,
     calculate_js_outs = _calculate_js_outs,
     calculate_map_outs = _calculate_map_outs,
 )
