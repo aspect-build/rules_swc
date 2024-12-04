@@ -6,7 +6,7 @@ load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
 # Runs `swc in.js > ../../bazel-bin/examples/js_outs/in.js`
 swc(
-    name = "compile",
+    name = "compile-js",
     srcs = ["in.js"],
 )
 
@@ -15,5 +15,27 @@ write_source_files(
     name = "test",
     # There is no pre-declared output of the "compile" rule because the input is .js
     # so the the target name is used instead of output file.
-    files = {"expected.js": ":compile"},
+    files = {"expected.js": ":compile-js"},
+)
+
+# Runs swc on all js files
+swc(
+    name = "compile-js-exts",
+    srcs = [
+        "in.cjs",
+        "in.d.ts",
+        "in.jsx",
+        "in.mjs",
+    ],
+    out_dir = "js_outs",
+)
+
+# Assert the extensions and output of each js file type via pre-declared outputs.
+write_source_files(
+    name = "test-x",
+    files = {
+        "expected.jsx": "js_outs/in.js",
+        "expected.mjs": "js_outs/in.mjs",
+        "expected.cjs": "js_outs/in.cjs",
+    },
 )
