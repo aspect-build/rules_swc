@@ -1,5 +1,7 @@
 "Internal implementation details"
 
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file_action")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "COPY_FILE_TO_BIN_TOOLCHAINS")
 load("@aspect_bazel_lib//lib:platform_utils.bzl", "platform_utils")
 load("@aspect_rules_js//js:libs.bzl", "js_lib_helpers")
 load("@aspect_rules_js//js:providers.bzl", "js_info")
@@ -108,6 +110,9 @@ def _is_js_src(src):
 
 def _is_supported_src(src):
     return _is_ts_src(src) or _is_js_src(src)
+
+def _is_data_src(src):
+    return src.endswith(".json")
 
 # TODO: vendored from rules_ts - aspect_bazel_lib should provide this?
 # https://github.com/aspect-build/rules_ts/blob/v3.2.1/ts/private/ts_lib.bzl#L194-L200
@@ -359,6 +364,22 @@ def _swc_impl(ctx):
                     output_sources.append(src)
                 continue
 
+            if _is_data_src(src_path):
+                # Copy data to the output directory.
+                # NOTE: assumes json must be resolved at runtime, see ts_project(resolve_json_module)
+                if ctx.attr.out_dir:
+                    out_path = "%s/%s" % (ctx.attr.out_dir if ctx.attr.out_dir else ".", src_path)
+                    out_file = ctx.actions.declare_file(out_path)
+                    copy_file_action(
+                        ctx = ctx,
+                        src = src,
+                        dst = out_file,
+                    )
+                    output_sources.append(out_file)
+                else:
+                    output_sources.append(src)
+                continue
+
             js_out_path = _to_js_out(ctx.attr.default_ext, src_path, ctx.attr.out_dir, ctx.attr.root_dir, js_outs_relative)
             if not js_out_path:
                 # This source file is not a supported src
@@ -440,7 +461,7 @@ def _swc_impl(ctx):
 swc = struct(
     implementation = _swc_impl,
     attrs = dict(_attrs, **_outputs),
-    toolchains = ["@aspect_rules_swc//swc:toolchain_type"],
+    toolchains = ["@aspect_rules_swc//swc:toolchain_type"] + COPY_FILE_TO_BIN_TOOLCHAINS,
     calculate_js_outs = _calculate_js_outs,
     calculate_map_outs = _calculate_map_outs,
     calculate_dts_outs = _calculate_dts_outs,
