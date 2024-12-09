@@ -1,0 +1,41 @@
+load("@aspect_rules_js//js:defs.bzl", "js_test")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+
+swc(
+    name = "ts",
+    srcs = [
+        "data.json",
+        "index.ts",
+    ],
+    args = [
+        "--config-json",
+        """{"module": {"type": "commonjs"}}""",
+    ],
+)
+
+swc(
+    name = "ts-out_dir",
+    srcs = [
+        "data.json",
+        "index.ts",
+    ],
+    args = [
+        "--config-json",
+        """{"module": {"type": "commonjs"}}""",
+    ],
+    out_dir = "ts-out_dir",
+)
+
+js_test(
+    # Test that the json is available at runtime.
+    name = "ts-with-json",
+    data = [":ts"],
+    entry_point = "index.js",
+)
+
+js_test(
+    # Test that the json is available at runtime with an out_dir.
+    name = "ts-with-json-out_dir",
+    data = [":ts-out_dir"],
+    entry_point = "ts-out_dir/index.js",
+)
