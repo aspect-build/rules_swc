@@ -29,3 +29,8 @@ swc_register_toolchains(
     name = "swc",
     swc_version = LATEST_SWC_VERSION,
 )
+
+# To use rules_swc with bazel-lib 2.x, you must additionally register the coreutils toolchain.
+load("@aspect_bazel_lib//lib:repositories.bzl", "register_coreutils_toolchains")
+
+register_coreutils_toolchains()
