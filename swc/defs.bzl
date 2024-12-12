@@ -32,7 +32,7 @@ for example to set your own output labels for `js_outs`.
     toolchains = _swc_lib.toolchains,
 )
 
-def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcrc = None, source_maps = False, out_dir = None, root_dir = None, default_ext = ".js", **kwargs):
+def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcrc = None, source_maps = False, out_dir = None, root_dir = None, default_ext = ".js", allow_js = True, **kwargs):
     """Execute the SWC compiler
 
     Args:
@@ -72,6 +72,9 @@ def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcr
 
         default_ext: The default extension to use for output files. If not set, the default is ".js".
 
+        allow_js: If `True` (default), then .js/.mjs/.cjs input files are transpiled. If `False`,
+          they are ignored. This can be used to mimic the behavior of tsc when using `ts_project(transpiler)`.
+
         **kwargs: additional keyword arguments passed through to underlying [`swc_compile`](#swc_compile), eg. `visibility`, `tags`
     """
     if not types.is_list(srcs):
@@ -105,9 +108,9 @@ def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcr
     dts_outs = []
 
     if not output_dir:
-        js_outs = _swc_lib.calculate_js_outs(default_ext, srcs, out_dir, root_dir)
-        map_outs = _swc_lib.calculate_map_outs(default_ext, srcs, source_maps, out_dir, root_dir)
-        dts_outs = _swc_lib.calculate_dts_outs(srcs, kwargs.get("emit_isolated_dts", False), out_dir, root_dir)
+        js_outs = _swc_lib.calculate_js_outs(default_ext, srcs, allow_js, out_dir, root_dir)
+        map_outs = _swc_lib.calculate_map_outs(default_ext, srcs, source_maps, allow_js, out_dir, root_dir)
+        dts_outs = _swc_lib.calculate_dts_outs(srcs, kwargs.get("emit_isolated_dts", False), allow_js, out_dir, root_dir)
 
     swc_compile(
         name = name,
@@ -116,6 +119,7 @@ def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcr
         js_outs = js_outs,
         map_outs = map_outs,
         dts_outs = dts_outs,
+        allow_js = allow_js,
         output_dir = output_dir,
         source_maps = source_maps,
         args = args,

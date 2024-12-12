@@ -18,8 +18,8 @@ swc(
 ## swc_compile
 
 <pre>
-swc_compile(<a href="#swc_compile-name">name</a>, <a href="#swc_compile-srcs">srcs</a>, <a href="#swc_compile-data">data</a>, <a href="#swc_compile-args">args</a>, <a href="#swc_compile-default_ext">default_ext</a>, <a href="#swc_compile-dts_outs">dts_outs</a>, <a href="#swc_compile-emit_isolated_dts">emit_isolated_dts</a>, <a href="#swc_compile-js_outs">js_outs</a>, <a href="#swc_compile-map_outs">map_outs</a>,
-            <a href="#swc_compile-out_dir">out_dir</a>, <a href="#swc_compile-output_dir">output_dir</a>, <a href="#swc_compile-plugins">plugins</a>, <a href="#swc_compile-root_dir">root_dir</a>, <a href="#swc_compile-source_maps">source_maps</a>, <a href="#swc_compile-source_root">source_root</a>, <a href="#swc_compile-swcrc">swcrc</a>)
+swc_compile(<a href="#swc_compile-name">name</a>, <a href="#swc_compile-srcs">srcs</a>, <a href="#swc_compile-data">data</a>, <a href="#swc_compile-allow_js">allow_js</a>, <a href="#swc_compile-args">args</a>, <a href="#swc_compile-default_ext">default_ext</a>, <a href="#swc_compile-dts_outs">dts_outs</a>, <a href="#swc_compile-emit_isolated_dts">emit_isolated_dts</a>, <a href="#swc_compile-js_outs">js_outs</a>,
+            <a href="#swc_compile-map_outs">map_outs</a>, <a href="#swc_compile-out_dir">out_dir</a>, <a href="#swc_compile-output_dir">output_dir</a>, <a href="#swc_compile-plugins">plugins</a>, <a href="#swc_compile-root_dir">root_dir</a>, <a href="#swc_compile-source_maps">source_maps</a>, <a href="#swc_compile-source_root">source_root</a>, <a href="#swc_compile-swcrc">swcrc</a>)
 </pre>
 
 Underlying rule for the `swc` macro.
@@ -38,6 +38,7 @@ for example to set your own output labels for `js_outs`.
 | <a id="swc_compile-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="swc_compile-srcs"></a>srcs |  source files, typically .ts files in the source tree   | <a href="https://bazel.build/concepts/labels">List of labels</a> | required |  |
 | <a id="swc_compile-data"></a>data |  Runtime dependencies to include in binaries/tests that depend on this target.<br><br>Follows the same semantics as `js_library` `data` attribute. See https://docs.aspect.build/rulesets/aspect_rules_js/docs/js_library#data for more info.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
+| <a id="swc_compile-allow_js"></a>allow_js |  Allow JavaScript sources to be transpiled.<br><br>If False, only TypeScript sources will be transpiled.   | Boolean | optional |  `True`  |
 | <a id="swc_compile-args"></a>args |  Additional arguments to pass to swcx cli (NOT swc!).<br><br>NB: this is not the same as the CLI arguments for @swc/cli npm package. For performance, rules_swc does not call a Node.js program wrapping the swc rust binding. Instead, we directly spawn the (somewhat experimental) native Rust binary shipped inside the @swc/core npm package, which the swc project calls "swcx" Tracking issue for feature parity: https://github.com/swc-project/swc/issues/4017   | List of strings | optional |  `[]`  |
 | <a id="swc_compile-default_ext"></a>default_ext |  Default extension for output files.<br><br>If a source file does not indicate a specific module type, this extension is used.<br><br>If unset, extensions will be determined based on the `js_outs` outputs attribute or source file extensions.   | String | optional |  `""`  |
 | <a id="swc_compile-dts_outs"></a>dts_outs |  list of expected TypeScript declaration files.<br><br>Can be empty, meaning no dts files should be produced. If non-empty, there should be one for each entry in srcs.   | List of labels | optional |  `[]`  |
@@ -59,7 +60,7 @@ for example to set your own output labels for `js_outs`.
 
 <pre>
 swc(<a href="#swc-name">name</a>, <a href="#swc-srcs">srcs</a>, <a href="#swc-args">args</a>, <a href="#swc-data">data</a>, <a href="#swc-plugins">plugins</a>, <a href="#swc-output_dir">output_dir</a>, <a href="#swc-swcrc">swcrc</a>, <a href="#swc-source_maps">source_maps</a>, <a href="#swc-out_dir">out_dir</a>, <a href="#swc-root_dir">root_dir</a>, <a href="#swc-default_ext">default_ext</a>,
-    <a href="#swc-kwargs">kwargs</a>)
+    <a href="#swc-allow_js">allow_js</a>, <a href="#swc-kwargs">kwargs</a>)
 </pre>
 
 Execute the SWC compiler
@@ -80,6 +81,7 @@ Execute the SWC compiler
 | <a id="swc-out_dir"></a>out_dir |  The base directory for output files relative to the output directory for this package.<br><br>If output_dir is True, then this is used as the name of the output directory.   |  `None` |
 | <a id="swc-root_dir"></a>root_dir |  A subdirectory under the input package which should be considered the root directory of all the input files   |  `None` |
 | <a id="swc-default_ext"></a>default_ext |  The default extension to use for output files. If not set, the default is ".js".   |  `".js"` |
+| <a id="swc-allow_js"></a>allow_js |  If `True` (default), then .js/.mjs/.cjs input files are transpiled. If `False`, they are ignored. This can be used to mimic the behavior of tsc when using `ts_project(transpiler)`.   |  `True` |
 | <a id="swc-kwargs"></a>kwargs |  additional keyword arguments passed through to underlying [`swc_compile`](#swc_compile), eg. `visibility`, `tags`   |  none |
 
 
