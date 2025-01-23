@@ -1,6 +1,7 @@
 """Simple use case for swc: transpiling .js using the `swc` rule, similar to tsc with 'allowJs'
 """
 
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_outputs")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
@@ -26,6 +27,7 @@ swc(
         "in.d.ts",
         "in.jsx",
         "in.mjs",
+        "in_ts.ts",
     ],
     out_dir = "js_outs",
 )
@@ -37,5 +39,27 @@ write_source_files(
         "expected.jsx": "js_outs/in.js",
         "expected.mjs": "js_outs/in.mjs",
         "expected.cjs": "js_outs/in.cjs",
+        "expected.ts": "js_outs/in_ts.js",
     },
+)
+
+swc(
+    name = "compile-js-exts-no-js",
+    srcs = [
+        "in.cjs",
+        "in.d.ts",
+        "in.jsx",
+        "in.mjs",
+        "in_ts.ts",
+    ],
+    allow_js = False,
+    out_dir = "no_js_outs",
+)
+
+assert_outputs(
+    name = "test-x-no-js",
+    actual = ":compile-js-exts-no-js",
+    expected = [
+        "examples/allow_js/no_js_outs/in_ts.js",
+    ],
 )

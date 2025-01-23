@@ -83,6 +83,12 @@ If a source file does not indicate a specific module type, this extension is use
 If unset, extensions will be determined based on the `js_outs` outputs attribute
 or source file extensions.""",
     ),
+    "allow_js": attr.bool(
+        doc = """Allow JavaScript sources to be transpiled.
+
+If False, only TypeScript sources will be transpiled.""",
+        default = True,
+    ),
 }
 
 _outputs = {
@@ -100,16 +106,16 @@ If non-empty, there should be one for each entry in srcs."""),
 }
 
 def _is_ts_src(src):
-    return src.endswith(".ts") or src.endswith(".mts") or src.endswith(".cts") or src.endswith(".tsx") or src.endswith(".jsx")
+    return src.endswith(".ts") or src.endswith(".mts") or src.endswith(".cts") or src.endswith(".tsx")
 
 def _is_typings_src(src):
     return src.endswith(".d.ts") or src.endswith(".d.mts") or src.endswith(".d.cts")
 
 def _is_js_src(src):
-    return src.endswith(".mjs") or src.endswith(".cjs") or src.endswith(".js")
+    return src.endswith(".mjs") or src.endswith(".cjs") or src.endswith(".js") or src.endswith(".jsx")
 
-def _is_supported_src(src):
-    return _is_ts_src(src) or _is_js_src(src)
+def _is_supported_src(src, allow_js):
+    return _is_ts_src(src) or (allow_js and _is_js_src(src))
 
 def _is_data_src(src):
     return src.endswith(".json")
@@ -138,8 +144,8 @@ def _remove_extension(f):
     i = f.rfind(".")
     return f if i <= 0 else f[:-(len(f) - i)]
 
-def _to_js_out(default_ext, src, out_dir, root_dir, js_outs = []):
-    if not _is_supported_src(src) or _is_typings_src(src):
+def _to_js_out(default_ext, src, allow_js, out_dir, root_dir, js_outs = []):
+    if not _is_supported_src(src, allow_js) or _is_typings_src(src):
         return None
 
     exts = {
@@ -177,18 +183,18 @@ def _to_js_out(default_ext, src, out_dir, root_dir, js_outs = []):
     # Return the matched custom out if it exists otherwise fallback to the default
     return alt_js_out or js_out
 
-def _calculate_js_outs(default_ext, srcs, out_dir = None, root_dir = None):
+def _calculate_js_outs(default_ext, srcs, allow_js, out_dir = None, root_dir = None):
     out = []
     for f in srcs:
-        js_out = _to_js_out(default_ext, f, out_dir, root_dir)
+        js_out = _to_js_out(default_ext, f, allow_js, out_dir, root_dir)
         if js_out and js_out != f:
             out.append(js_out)
     return out
 
-def _to_map_out(default_ext, src, source_maps, out_dir, root_dir):
+def _to_map_out(default_ext, src, source_maps, allow_js, out_dir, root_dir):
     if source_maps == "false" or source_maps == "inline":
         return None
-    if not _is_supported_src(src) or _is_typings_src(src):
+    if not _is_supported_src(src, allow_js) or _is_typings_src(src):
         return None
     exts = {
         ".mts": ".mjs.map",
@@ -201,30 +207,30 @@ def _to_map_out(default_ext, src, source_maps, out_dir, root_dir):
     map_out = _to_out_path(map_out, out_dir, root_dir)
     return map_out
 
-def _calculate_map_outs(default_ext, srcs, source_maps, out_dir, root_dir):
+def _calculate_map_outs(default_ext, srcs, source_maps, allow_js, out_dir, root_dir):
     if source_maps == "false" or source_maps == "inline":
         return []
 
     out = []
     for f in srcs:
-        map_out = _to_map_out(default_ext, f, source_maps, out_dir, root_dir)
+        map_out = _to_map_out(default_ext, f, source_maps, allow_js, out_dir, root_dir)
         if map_out:
             out.append(map_out)
     return out
 
-def _to_dts_out(src, emit_isolated_dts, out_dir, root_dir):
+def _to_dts_out(src, emit_isolated_dts, allow_js, out_dir, root_dir):
     if not emit_isolated_dts:
         return None
-    if not _is_supported_src(src) or _is_typings_src(src):
+    if not _is_supported_src(src, allow_js) or _is_typings_src(src):
         return None
     dts_out = src[:src.rindex(".")] + ".d.ts"
     dts_out = _to_out_path(dts_out, out_dir, root_dir)
     return dts_out
 
-def _calculate_dts_outs(srcs, emit_isolated_dts, out_dir, root_dir):
+def _calculate_dts_outs(srcs, emit_isolated_dts, allow_js, out_dir, root_dir):
     out = []
     for f in srcs:
-        dts_out = _to_dts_out(f, emit_isolated_dts, out_dir, root_dir)
+        dts_out = _to_dts_out(f, emit_isolated_dts, allow_js, out_dir, root_dir)
         if dts_out:
             out.append(dts_out)
     return out
@@ -380,19 +386,19 @@ def _swc_impl(ctx):
                     output_sources.append(src)
                 continue
 
-            js_out_path = _to_js_out(ctx.attr.default_ext, src_path, ctx.attr.out_dir, ctx.attr.root_dir, js_outs_relative)
+            js_out_path = _to_js_out(ctx.attr.default_ext, src_path, ctx.attr.allow_js, ctx.attr.out_dir, ctx.attr.root_dir, js_outs_relative)
             if not js_out_path:
                 # This source file is not a supported src
                 continue
             js_out = ctx.actions.declare_file(js_out_path)
             outputs = [js_out]
 
-            map_out_path = _to_map_out(ctx.attr.default_ext, src_path, ctx.attr.source_maps, ctx.attr.out_dir, ctx.attr.root_dir)
+            map_out_path = _to_map_out(ctx.attr.default_ext, src_path, ctx.attr.source_maps, ctx.attr.allow_js, ctx.attr.out_dir, ctx.attr.root_dir)
             if map_out_path:
                 js_map_out = ctx.actions.declare_file(map_out_path)
                 outputs.append(js_map_out)
 
-            dts_out_path = _to_dts_out(src_path, ctx.attr.emit_isolated_dts, ctx.attr.out_dir, ctx.attr.root_dir)
+            dts_out_path = _to_dts_out(src_path, ctx.attr.emit_isolated_dts, ctx.attr.allow_js, ctx.attr.out_dir, ctx.attr.root_dir)
             if dts_out_path:
                 dts_out = ctx.actions.declare_file(dts_out_path)
                 outputs.append(dts_out)
