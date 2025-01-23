@@ -52,14 +52,14 @@ swc(
         "in.mjs",
         "in_ts.ts",
     ],
-    out_dir = "no_js_outs",
     allow_js = False,
+    out_dir = "no_js_outs",
 )
 
 assert_outputs(
     name = "test-x-no-js",
     actual = ":compile-js-exts-no-js",
     expected = [
-        "examples/allow_js/no_js_outs/in_ts.js"
+        "examples/allow_js/no_js_outs/in_ts.js",
     ],
 )
