@@ -18,7 +18,7 @@ the JS ecosystem, regardless what language they run on.
 With Bazel, you won't need to figure out SWC's plugin infrastructure.
 You can have SWC do what it's good at, and not even have it involved with the rest.
 
-_Need help?_ This ruleset has support provided by https://aspect.dev.
+_Need help?_ This ruleset has support provided by https://aspect.build/services.
 
 ## Features
 
