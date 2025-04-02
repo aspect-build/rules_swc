@@ -18,6 +18,8 @@ swc(
 ## swc_compile
 
 <pre>
+load("@aspect_rules_swc//swc:defs.bzl", "swc_compile")
+
 swc_compile(<a href="#swc_compile-name">name</a>, <a href="#swc_compile-srcs">srcs</a>, <a href="#swc_compile-data">data</a>, <a href="#swc_compile-allow_js">allow_js</a>, <a href="#swc_compile-args">args</a>, <a href="#swc_compile-default_ext">default_ext</a>, <a href="#swc_compile-dts_outs">dts_outs</a>, <a href="#swc_compile-emit_isolated_dts">emit_isolated_dts</a>, <a href="#swc_compile-js_outs">js_outs</a>,
             <a href="#swc_compile-map_outs">map_outs</a>, <a href="#swc_compile-out_dir">out_dir</a>, <a href="#swc_compile-output_dir">output_dir</a>, <a href="#swc_compile-plugins">plugins</a>, <a href="#swc_compile-root_dir">root_dir</a>, <a href="#swc_compile-source_maps">source_maps</a>, <a href="#swc_compile-source_root">source_root</a>, <a href="#swc_compile-swcrc">swcrc</a>)
 </pre>
@@ -59,6 +61,8 @@ for example to set your own output labels for `js_outs`.
 ## swc
 
 <pre>
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+
 swc(<a href="#swc-name">name</a>, <a href="#swc-srcs">srcs</a>, <a href="#swc-args">args</a>, <a href="#swc-data">data</a>, <a href="#swc-plugins">plugins</a>, <a href="#swc-output_dir">output_dir</a>, <a href="#swc-swcrc">swcrc</a>, <a href="#swc-source_maps">source_maps</a>, <a href="#swc-out_dir">out_dir</a>, <a href="#swc-root_dir">root_dir</a>, <a href="#swc-default_ext">default_ext</a>,
     <a href="#swc-allow_js">allow_js</a>, <a href="#swc-kwargs">kwargs</a>)
 </pre>
@@ -90,6 +94,8 @@ Execute the SWC compiler
 ## swc_plugin
 
 <pre>
+load("@aspect_rules_swc//swc:defs.bzl", "swc_plugin")
+
 swc_plugin(<a href="#swc_plugin-name">name</a>, <a href="#swc_plugin-srcs">srcs</a>, <a href="#swc_plugin-config">config</a>, <a href="#swc_plugin-kwargs">kwargs</a>)
 </pre>
 

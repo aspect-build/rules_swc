@@ -56,6 +56,9 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     needs:
       - matrix-prep
+    defaults:
+      run:
+        working-directory: ${{ matrix.folder }}
     strategy:
       fail-fast: false
       matrix:
@@ -74,6 +77,13 @@ jobs:
           - os: windows
             bazel-version:
               major: 6
+        include:
+          - bazel-version:
+              major: 7
+              version: 7.1.1
+            bzlmod: 1
+            os: ubuntu
+            folder: docs
 
     steps:
       - uses: actions/checkout@v4
@@ -89,7 +99,6 @@ jobs:
           restore-keys: bazel-cache-${{ matrix.bazel-version.version }}-${{ matrix.bzlmod }}-${{ matrix.os }}-${{ matrix.folder }}-
 
       - name: Configure Bazel version
-        working-directory: ${{ matrix.folder }}
         shell: bash
         run: |
           # Overwrite the .bazelversion instead of using USE_BAZEL_VERSION so that Bazelisk
@@ -105,12 +114,10 @@ jobs:
       # TODO: remove this block once we have Aspect CLI Windows releases
       - name: Don't use Aspect CLI on Windows
         if: matrix.os == 'windows'
-        working-directory: ${{ matrix.folder }}
         shell: bash
         run: rm -f .bazeliskrc
 
       - name: bazel test //...
-        working-directory: ${{ matrix.folder }}
         shell: bash
         run: |
           bazel \

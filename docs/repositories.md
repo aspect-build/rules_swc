@@ -35,6 +35,8 @@ swc_register_toolchains(
 ## swc_register_toolchains
 
 <pre>
+load("@aspect_rules_swc//swc:repositories.bzl", "swc_register_toolchains")
+
 swc_register_toolchains(<a href="#swc_register_toolchains-name">name</a>, <a href="#swc_register_toolchains-swc_version">swc_version</a>, <a href="#swc_register_toolchains-swc_version_from">swc_version_from</a>, <a href="#swc_register_toolchains-register">register</a>, <a href="#swc_register_toolchains-kwargs">kwargs</a>)
 </pre>
 
@@ -63,6 +65,8 @@ Users can avoid this macro and do these steps themselves, if they want more cont
 ## swc_repositories
 
 <pre>
+load("@aspect_rules_swc//swc:repositories.bzl", "swc_repositories")
+
 swc_repositories(<a href="#swc_repositories-name">name</a>, <a href="#swc_repositories-integrity_hashes">integrity_hashes</a>, <a href="#swc_repositories-platform">platform</a>, <a href="#swc_repositories-repo_mapping">repo_mapping</a>, <a href="#swc_repositories-swc_version">swc_version</a>, <a href="#swc_repositories-swc_version_from">swc_version_from</a>)
 </pre>
 
