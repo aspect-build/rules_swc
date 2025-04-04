@@ -48,6 +48,10 @@ sh_test(
     name = "check_outputs",
     srcs = ["check_outputs.sh"],
     data = [":compile"],
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
 )
 
 swc(
@@ -77,6 +81,10 @@ sh_test(
     srcs = ["check_outputs.sh"],
     args = ["out2"],
     data = [":compile"],
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
 )
 
 swc(
