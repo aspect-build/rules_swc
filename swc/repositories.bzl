@@ -150,8 +150,15 @@ def swc_register_toolchains(name, swc_version = None, swc_version_from = None, r
 
     Args:
         name: base name for all created repos; we recommend `swc`
-        swc_version_from: label of a json file (typically `package.json`) which declares an exact `@swc/core` version
-            in a dependencies or devDependencies property.
+        swc_version_from: label of a json file which declares an `@swc/core` version.
+
+            This may be a `package.json` file, with "@swc/core" in the dependencies or
+            devDependencies property, and the version exactly specified.
+
+            With rules_js v1.32.0 or greater, it may also be a `resolved.json` file
+            produced by `npm_translate_lock`, such as
+            `@npm//path/to/linked:@swc/core/resolved.json`
+
             Exactly one of `swc_version` or `swc_version_from` must be set.
         swc_version: version of the swc project, from https://github.com/swc-project/swc/releases
             Exactly one of `swc_version` or `swc_version_from` must be set.

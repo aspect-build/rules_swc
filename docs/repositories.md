@@ -55,7 +55,7 @@ Users can avoid this macro and do these steps themselves, if they want more cont
 | :------------- | :------------- | :------------- |
 | <a id="swc_register_toolchains-name"></a>name |  base name for all created repos; we recommend `swc`   |  none |
 | <a id="swc_register_toolchains-swc_version"></a>swc_version |  version of the swc project, from https://github.com/swc-project/swc/releases Exactly one of `swc_version` or `swc_version_from` must be set.   |  `None` |
-| <a id="swc_register_toolchains-swc_version_from"></a>swc_version_from |  label of a json file (typically `package.json`) which declares an exact `@swc/core` version in a dependencies or devDependencies property. Exactly one of `swc_version` or `swc_version_from` must be set.   |  `None` |
+| <a id="swc_register_toolchains-swc_version_from"></a>swc_version_from |  label of a json file which declares an `@swc/core` version.<br><br>This may be a `package.json` file, with "@swc/core" in the dependencies or devDependencies property, and the version exactly specified.<br><br>With rules_js v1.32.0 or greater, it may also be a `resolved.json` file produced by `npm_translate_lock`, such as `@npm//path/to/linked:@swc/core/resolved.json`<br><br>Exactly one of `swc_version` or `swc_version_from` must be set.   |  `None` |
 | <a id="swc_register_toolchains-register"></a>register |  whether to call through to native.register_toolchains. Should be True for WORKSPACE users, but false when used under bzlmod extension   |  `True` |
 | <a id="swc_register_toolchains-kwargs"></a>kwargs |  passed to each swc_repositories call   |  none |
 
