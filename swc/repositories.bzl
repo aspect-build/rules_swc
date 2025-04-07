@@ -71,7 +71,10 @@ def _determine_version(rctx):
 
     json_path = rctx.path(rctx.attr.swc_version_from)
     p = json.decode(rctx.read(json_path))
-    if "devDependencies" in p.keys() and _NPM_PKG in p["devDependencies"]:
+    # Allow use of "resolved.json", see https://github.com/aspect-build/rules_js/pull/1221
+    if "$schema" in p.keys() and p["$schema"] == "https://docs.aspect.build/rules/aspect_rules_js/docs/npm_translate_lock":
+        v = p["version"]
+    elif "devDependencies" in p.keys() and _NPM_PKG in p["devDependencies"]:
         v = p["devDependencies"][_NPM_PKG]
     elif "dependencies" in p.keys() and _NPM_PKG in p["dependencies"]:
         v = p["dependencies"][_NPM_PKG]
