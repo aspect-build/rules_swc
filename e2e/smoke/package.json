@@ -1,0 +1,5 @@
+{
+    "devDependencies": {
+        "@swc/core": "~1.11.0"
+    }
+}
