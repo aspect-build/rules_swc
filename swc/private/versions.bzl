@@ -29,6 +29,16 @@ TOOL_VERSIONS = {
         "win32-ia32-msvc": "sha384-6Mpozst8VF94syxGQa/zep+A/l+8ygm59GcY3qlh198wQO1KizWjLQsgP9Ez4WEY",
         "win32-x64-msvc": "sha384-aolnPjqNCktzWxU381cIPuAQ0lF/bMldP4iKmSgtq3QpWV7xFH0CaUvfAVbkEkK+",
     },
+    "v1.11.18": {
+        "darwin-arm64": "sha384-uS24akgReGrG1OvmEz9CkJgZrtnENqciSysXiAfff6TRqtcdUxdI0dm9dSjhv8K6",
+        "darwin-x64": "sha384-yXhZaYgT3PxqT8mzSkd/NGz8xZqq5Zn6RAdJYpYRkfm65XmaCw4pMkOilswoNps8",
+        "linux-arm-gnueabihf": "sha384-pz9Zys1aO0kPhNf0LEWyc8xWcLnZopSCEbnDWEaz7kRMZz8bgA9GFaSZMmgqB/F7",
+        "linux-arm64-gnu": "sha384-Yh+Qp+hZvyCRaOmRUyqqAYi/7eDN69h2ikhwiY6VQmZ1yv+Nup9OV0/4ToSbhlZr",
+        "linux-x64-gnu": "sha384-4x5qhzwNq83IlmPC+Ft2PTpVrcj1VjGIpIGQ2ESgmIZDiYB7Ij2vXQxmjfrrLwyz",
+        "win32-arm64-msvc": "sha384-jMkwVOew9yP3SP3Ho9oiHth0cqbsHHewXfteHzDl2TgLHNH677S644PXlZzHzr8L",
+        "win32-ia32-msvc": "sha384-EBrW+WtLREmyAuHPlwhKKtpK22/1Rxq66hgtWoNJqfVlqOiUzO/DZy3Hid3pmGT6",
+        "win32-x64-msvc": "sha384-r8MNGdXLjvT/ept8RCcgamNusiBMIhRrVSydQDKRuEmmcrBgLfgggFiAj4sSBJBE",
+    },
     "v1.11.16": {
         "darwin-arm64": "sha384-kGtC7HsDVrEtowMgyBk28OLWhxqE6cQorZKkf+qv54psk3e2HvbtC9MmSaH7MSK1",
         "darwin-x64": "sha384-POhiqDFgpT+x2zMdAFvNIGcksMSGy6EB3B6J0fvVhpYiW4PF4zOUfz2JM7csnEGj",
