@@ -39,8 +39,8 @@ def _toolchain_extension(module_ctx):
     for name, registration in registrations.items():
         swc_register_toolchains(
             name = name,
-            swc_version = registration.swc_version if registration.swc_version else None,
-            swc_version_from = registration.swc_version_from if registration.swc_version_from else None,
+            swc_version = registration.swc_version,
+            swc_version_from = registration.swc_version_from,
             register = False,
         )
 
