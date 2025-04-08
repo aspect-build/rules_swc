@@ -71,7 +71,11 @@ def _determine_version(rctx):
 
     json_path = rctx.path(rctx.attr.swc_version_from)
     p = json.decode(rctx.read(json_path))
-    if "devDependencies" in p.keys() and _NPM_PKG in p["devDependencies"]:
+
+    # Allow use of "resolved.json", see https://github.com/aspect-build/rules_js/pull/1221
+    if "$schema" in p.keys() and p["$schema"] == "https://docs.aspect.build/rules/aspect_rules_js/docs/npm_translate_lock":
+        v = p["version"]
+    elif "devDependencies" in p.keys() and _NPM_PKG in p["devDependencies"]:
         v = p["devDependencies"][_NPM_PKG]
     elif "dependencies" in p.keys() and _NPM_PKG in p["dependencies"]:
         v = p["dependencies"][_NPM_PKG]
@@ -147,8 +151,15 @@ def swc_register_toolchains(name, swc_version = None, swc_version_from = None, r
 
     Args:
         name: base name for all created repos; we recommend `swc`
-        swc_version_from: label of a json file (typically `package.json`) which declares an exact `@swc/core` version
-            in a dependencies or devDependencies property.
+        swc_version_from: label of a json file which declares an `@swc/core` version.
+
+            This may be a `package.json` file, with "@swc/core" in the dependencies or
+            devDependencies property, and the version exactly specified.
+
+            With rules_js v1.32.0 or greater, it may also be a `resolved.json` file
+            produced by `npm_translate_lock`, such as
+            `@npm//path/to/linked:@swc/core/resolved.json`
+
             Exactly one of `swc_version` or `swc_version_from` must be set.
         swc_version: version of the swc project, from https://github.com/swc-project/swc/releases
             Exactly one of `swc_version` or `swc_version_from` must be set.
