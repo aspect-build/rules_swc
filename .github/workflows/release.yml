@@ -7,10 +7,21 @@ on:
   push:
     tags:
       - "v*.*.*"
-
+permissions:
+  id-token: write
+  attestations: write
+  contents: write
 jobs:
   release:
-    uses: bazel-contrib/.github/.github/workflows/release_ruleset.yaml@v6
+    uses: bazel-contrib/.github/.github/workflows/release_ruleset.yaml@v7.2.2
     with:
-      prerelease: false
       release_files: rules_swc-*.tar.gz
+      prerelease: false
+      tag_name: ${{ github.ref_name }}
+  publish:
+    needs: release
+    uses: ./.github/workflows/publish.yaml
+    with:
+      tag_name: ${{ github.ref_name }}
+    secrets:
+      publish_token: ${{ secrets.BCR_PUBLISH_TOKEN }}
