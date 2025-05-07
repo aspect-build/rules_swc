@@ -19,7 +19,7 @@ load("//swc/private:swc.bzl", _swc_lib = "swc")
 load("//swc/private:swc_plugin.bzl", _swc_plugin_lib = "swc_plugin")
 
 swc_compile = rule(
-    doc = """Underlying rule for the `swc` macro.
+    docx = """Underlying rule for the `swc` macro.
 
 Most users should use [swc](#swc) instead, as it predicts the output files
 and has convenient default values.
