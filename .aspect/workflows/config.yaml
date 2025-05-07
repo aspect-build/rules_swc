@@ -1,0 +1,24 @@
+# See https://docs.aspect.build/workflows/configuration
+tasks:
+  - checkout:
+      update_strategy: rebase
+  - buildifier:
+      queue: aspect-medium
+  - configure:
+  - test:
+  - finalization:
+      queue: aspect-small
+workspaces:
+  - .
+  - e2e/smoke:
+      tasks:
+        - buildifier:
+            without: true
+  - docs:
+      tasks:
+        - buildifier:
+            without: true
+        - configure:
+            without: true
+notifications:
+  github: {}
