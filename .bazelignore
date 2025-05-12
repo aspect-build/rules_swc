@@ -1,5 +1,4 @@
 # Nested modules
-docs/
 e2e/
 examples/node_modules
 examples/generate_swcrc/node_modules
