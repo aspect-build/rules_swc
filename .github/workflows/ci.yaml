@@ -25,9 +25,12 @@ jobs:
       - name: docgen
         run: |
           bazel query 'kind(starlark_doc_extract, //...)' | xargs bazel build
+      # TODO(alexeagle): we should have a preview service in Aspect Workflows
+      # which could render the changed docs and show a delta
       - uses: actions/upload-artifact@v4
         with:
-          path: bazel-out/*/bin/**/*.doc_extract.binaryproto
+          name: docs
+          path: bazel-out/k8-fastbuild/bin/**/*.doc_extract.binaryproto
 
   # Prepares dynamic test matrix values
   matrix-prep:
