@@ -30,7 +30,7 @@ bazel_dep(name = "bazelrc-preset.bzl", version = "1.1.0", dev_dependency = True)
 # Patch in https://github.com/bazelbuild/bazel-skylib/pull/571
 git_override(
     module_name = "bazel_skylib",
-    commit = "17cdc147f29ae3bd73b5dc0d42cdc288338b0a7e",
+    commit = "429edfb2b9c7be99208b2095105ddf8d43ee492b",
     remote = "https://github.com/alexeagle/bazel-skylib.git",
 )
 
