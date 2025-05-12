@@ -18,6 +18,17 @@ concurrency:
   cancel-in-progress: ${{ github.ref_name != 'main' }}
 
 jobs:
+  docgen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: docgen
+        run: |
+          bazel query 'kind(starlark_doc_extract, //...)' | xargs bazel build
+      - uses: actions/upload-artifact@v4
+        with:
+          path: bazel-out/*/bin/**/*.doc_extract.binaryproto
+
   # Prepares dynamic test matrix values
   matrix-prep:
     runs-on: ubuntu-latest
@@ -80,13 +91,6 @@ jobs:
           # Root folder is bzlmod-only
           - folder: .
             bzlmod: 0
-        include:
-          - bazel-version:
-              major: 7
-              version: 7.6.1
-            bzlmod: 1
-            os: ubuntu
-            folder: docs
 
     steps:
       - uses: actions/checkout@v4
