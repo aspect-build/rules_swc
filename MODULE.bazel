@@ -26,7 +26,7 @@ register_toolchains("@swc_toolchains//:all")
 # Patch in https://github.com/bazelbuild/bazel-skylib/pull/571
 git_override(
     module_name = "bazel_skylib",
-    commit = "f3f6b7989eb69296d38aeabd7efd5c3fa64b86c3",
+    commit = "17cdc147f29ae3bd73b5dc0d42cdc288338b0a7e",
     remote = "https://github.com/alexeagle/bazel-skylib.git",
 )
 
