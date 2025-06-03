@@ -14,12 +14,54 @@ swc(
     source_maps = True,
 )
 
+# Test case for root_dir="." (should have depth 0)
+swc(
+    name = "compile_dot",
+    srcs = [
+        "src/a.ts",
+        "src/b.ts",
+        "src/sub/c.ts",
+    ],
+    out_dir = "out_dot",
+    root_dir = ".",
+    source_maps = True,
+)
+
+# Test case for nested root_dir
+swc(
+    name = "compile_nested",
+    srcs = [
+        "src/sub/c.ts",
+    ],
+    out_dir = "out_nested",
+    root_dir = "src/sub",
+    source_maps = True,
+)
+
 # Assert that the output of "compile" rule matches the expected file.
 write_source_files(
     name = "test",
     files = {
         "expected/a.js": ":out/a.js",
         "expected/b.js": ":out/b.js",
+    },
+)
+
+# Assert outputs for dot root_dir test
+write_source_files(
+    name = "test_dot",
+    files = {
+        "expected_dot/src/a.js": ":out_dot/src/a.js",
+        "expected_dot/src/b.js": ":out_dot/src/b.js",
+        "expected_dot/src/sub/c.js": ":out_dot/src/sub/c.js",
+    },
+)
+
+# Assert outputs for nested root_dir test
+write_source_files(
+    name = "test_nested",
+    files = {
+        "expected_nested/c.js": ":out_nested/c.js",
     },
 )
 
@@ -37,3 +79,26 @@ write_source_files(
         "sub/c",
     ]
 ]
+
+[
+    assert_json_matches(
+        name = "test_dot_%s" % f.replace("/", "-"),
+        file1 = ":out_dot/%s.js.map" % f,
+        file2 = "expected_dot/%s.js.map.golden" % f,
+        filter1 = ".sourceRoot,.sources",
+        filter2 = ".sourceRoot,.sources",
+    )
+    for f in [
+        "src/a",
+        "src/b",
+        "src/sub/c",
+    ]
+]
+
+assert_json_matches(
+    name = "test_nested_c",
+    file1 = ":out_nested/c.js.map",
+    file2 = "expected_nested/c.js.map.golden",
+    filter1 = ".sourceRoot,.sources",
+    filter2 = ".sourceRoot,.sources",
+)

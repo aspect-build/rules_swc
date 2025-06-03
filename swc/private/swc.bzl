@@ -245,7 +245,7 @@ def _calculate_source_file(ctx, src):
     # out of src subdir
     if src_pkg:
         src_pkg_depth = len(src_pkg.split("/"))
-        root_dir_depth = len(ctx.attr.root_dir.split("/")) if ctx.attr.root_dir else 0
+        root_dir_depth = len(ctx.attr.root_dir.split("/")) if ctx.attr.root_dir and ctx.attr.root_dir != "." else 0
         effective_depth = max(0, src_pkg_depth - root_dir_depth)
         s = paths.join(s, "/".join([".." for _ in range(effective_depth)]))
 
