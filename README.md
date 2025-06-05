@@ -76,3 +76,7 @@ but note that this may have breaking changes between major releases.
 
 Alternatively you can write a rule from scratch, using the toolchains and
 SWC cli provided in aspect_rules_swc.
+
+### Synchronizing settings with tsconfig.json
+
+See (tsconfig.md)[./docs/tsconfig.md]
