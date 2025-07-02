@@ -21,8 +21,6 @@ with only the toolchain attribute pointing into the platform-specific repositori
 # https://github.com/swc-project/swc/releases/tag/v1.3.56
 # TODO: how to represent these three?
 # linux-arm-gnueabihf
-# linux-arm64-musl
-# linux-x64-musl
 PLATFORMS = {
     "darwin-arm64": struct(
         compatible_with = [
@@ -42,7 +40,21 @@ PLATFORMS = {
             "@platforms//cpu:aarch64",
         ],
     ),
+    "linux-arm64-musl": struct(
+        # bazel does not support targeting MUSL explicitely, thus we just rely on resolution order here to pick gnu over musl by default
+        compatible_with = [
+            "@platforms//os:linux",
+            "@platforms//cpu:aarch64",
+        ],
+    ),
     "linux-x64-gnu": struct(
+        compatible_with = [
+            "@platforms//os:linux",
+            "@platforms//cpu:x86_64",
+        ],
+    ),
+    "linux-x64-musl": struct(
+        # bazel does not support targeting MUSL explicitely, thus we just rely on resolution order here to pick gnu over musl by default
         compatible_with = [
             "@platforms//os:linux",
             "@platforms//cpu:x86_64",
