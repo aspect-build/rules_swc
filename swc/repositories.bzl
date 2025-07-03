@@ -187,4 +187,5 @@ def swc_register_toolchains(name, swc_version = None, swc_version_from = None, p
     toolchains_repo(
         name = name + "_toolchains",
         user_repository_name = name,
+        platforms = platforms,
     )

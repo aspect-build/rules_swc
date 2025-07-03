@@ -96,7 +96,8 @@ alias(
 )
 """
 
-    for [platform, meta] in PLATFORMS.items():
+    for platform in repository_ctx.attr.platforms:
+        meta = PLATFORMS[platform]
         build_content += """
 toolchain(
     name = "{platform}_toolchain",
@@ -120,5 +121,6 @@ toolchains_repo = repository_rule(
      which can be registered or selected.""",
     attrs = {
         "user_repository_name": attr.string(doc = "what the user chose for the base name"),
+        "platforms": attr.string_list(doc = "list of platforms to register toolchains for", default = PLATFORMS.keys()),
     },
 )
