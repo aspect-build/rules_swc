@@ -141,7 +141,7 @@ swc_repositories = repository_rule(
 )
 
 # Wrapper macro around everything above, this is the primary API
-def swc_register_toolchains(name, swc_version = None, swc_version_from = None, register = True, **kwargs):
+def swc_register_toolchains(name, swc_version = None, swc_version_from = None, platforms = PLATFORMS.keys(), register = True, **kwargs):
     """Convenience macro for users which does typical setup.
 
     - create a repository for each built-in platform like "swc_linux_amd64"
@@ -163,6 +163,8 @@ def swc_register_toolchains(name, swc_version = None, swc_version_from = None, r
             Exactly one of `swc_version` or `swc_version_from` must be set.
         swc_version: version of the swc project, from https://github.com/swc-project/swc/releases
             Exactly one of `swc_version` or `swc_version_from` must be set.
+        platforms: list of platforms (must be a key in PLATFORMS) to register toolchains for.
+            Defaults to all platforms.
         register: whether to call through to native.register_toolchains.
             Should be True for WORKSPACE users, but false when used under bzlmod extension
         **kwargs: passed to each swc_repositories call
@@ -171,7 +173,7 @@ def swc_register_toolchains(name, swc_version = None, swc_version_from = None, r
     if (swc_version and swc_version_from) or (not swc_version_from and not swc_version):
         fail("Exactly one of 'swc_version' or 'swc_version_from' must be set.")
 
-    for platform in PLATFORMS.keys():
+    for platform in platforms:
         swc_repositories(
             name = name + "_" + platform,
             platform = platform,
@@ -185,4 +187,5 @@ def swc_register_toolchains(name, swc_version = None, swc_version_from = None, r
     toolchains_repo(
         name = name + "_toolchains",
         user_repository_name = name,
+        platforms = platforms,
     )

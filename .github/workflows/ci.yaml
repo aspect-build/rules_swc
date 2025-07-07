@@ -83,7 +83,7 @@ jobs:
         include:
           - bazel-version:
               major: 7
-              version: 7.1.1
+              version: 7.6.1
             bzlmod: 1
             os: ubuntu
             folder: docs
