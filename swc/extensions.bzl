@@ -1,5 +1,6 @@
 "extensions for bzlmod"
 
+load("@aspect_tools_telemetry_report//:defs.bzl", "TELEMETRY")  # buildifier: disable=load
 load(":repositories.bzl", "swc_register_toolchains")
 
 swc_toolchain = tag_class(attrs = {
