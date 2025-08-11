@@ -1,0 +1,10 @@
+load("@bazelrc-preset.bzl", "bazelrc_preset")
+
+bazelrc_preset(
+    name = "preset",
+    # The output is specific to the version in .bazelversion
+    tags = [
+        "skip-on-bazel6",
+        "skip-on-bazel8",
+    ],
+)
