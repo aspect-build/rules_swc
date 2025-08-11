@@ -1,0 +1,2 @@
+import %workspace%/../tools/preset.bazelrc
+common --noincompatible_disallow_empty_glob
