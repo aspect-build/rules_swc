@@ -80,13 +80,6 @@ jobs:
           # Root folder is bzlmod-only
           - folder: .
             bzlmod: 0
-        include:
-          - bazel-version:
-              major: 7
-              version: 7.6.1
-            bzlmod: 1
-            os: ubuntu
-            folder: docs
 
     steps:
       - uses: actions/checkout@v4
