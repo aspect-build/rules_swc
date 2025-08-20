@@ -2,7 +2,6 @@
 
 module(
     name = "aspect_rules_swc",
-    version = "0.0.0",
     compatibility_level = 1,
 )
 
