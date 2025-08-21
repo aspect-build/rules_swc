@@ -1,4 +1,7 @@
 # See https://docs.aspect.build/workflows/configuration
+bazel:
+  flags:
+    - --config=ci
 tasks:
   - checkout:
       update_strategy: rebase
