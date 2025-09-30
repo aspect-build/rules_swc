@@ -77,6 +77,10 @@ but note that this may have breaking changes between major releases.
 Alternatively you can write a rule from scratch, using the toolchains and
 SWC cli provided in aspect_rules_swc.
 
+### Synchronizing settings with tsconfig.json
+
+See (tsconfig.md)[./docs/tsconfig.md]
+
 # Telemetry & privacy policy
 
 This ruleset collects limited usage data via [`tools_telemetry`](https://github.com/aspect-build/tools_telemetry), which is reported to Aspect Build Inc and governed by our [privacy policy](https://www.aspect.build/privacy-policy).

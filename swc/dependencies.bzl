@@ -12,6 +12,7 @@ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 def http_archive(**kwargs):
     maybe(_http_archive, **kwargs)
 
+# buildifier: disable=function-docstring
 def rules_swc_dependencies():
     http_archive(
         name = "bazel_skylib",
@@ -21,9 +22,9 @@ def rules_swc_dependencies():
 
     http_archive(
         name = "aspect_bazel_lib",
-        integrity = "sha256-yW22ndJxSjfzKYM4oaQrJ+OiaWw7Nt1EQbm/ehoSvuA=",
-        strip_prefix = "bazel-lib-2.11.0",
-        url = "https://github.com/aspect-build/bazel-lib/releases/download/v2.11.0/bazel-lib-v2.11.0.tar.gz",
+        sha256 = "db7da732db4dece80cd6d368220930950c9306ff356ebba46498fe64e65a3945",
+        strip_prefix = "bazel-lib-2.19.3",
+        url = "https://github.com/bazel-contrib/bazel-lib/releases/download/v2.19.3/bazel-lib-v2.19.3.tar.gz",
     )
 
     http_archive(

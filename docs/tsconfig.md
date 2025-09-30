@@ -16,7 +16,7 @@ This document explores our options.
 
 You might just check in both files as sources.
 
-Since both `tsconfig.json` and `.swcrc` are JSON files, we recommend adding an [`assert_json_matches`](https://docs.aspect.build/rules/aspect_bazel_lib/docs/testing#assert_json_matches) rule to guarantee that they don't accidentally diverge.
+Since both `tsconfig.json` and `.swcrc` are JSON files, we recommend adding an [`assert_json_matches`](https://registry.bazel.build/modules/bazel_lib#function-assert_json_matches) rule to guarantee that they don't accidentally diverge.
 
 A typical example looks like this:
 

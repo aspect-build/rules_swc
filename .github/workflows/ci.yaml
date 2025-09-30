@@ -80,13 +80,11 @@ jobs:
           # Root folder is bzlmod-only
           - folder: .
             bzlmod: 0
-        include:
-          - bazel-version:
-              major: 7
-              version: 7.6.1
-            bzlmod: 1
-            os: ubuntu
-            folder: docs
+          # Newer bazel-lib not compatible: has bazel_lib/lib/private/platform_utils.bzl:3:6: Label '@platforms//host:constraints.bzl' is invalid because 'host' is not a package
+          - folder: e2e/smoke
+            bzlmod: 0
+            bazel-version:
+              major: 6
 
     steps:
       - uses: actions/checkout@v4

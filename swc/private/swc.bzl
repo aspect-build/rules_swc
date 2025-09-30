@@ -120,7 +120,7 @@ def _is_supported_src(src, allow_js):
 def _is_data_src(src):
     return src.endswith(".json")
 
-# TODO: vendored from rules_ts - aspect_bazel_lib should provide this?
+# TODO: vendored from rules_ts - bazel_lib should provide this?
 # https://github.com/aspect-build/rules_ts/blob/v3.2.1/ts/private/ts_lib.bzl#L194-L200
 def _relative_to_package(path, ctx):
     path = path.removeprefix(ctx.bin_dir.path + "/")
@@ -130,7 +130,7 @@ def _relative_to_package(path, ctx):
         path = path.removeprefix(ctx.label.package + "/")
     return path
 
-# TODO: vendored from rules_ts - aspect_bazel_lib should provide this?
+# TODO: vendored from rules_ts - bazel_lib should provide this?
 # https://github.com/aspect-build/rules_ts/blob/v3.2.1/ts/private/ts_lib.bzl#L220-L226
 def _to_out_path(f, out_dir, root_dir):
     f = f[f.find(":") + 1:]
