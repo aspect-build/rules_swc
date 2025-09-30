@@ -1,7 +1,7 @@
 "Showcases how to specify the SWC configuration file as a dict"
 
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
-load("@bazel_lib//lib:write_source_files.bzl", "write_source_files")
 
 swc(
     name = "es5",

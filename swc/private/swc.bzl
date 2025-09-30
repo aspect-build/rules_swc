@@ -1,10 +1,10 @@
 "Internal implementation details"
 
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file_action")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "COPY_FILE_TO_BIN_TOOLCHAINS")
+load("@aspect_bazel_lib//lib:platform_utils.bzl", "platform_utils")
 load("@aspect_rules_js//js:libs.bzl", "js_lib_helpers")
 load("@aspect_rules_js//js:providers.bzl", "js_info")
-load("@bazel_lib//lib:copy_file.bzl", "copy_file_action")
-load("@bazel_lib//lib:copy_to_bin.bzl", "COPY_FILE_TO_BIN_TOOLCHAINS")
-load("@bazel_lib//lib:platform_utils.bzl", "platform_utils")
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("//swc:providers.bzl", "SwcPluginConfigInfo")
 

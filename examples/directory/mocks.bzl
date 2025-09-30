@@ -1,6 +1,6 @@
 "Placeholder for a rule like webpack which may produce an unpredictable number of JS chunks"
 
-load("@bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
+load("@aspect_bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 
 def mock_codesplit(name):

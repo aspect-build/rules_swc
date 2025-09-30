@@ -1,9 +1,9 @@
 """Simple use case for swc: transpiling .js using the `swc` rule, similar to tsc with 'allowJs'
 """
 
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_outputs")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
-load("@bazel_lib//lib:testing.bzl", "assert_outputs")
-load("@bazel_lib//lib:write_source_files.bzl", "write_source_files")
 
 # Runs `swc in.js > ../../bazel-bin/examples/js_outs/in.js`
 swc(

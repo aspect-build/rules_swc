@@ -1,8 +1,8 @@
 """Demonstrate that js_outs can go to the desired file extensions."""
 
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_outputs")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc", "swc_compile")
-load("@bazel_lib//lib:testing.bzl", "assert_outputs")
-load("@bazel_lib//lib:write_source_files.bzl", "write_source_files")
 
 ###############################
 # Case 1: js extension variants

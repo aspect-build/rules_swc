@@ -20,19 +20,11 @@ def rules_swc_dependencies():
         urls = ["https://github.com/bazelbuild/bazel-skylib/releases/download/1.5.0/bazel-skylib-1.5.0.tar.gz"],
     )
 
-    # transitive dep of rules_js
     http_archive(
         name = "aspect_bazel_lib",
-        integrity = "sha256-yW22ndJxSjfzKYM4oaQrJ+OiaWw7Nt1EQbm/ehoSvuA=",
-        strip_prefix = "bazel-lib-2.11.0",
-        url = "https://github.com/aspect-build/bazel-lib/releases/download/v2.11.0/bazel-lib-v2.11.0.tar.gz",
-    )
-
-    http_archive(
-        name = "bazel_lib",
-        sha256 = "46960e9fa6c9352d883768280951ac388dba8cb9ff0256182fb77925eae2b6ac",
-        strip_prefix = "bazel-lib-3.0.0-beta.1",
-        url = "https://github.com/bazel-contrib/bazel-lib/releases/download/v3.0.0-beta.1/bazel-lib-v3.0.0-beta.1.tar.gz",
+        sha256 = "db7da732db4dece80cd6d368220930950c9306ff356ebba46498fe64e65a3945",
+        strip_prefix = "bazel-lib-2.19.3",
+        url = "https://github.com/bazel-contrib/bazel-lib/releases/download/v2.19.3/bazel-lib-v2.19.3.tar.gz",
     )
 
     http_archive(

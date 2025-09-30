@@ -21,7 +21,7 @@ Since both `tsconfig.json` and `.swcrc` are JSON files, we recommend adding an [
 A typical example looks like this:
 
 ```python
-load("@bazel_lib//lib:testing.bzl", "assert_json_matches")
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_json_matches")
 
 # Verify that the "paths" entry is the same
 # between swc and TS language service (in the editor)

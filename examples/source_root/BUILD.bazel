@@ -1,6 +1,6 @@
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_json_matches")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
-load("@bazel_lib//lib:testing.bzl", "assert_json_matches")
-load("@bazel_lib//lib:write_source_files.bzl", "write_source_files")
 
 # Specifies a custom location where a debugger should locate source files instead of relative source
 # locations. This string is treated verbatim inside the source-map where you can use a path or a URL.

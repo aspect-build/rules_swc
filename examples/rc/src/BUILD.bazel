@@ -1,5 +1,5 @@
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
-load("@bazel_lib//lib:write_source_files.bzl", "write_source_files")
 
 # Runs `swc in.ts > ../../bazel-bin/examples/simple/in.js`
 # You can run `bazel build --subcommands //examples/simple:compile`

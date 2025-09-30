@@ -1,5 +1,5 @@
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_json_matches")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
-load("@bazel_lib//lib:testing.bzl", "assert_json_matches")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//examples/generate_swcrc:tsconfig-to-swcconfig/package_json.bzl", tsconfig_to_swcconfig = "bin")
 

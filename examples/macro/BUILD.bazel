@@ -1,4 +1,4 @@
-load("@bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 
 # gazelle:exclude *.bzl
 load(":ts_project.bzl", "my_ts_project")
