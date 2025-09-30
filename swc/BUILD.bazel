@@ -1,6 +1,5 @@
-load("@aspect_bazel_lib//:bzl_library.bzl", "bzl_library")
-load("@aspect_bazel_lib//lib:utils.bzl", bazel_lib_utils = "utils")
 load("@bazel_lib//:bzl_library.bzl", "bzl_library")
+load("@bazel_lib//lib:utils.bzl", bazel_lib_utils = "utils")
 load("//swc/private:resolved_toolchain.bzl", "resolved_toolchain")
 
 # This is the target rule authors should put in their "toolchains"
@@ -47,7 +46,7 @@ bzl_library(
     deps = [
         "//swc/private:swc",
         "//swc/private:swc_plugin",
-        "@aspect_bazel_lib//lib:copy_file",
+        "@bazel_lib//lib:copy_file",
         "@bazel_skylib//lib:types",
         "@bazel_skylib//rules:write_file",
     ] + (["@bazel_tools//tools/build_defs/repo:cache.bzl"] if bazel_lib_utils.is_bazel_7_or_greater() else []),

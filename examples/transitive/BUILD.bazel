@@ -3,7 +3,7 @@ which are compiled separately as "libraries" but which
 have runtime dependencies.
 """
 
-load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@bazel_lib//lib:write_source_files.bzl", "write_source_files")
 
 exports_files([".swcrc"])
 
