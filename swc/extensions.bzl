@@ -8,6 +8,7 @@ swc_toolchain = tag_class(attrs = {
     "swc_version": attr.string(doc = "Explicit version of @swc/core. If provided, the package.json is not read."),
     "swc_version_from": attr.label(doc = "Location of package.json which may have a version for @swc/core."),
     "platforms": attr.string_list(doc = "List of platforms to register toolchains for. Defaults to all platforms if not provided."),
+    "integrity_hashes": attr.string_dict(doc = "A mapping from platform to integrity hash."),
 })
 
 default_repository = "swc"
@@ -37,6 +38,7 @@ def _toolchain_extension(module_ctx):
                     swc_version = toolchain.swc_version,
                     swc_version_from = toolchain.swc_version_from,
                     platforms = toolchain.platforms,
+                    integrity_hashes = toolchain.integrity_hashes,
                 )
 
     for name, registration in registrations.items():
@@ -46,6 +48,7 @@ def _toolchain_extension(module_ctx):
                 swc_version = registration.swc_version,
                 swc_version_from = registration.swc_version_from,
                 platforms = registration.platforms,
+                integrity_hashes = registration.integrity_hashes,
                 register = False,
             )
         else:
@@ -53,6 +56,7 @@ def _toolchain_extension(module_ctx):
                 name = name,
                 swc_version = registration.swc_version,
                 swc_version_from = registration.swc_version_from,
+                integrity_hashes = registration.integrity_hashes,
                 register = False,
             )
 
