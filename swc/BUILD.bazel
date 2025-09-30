@@ -18,6 +18,7 @@ resolved_toolchain(
     visibility = ["//visibility:public"],
 )
 
+# gazelle:exclude extensions.bzl
 bzl_library(
     name = "repositories",
     srcs = ["repositories.bzl"],
@@ -51,16 +52,6 @@ bzl_library(
         "@bazel_skylib//lib:types",
         "@bazel_skylib//rules:write_file",
     ] + (["@bazel_tools//tools/build_defs/repo:cache.bzl"] if bazel_lib_utils.is_bazel_7_or_greater() else []),
-)
-
-bzl_library(
-    name = "extensions",
-    srcs = ["extensions.bzl"],
-    visibility = ["//visibility:public"],
-    deps = [
-        ":repositories",
-        "@aspect_tools_telemetry_report//:defs",
-    ],
 )
 
 bzl_library(
