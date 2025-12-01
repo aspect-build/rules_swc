@@ -55,7 +55,7 @@ See the example in /examples/simple.
 Often the repetition of hand-writing BUILD files needs to be overcome with a Bazel macro.
 This composes a few rules together into a common pattern which is shared in your repo.
 
-See the example in /examples/macro.
+See the example in [`examples/macro`](examples/macro).
 
 ### In a custom rule
 
@@ -79,7 +79,7 @@ SWC cli provided in aspect_rules_swc.
 
 ### Synchronizing settings with tsconfig.json
 
-See (tsconfig.md)[./docs/tsconfig.md]
+See [`tsconfig.md`](docs/tsconfig.md)
 
 # Telemetry & privacy policy
 
