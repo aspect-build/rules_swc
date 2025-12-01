@@ -14,7 +14,6 @@ jobs:
       - run: |
           ./scripts/mirror_releases.sh
           npx @bazel/buildifier swc/private/versions.bzl
-          (cd docs && bazel run //:update)
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
