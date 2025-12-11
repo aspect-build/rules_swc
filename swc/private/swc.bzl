@@ -256,11 +256,12 @@ def _calculate_source_file(ctx, src):
     # back into the src dir, including into the root_dir
     return paths.join(s, src_pkg, src.basename)
 
-def _swc_action(ctx, swc_binary, **kwargs):
+def _swc_action(ctx, swc_binary, execution_requirements, **kwargs):
     ctx.actions.run(
         mnemonic = "SWCCompile",
         progress_message = "Compiling %{label} [swc %{input}]",
         executable = swc_binary,
+        execution_requirements = execution_requirements,
         **kwargs
     )
 
@@ -289,7 +290,9 @@ def _swc_impl(ctx):
         plugin_args = ["--config-json", json.encode({
             "jsc": {
                 "experimental": {
+                    # TODO: .path breaks 'supports-path-mapping'
                     "cacheRoot": plugin_cache[0].path,
+                    # TODO: .path breaks 'supports-path-mapping'
                     "plugins": [["./" + p[DefaultInfo].files.to_list()[0].path, json.decode(p[SwcPluginConfigInfo].config)] for p in ctx.attr.plugins],
                 },
             },
@@ -304,6 +307,7 @@ def _swc_impl(ctx):
             arguments = ["compile"] + plugin_args + ["--source-maps", "false", "--out-file", null_file, null_file],
             inputs = inputs + ctx.files.plugins,
             outputs = plugin_cache,
+            execution_requirements = {"supports-path-mapping": "1"},
         )
 
         inputs.extend(plugin_cache)
@@ -330,17 +334,16 @@ def _swc_impl(ctx):
 
         output_sources = [output_dir]
 
-        args.add("--out-dir", output_dir.path)
+        args.add_all(["--out-dir", output_dir], expand_directories = False)
+        args.add_all([ctx.files.srcs[0]], expand_directories = False)
 
         _swc_action(
             ctx,
             swc_toolchain.swcinfo.swc_binary,
             inputs = inputs,
-            arguments = [
-                args,
-                ctx.files.srcs[0].path,
-            ],
+            arguments = [args],
             outputs = output_sources,
+            execution_requirements = {"supports-path-mapping": "1"},
         )
     else:
         # Disable sandboxing for the SWC action by default since there is normally only
@@ -349,6 +352,7 @@ def _swc_impl(ctx):
         # This may be required for SWC issues with symlinks in the sandbox.
         execution_requirements = {
             "no-sandbox": "1",
+            "supports-path-mapping": "1",
         }
 
         output_sources = []
@@ -404,6 +408,7 @@ def _swc_impl(ctx):
                 outputs.append(dts_out)
 
             src_args.add("--out-file", js_out)
+            src_args.add(src)
 
             output_sources.extend(outputs)
 
@@ -414,7 +419,6 @@ def _swc_impl(ctx):
                 arguments = [
                     args,
                     src_args,
-                    src.path,
                 ],
                 outputs = outputs,
                 execution_requirements = execution_requirements,
