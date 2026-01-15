@@ -1,0 +1,9 @@
+bazel_dep(name = "aspect_rules_swc", version = "0.0.0", dev_dependency = True)
+local_path_override(
+    module_name = "aspect_rules_swc",
+    path = "../..",
+)
+
+bazel_dep(name = "bazel_skylib", version = "1.5.0", dev_dependency = True)
+
+bazel_dep(name = "aspect_rules_js", version = "3.0.0-alpha.4")
