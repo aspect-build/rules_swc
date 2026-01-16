@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '9.0'
 
 settings:
   autoInstallPeers: true
@@ -30,56 +30,68 @@ importers:
 
 packages:
 
-  /@fastify/deepmerge@1.3.0:
+  '@fastify/deepmerge@1.3.0':
     resolution: {integrity: sha512-J8TOSBq3SoZbDhM9+R/u77hP93gz/rajSA+K2kGyijPpORPWUXHUpTaleoj+92As0S9uPRP7Oi8IqMf0u+ro6A==}
-    dev: true
 
-  /@swc/counter@0.1.3:
+  '@swc/counter@0.1.3':
     resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
-    dev: true
 
-  /@swc/plugin-transform-imports@3.0.4:
+  '@swc/plugin-transform-imports@3.0.4':
     resolution: {integrity: sha512-ubmNyCgaXtRNstdU/rv33QGFt6i4YZM9mL1IrrMkVbCVC+2xFNN6SKaJUdcNHkzgLWumK8H29Xman3CAOtR1Jw==}
-    dependencies:
-      '@swc/counter': 0.1.3
-    dev: true
 
-  /buffer-from@1.1.2:
+  buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
-    dev: false
 
-  /joycon@3.1.1:
+  joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
-    dev: true
 
-  /jsonc-parser@3.2.0:
+  jsonc-parser@3.2.0:
     resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
-    dev: true
 
-  /source-map-support@0.5.21:
+  source-map-support@0.5.21:
     resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
+
+  source-map@0.6.1:
+    resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
+    engines: {node: '>=0.10.0'}
+
+  tsconfig-to-swcconfig@2.4.0:
+    resolution: {integrity: sha512-vT1hUG06TC3XCRQoina91VGH5HKfxYgA4hN2Ly0uNxHKNeCds++7aBE2Je62FUTKvvdkTpLjmynF8bzgYcDymA==}
+    hasBin: true
+
+  typescript@5.2.2:
+    resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+snapshots:
+
+  '@fastify/deepmerge@1.3.0': {}
+
+  '@swc/counter@0.1.3': {}
+
+  '@swc/plugin-transform-imports@3.0.4':
+    dependencies:
+      '@swc/counter': 0.1.3
+
+  buffer-from@1.1.2: {}
+
+  joycon@3.1.1: {}
+
+  jsonc-parser@3.2.0: {}
+
+  source-map-support@0.5.21:
     dependencies:
       buffer-from: 1.1.2
       source-map: 0.6.1
-    dev: false
 
-  /source-map@0.6.1:
-    resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
-    engines: {node: '>=0.10.0'}
-    dev: false
+  source-map@0.6.1: {}
 
-  /tsconfig-to-swcconfig@2.4.0:
-    resolution: {integrity: sha512-vT1hUG06TC3XCRQoina91VGH5HKfxYgA4hN2Ly0uNxHKNeCds++7aBE2Je62FUTKvvdkTpLjmynF8bzgYcDymA==}
-    hasBin: true
+  tsconfig-to-swcconfig@2.4.0:
     dependencies:
       '@fastify/deepmerge': 1.3.0
       joycon: 3.1.1
       jsonc-parser: 3.2.0
-    dev: true
 
-  /typescript@5.2.2:
-    resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: true
+  typescript@5.2.2: {}
