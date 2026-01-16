@@ -14,5 +14,9 @@ workspaces:
       tasks:
         - buildifier:
             without: true
+  - e2e/smoke_rjs3:
+      tasks:
+        - buildifier:
+            without: true
 notifications:
   github: {}
