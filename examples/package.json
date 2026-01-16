@@ -1,5 +1,9 @@
 {
   "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "pnpm": {
+    "onlyBuiltDependencies": []
+  },
   "dependencies": {
     "source-map-support": "^0.5.21"
   },
