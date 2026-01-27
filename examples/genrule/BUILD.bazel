@@ -1,5 +1,6 @@
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
 
 genrule(
     name = "a",

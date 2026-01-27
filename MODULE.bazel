@@ -26,6 +26,8 @@ register_toolchains("@swc_toolchains//:all")
 
 ####### Dev dependencies ########
 
+bazel_dep(name = "rules_shell", version = "0.6.1", dev_dependency = True)
+bazel_dep(name = "rules_nodejs", version = "6.5.0", dev_dependency = True)
 bazel_dep(name = "bazelrc-preset.bzl", version = "1.1.0", dev_dependency = True)
 bazel_dep(name = "buildifier_prebuilt", version = "6.4.0", dev_dependency = True)
 
