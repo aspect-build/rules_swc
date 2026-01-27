@@ -65,11 +65,12 @@ so they aren't affected by these bugs.
 """
 
 # Read the swc version from package.json if requested
-def _determine_version(rctx):
-    if rctx.attr.swc_version:
-        return rctx.attr.swc_version
+# buildifier: disable=function-docstring
+def determine_version(rctx, swc_version, swc_version_from):
+    if swc_version:
+        return swc_version
 
-    json_path = rctx.path(rctx.attr.swc_version_from)
+    json_path = rctx.path(swc_version_from)
     p = json.decode(rctx.read(json_path))
 
     # Allow use of "resolved.json", see https://github.com/aspect-build/rules_js/pull/1221
@@ -89,7 +90,7 @@ def _determine_version(rctx):
     return "v" + v
 
 def _swc_repo_impl(repository_ctx):
-    version = _determine_version(repository_ctx)
+    version = determine_version(repository_ctx, repository_ctx.attr.swc_version, repository_ctx.attr.swc_version_from)
     if not versions.is_at_least("1.3.25", version.lstrip("v")):
         fail(_SWC_TOO_OLD.format(version))
     filename = "swc-" + repository_ctx.attr.platform
