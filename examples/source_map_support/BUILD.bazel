@@ -1,9 +1,5 @@
-load("@aspect_bazel_lib//:bzl_library.bzl", "bzl_library")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
-
-exports_files([
-    "defs.bzl",
-])
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
 copy_to_bin(
     name = "stack-trace-support",
