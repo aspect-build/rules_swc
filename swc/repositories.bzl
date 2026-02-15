@@ -134,6 +134,12 @@ swc_toolchain(
     # Base BUILD file for this repository
     repository_ctx.file("BUILD.bazel", build_content)
 
+    # Bazel <8.3.0 lacks repository_ctx.repo_metadata
+    if not hasattr(repository_ctx, "repo_metadata"):
+        return None
+
+    return repository_ctx.repo_metadata(reproducible = True)
+
 swc_repositories = repository_rule(
     _swc_repo_impl,
     doc = _DOC,
