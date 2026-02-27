@@ -5,5 +5,4 @@ local_path_override(
 )
 
 bazel_dep(name = "bazel_skylib", version = "1.5.0", dev_dependency = True)
-
-bazel_dep(name = "aspect_rules_js", version = "3.0.0-alpha.4")
+bazel_dep(name = "aspect_rules_js", version = "3.0.0-rc6", dev_dependency = True)
