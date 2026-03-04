@@ -4,7 +4,6 @@ tasks:
       update_strategy: rebase
   - buildifier:
       queue: aspect-medium
-  - configure:
   - test:
   - finalization:
       queue: aspect-small
