@@ -17,5 +17,9 @@ workspaces:
       tasks:
         - buildifier:
             without: true
+  - e2e/path_mapping:
+      tasks:
+        - buildifier:
+            without: true
 notifications:
   github: {}
