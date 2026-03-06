@@ -5,10 +5,51 @@ tasks:
   - buildifier:
       queue: aspect-medium
   - test:
+      name: Bazel 6
+      id: bazel-6
+      bazel:
+        flags:
+          - --enable_bzlmod
+          - --test_tag_filters=-skip-on-bazel6
+          - --build_tag_filters=-skip-on-bazel6
+      env:
+        USE_BAZEL_VERSION: "6.5.0"
+  - test:
+      name: Bazel 7
+      id: bazel-7
+      bazel:
+        flags:
+          - --test_tag_filters=-skip-on-bazel7
+          - --build_tag_filters=-skip-on-bazel7
+      env:
+        USE_BAZEL_VERSION: "7.x"
+  - test:
+      name: Bazel 7 (no bzlmod)
+      id: bazel-7-no-bzlmod
+      bazel:
+        flags:
+          - --noenable_bzlmod
+          - --test_tag_filters=-skip-on-bazel7
+          - --build_tag_filters=-skip-on-bazel7
+      env:
+        USE_BAZEL_VERSION: "7.x"
+  - test:
+      name: Bazel 8
+      id: bazel-8
+      bazel:
+        flags:
+          - --test_tag_filters=-skip-on-bazel8
+          - --build_tag_filters=-skip-on-bazel8
+      env:
+        USE_BAZEL_VERSION: "8.x"
   - finalization:
       queue: aspect-small
 workspaces:
-  - .
+  - .:
+      tasks:
+        # Root folder is bzlmod-only
+        - bazel-7-no-bzlmod:
+            without: true
   - e2e/smoke:
       tasks:
         - buildifier:
@@ -16,6 +57,11 @@ workspaces:
   - e2e/smoke_rjs3:
       tasks:
         - buildifier:
+            without: true
+        # smoke_rjs3 requires rules_js 3.x which is bazel 7+ and bzlmod-only
+        - bazel-7-no-bzlmod:
+            without: true
+        - bazel-6:
             without: true
   - e2e/path_mapping:
       tasks:
