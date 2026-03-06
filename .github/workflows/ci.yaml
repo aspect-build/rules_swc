@@ -22,7 +22,7 @@ jobs:
   matrix-prep:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - id: bazel-version
         name: Prepare 'bazel-version' matrix axis
         run: |
@@ -30,7 +30,6 @@ jobs:
           m=${v::1}
           a=(
             "major:$m, version:\"$v\""
-            "major:6, version:\"6.5.0\""
           )
           printf -v j '{%s},' "${a[@]}"
           echo "res=[${j%,}]" | tee -a $GITHUB_OUTPUT
@@ -38,6 +37,7 @@ jobs:
         name: Prepare 'os' matrix axis
         # Only run MacOS and Windows on main branch (not PRs) to minimize minutes (billed at 10X and 2X respectively)
         # https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#included-storage-and-minutes
+        # Full Linux test suite is handled by Aspect Workflows.
         run: |
           a=( ubuntu )
           if [[ "${{ github.ref_name }}" == "main" ]] || [[ "${{ github.head_ref }}" == *"macos"* ]]; then
@@ -52,67 +52,29 @@ jobs:
       bazel-version: ${{ steps.bazel-version.outputs.res }}
       os: ${{ steps.os.outputs.res }}
 
+  # Smoke test on Ubuntu (all PRs) and full matrix on MacOS/Windows (main only).
+  # Full Linux test suite (all folders, bzlmod variants, Bazel versions) is on Aspect Workflows.
   test:
     runs-on: ${{ matrix.os }}-latest
     needs:
       - matrix-prep
     defaults:
       run:
-        working-directory: ${{ matrix.folder }}
+        working-directory: e2e/smoke
     strategy:
       fail-fast: false
       matrix:
         bazel-version: ${{ fromJSON(needs.matrix-prep.outputs.bazel-version) }}
-        bzlmod: [1, 0]
         os: ${{ fromJSON(needs.matrix-prep.outputs.os) }}
-        folder:
-          - "."
-          - "e2e/smoke"
-          - "e2e/smoke_rjs3"
-        exclude:
-          # Don't test MacOS and Windows against secondary bazel version to minimize minutes (billed at 10X and 2X respectively)
-          # https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#included-storage-and-minutes
-          - os: macos
-            bazel-version:
-              major: 6
-          - os: windows
-            bazel-version:
-              major: 6
-          # Root folder is bzlmod-only
-          - folder: .
-            bzlmod: 0
-          # Newer bazel-lib not compatible: has bazel_lib/lib/private/platform_utils.bzl:3:6: Label '@platforms//host:constraints.bzl' is invalid because 'host' is not a package
-          - folder: e2e/smoke
-            bzlmod: 0
-            bazel-version:
-              major: 6
-          # smoke_rjs3 requires rules_js 3.x which is bzlmod-only and requires bazel 7+
-          - folder: e2e/smoke_rjs3
-            bzlmod: 0
-          - folder: e2e/smoke_rjs3
-            bazel-version:
-              major: 6
-
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: Mount bazel caches
-        uses: actions/cache@v4
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
         with:
-          path: |
-            ~/.cache/bazel-disk-cache
-            ~/.cache/bazel-repository-cache
-            ~/.cache/xdg-cache
-          key: bazel-cache-${{ matrix.bazel-version.version }}-${{ matrix.bzlmod }}-${{ matrix.os }}-${{ matrix.folder }}-${{ hashFiles('.bazelrc', '.bazelversion', '**/BUILD', '**/BUILD.bazel', '**/*.bzl', 'WORKSPACE', 'WORKSPACE.bazel', 'WORKSPACE.bzlmod', 'MODULE.bazel') }}
-          restore-keys: bazel-cache-${{ matrix.bazel-version.version }}-${{ matrix.bzlmod }}-${{ matrix.os }}-${{ matrix.folder }}-
-
-      - name: Configure Bazel version
-        shell: bash
-        run: |
-          # Overwrite the .bazelversion instead of using USE_BAZEL_VERSION so that Bazelisk
-          # still bootstraps Aspect CLI from configuration in .bazeliskrc. Aspect CLI will
-          # then use .bazelversion to determine which Bazel version to use.
-          echo "${{ matrix.bazel-version.version }}" > .bazelversion
+          bazelisk-cache: true
+          disk-cache: ${{ matrix.bazel-version.version }}-${{ matrix.os }}-smoke
+          repository-cache: true
 
       - name: bazel test //...
         shell: bash
@@ -121,5 +83,4 @@ jobs:
             --config=ci \
             --test_tag_filters=-skip-on-bazel${{ matrix.bazel-version.major }} \
             --build_tag_filters=-skip-on-bazel${{ matrix.bazel-version.major }} \
-            --enable_bzlmod=${{ matrix.bzlmod }} \
             //...
