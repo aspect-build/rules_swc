@@ -1,0 +1,3 @@
+import %workspace%/../../tools/preset.bazelrc
+
+common --experimental_output_paths=strip

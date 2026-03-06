@@ -350,9 +350,10 @@ def _swc_impl(ctx):
         # the source and config files as inputs and not complex dependency tree.
         #
         # This may be required for SWC issues with symlinks in the sandbox.
+        # TODO: investigate removal of no-sandbox and adding of supports-path-mapping once SWC stops resolving
+        # symlinks during transpilation, see https://github.com/swc-project/swc/pull/11585
         execution_requirements = {
             "no-sandbox": "1",
-            "supports-path-mapping": "1",
         }
 
         output_sources = []
