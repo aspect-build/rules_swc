@@ -80,7 +80,6 @@ jobs:
         shell: bash
         run: |
           bazel test \
-            --config=ci \
             --test_tag_filters=-skip-on-bazel${{ matrix.bazel-version.major }} \
             --build_tag_filters=-skip-on-bazel${{ matrix.bazel-version.major }} \
             //...

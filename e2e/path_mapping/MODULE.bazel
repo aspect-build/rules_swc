@@ -23,3 +23,6 @@ swc.toolchain(
     name = "swc",
     swc_version_from = "@npm//:@swc/core/resolved.json",
 )
+
+# For bazel 9 compat
+bazel_dep(name = "rules_nodejs", version = "6.5.0", dev_dependency = True)  # TODO: repo_name=None
