@@ -6,7 +6,7 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 VERSIONS_BZL="$SCRIPT_DIR/../swc/private/versions.bzl"
 
 releases=$(curl -sSL -H 'Accept: application/vnd.github.v3+json' https://api.github.com/repos/swc-project/swc/releases?per_page=20 | jq -f "$SCRIPT_DIR/filter.jq")
-versions=$(echo $releases | jq --raw-output 'keys[]')
+versions=$(echo $releases | jq --raw-output '[keys_unsorted[]] | sort_by(ltrimstr("v") | split(".") | map(tonumber)) | .[]')
 
 # Combine the new versions with the existing ones.
 # New versions should appear first, but existing content should overwrite new
