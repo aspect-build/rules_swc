@@ -376,19 +376,15 @@ def _swc_impl(ctx):
                 continue
 
             if _is_data_src(src_path):
-                # Copy data to the output directory.
-                # NOTE: assumes json must be resolved at runtime, see ts_project(resolve_json_module)
-                if ctx.attr.out_dir:
-                    out_path = "%s/%s" % (ctx.attr.out_dir if ctx.attr.out_dir else ".", src_path)
-                    out_file = ctx.actions.declare_file(out_path)
-                    copy_file_action(
-                        ctx = ctx,
-                        src = src,
-                        dst = out_file,
-                    )
-                    output_sources.append(out_file)
-                else:
-                    output_sources.append(src)
+                # Copy data to the output directory for behavior similar to tsc
+                out_path = _to_out_path(src_path, ctx.attr.out_dir, ctx.attr.root_dir)
+                out_file = ctx.actions.declare_file(out_path)
+                copy_file_action(
+                    ctx = ctx,
+                    src = src,
+                    dst = out_file,
+                )
+                output_sources.append(out_file)
                 continue
 
             js_out_path = _to_js_out(ctx.attr.default_ext, src_path, ctx.attr.allow_js, ctx.attr.out_dir, ctx.attr.root_dir, js_outs_relative)
