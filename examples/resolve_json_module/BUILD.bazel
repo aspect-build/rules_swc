@@ -33,9 +33,53 @@ js_test(
     entry_point = "index.js",
 )
 
+swc(
+    name = "ts-root_dir",
+    srcs = [
+        "src/data.json",
+        "src/index.ts",
+    ],
+    args = [
+        "--config-json",
+        """{"module": {"type": "commonjs"}}""",
+    ],
+    out_dir = "ts-root_dir",
+    root_dir = "src",
+)
+
+swc(
+    name = "ts-root_dir-out_dir",
+    srcs = [
+        "src/data.json",
+        "src/index.ts",
+    ],
+    args = [
+        "--config-json",
+        """{"module": {"type": "commonjs"}}""",
+    ],
+    out_dir = "ts-root_dir-out_dir",
+    root_dir = "src",
+)
+
 js_test(
     # Test that the json is available at runtime with an out_dir.
     name = "ts-with-json-out_dir",
     data = [":ts-out_dir"],
     entry_point = "ts-out_dir/index.js",
+)
+
+js_test(
+    # Test that the json is available alongside the compiled output when root_dir
+    # strips the source prefix (json must land at ts-root_dir/, not ts-root_dir/src/).
+    name = "ts-with-json-root_dir",
+    data = [":ts-root_dir"],
+    entry_point = "ts-root_dir/index.js",
+)
+
+js_test(
+    # Test that the json lands inside out_dir (not out_dir/src/) when both
+    # root_dir and out_dir are set.
+    name = "ts-with-json-root_dir-out_dir",
+    data = [":ts-root_dir-out_dir"],
+    entry_point = "ts-root_dir-out_dir/index.js",
 )
