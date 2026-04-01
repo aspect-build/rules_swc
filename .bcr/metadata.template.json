@@ -1,11 +1,6 @@
 {
   "maintainers": [
     {
-      "email": "alex@aspect.build",
-      "github": "alexeagle",
-      "name": "Alex Eagle"
-    },
-    {
       "email": "jason@aspect.build",
       "github": "jbedard",
       "name": "Jason Bedard"
