@@ -1,7 +1,7 @@
 "Internal implementation details"
 
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file_action")
-load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "COPY_FILE_TO_BIN_TOOLCHAINS")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "COPY_FILE_TO_BIN_TOOLCHAINS", "copy_file_to_bin_action")
 load("@aspect_bazel_lib//lib:platform_utils.bzl", "platform_utils")
 load("@aspect_rules_js//js:libs.bzl", "js_lib_helpers")
 load("@aspect_rules_js//js:providers.bzl", "js_info")
@@ -360,6 +360,10 @@ def _swc_impl(ctx):
 
         js_outs_relative = [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs]
 
+        # Keep srcs in the same tree as a generated swcrc so SWC's symlink-resolving
+        # `jsc.paths` resolver emits clean relative imports. See #325.
+        copy_srcs_to_bin = ctx.attr.swcrc and not ctx.file.swcrc.is_source
+
         for src in ctx.files.srcs:
             src_args = ctx.actions.args()
 
@@ -404,15 +408,17 @@ def _swc_impl(ctx):
                 dts_out = ctx.actions.declare_file(dts_out_path)
                 outputs.append(dts_out)
 
+            src_input = copy_file_to_bin_action(ctx, src) if copy_srcs_to_bin else src
+
             src_args.add("--out-file", js_out)
-            src_args.add(src)
+            src_args.add(src_input)
 
             output_sources.extend(outputs)
 
             _swc_action(
                 ctx,
                 swc_toolchain.swcinfo.swc_binary,
-                inputs = [src] + inputs,
+                inputs = [src_input] + inputs,
                 arguments = [
                     args,
                     src_args,
