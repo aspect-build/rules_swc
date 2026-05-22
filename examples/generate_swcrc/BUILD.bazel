@@ -1,4 +1,4 @@
-load("@aspect_bazel_lib//lib:testing.bzl", "assert_json_matches")
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_contains", "assert_json_matches")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//examples/generate_swcrc:tsconfig-to-swcconfig/package_json.bzl", tsconfig_to_swcconfig = "bin")
@@ -19,7 +19,10 @@ tsconfig_to_swcconfig.t2s(
 # Demonstrate that it works
 swc(
     name = "compile",
-    srcs = ["some.ts"],
+    srcs = glob([
+        "app/**",
+        "lib/**",
+    ]),
     swcrc = ".swcrc",
 )
 
@@ -30,4 +33,13 @@ assert_json_matches(
     file2 = "tsconfig.json",
     filter1 = ".jsc.target",
     filter2 = ".compilerOptions.target",
+)
+
+# Regression test for https://github.com/aspect-build/rules_swc/issues/325 — a generated
+# swcrc using `jsc.paths` should produce the same relative import as a swcrc in the source
+# tree, not an absolute path through the filesystem root via the execroot symlink.
+assert_contains(
+    name = "test_paths_import",
+    actual = "app/main.js",
+    expected = 'from "../lib/utils/utils.js"',
 )
