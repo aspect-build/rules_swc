@@ -23,7 +23,7 @@ permissions:
   contents: write
 jobs:
   release:
-    uses: bazel-contrib/.github/.github/workflows/release_ruleset.yaml@v7.2.2
+    uses: bazel-contrib/.github/.github/workflows/release_ruleset.yaml@9ed8d86404ac3214f80cfb02e49f44a1b28b17b0 # v7.2.2
     with:
       release_files: rules_swc-*.tar.gz
       prerelease: false
