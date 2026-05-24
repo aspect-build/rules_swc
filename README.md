@@ -1,5 +1,9 @@
 # Bazel rules for swc
 
+> [!NOTE]
+> This repository uses the [Aspect CLI](https://github.com/aspect-build/aspect-cli) for CI and local development.
+> See the [docs](https://docs.aspect.build/cli/overview) and [install instructions](https://docs.aspect.build/cli/install) to get started.
+
 SWC (<https://swc.rs/>) is a fast JavaScript compiler, written in Rust.
 It performs the same work as Babel among other things, but is 20x faster.
 
