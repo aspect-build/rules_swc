@@ -1,5 +1,4 @@
 bazel-*
-.bazelrc.user
 node_modules/
 .pnpm-*
 

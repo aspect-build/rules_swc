@@ -1,0 +1,69 @@
+name: CI - Aspect Workflows
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+    workflow_dispatch:
+
+permissions:
+    id-token: write
+
+env:
+    ASPECT_API_TOKEN: ${{ secrets.ASPECT_API_TOKEN }}
+    INSTALL_ASPECT_LAUNCHER_VERSION: 2026.21.36
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    buildifier:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - uses: bazel-contrib/setup-bazel@c5acdfb288317d0b5c0bbd7a396a3dc868bb0f86 # 0.19.0
+              with:
+                bazelisk-cache: true
+                disk-cache: ${{ github.workflow }}-buildifier
+                repository-cache: true
+                external-cache: true
+            - name: Buildifier
+              run: |
+                curl -fsSL https://install.aspect.build | bash -s -- "$INSTALL_ASPECT_LAUNCHER_VERSION"
+                aspect buildifier --task-key=buildifier
+    test:
+        name: test (${{ matrix.workspace.path }}, ${{ matrix.bazel.id }})
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                workspace:
+                - { path: ".", slug: "root" }
+                - { path: "e2e/smoke", slug: "e2e-smoke" }
+                - { path: "e2e/smoke_rjs3", slug: "e2e-smoke_rjs3" }
+                - { path: "e2e/path_mapping", slug: "e2e-path_mapping" }
+                bazel:
+                - { id: "bazel-7", version: "7.x", flags: "--bazel-flag=--test_tag_filters=-skip-on-bazel7 --bazel-flag=--build_tag_filters=-skip-on-bazel7" }
+                - { id: "bazel-7-no-bzlmod", version: "7.x", flags: "--bazel-flag=--noenable_bzlmod --bazel-flag=--test_tag_filters=-skip-on-bazel7 --bazel-flag=--build_tag_filters=-skip-on-bazel7" }
+                - { id: "bazel-8", version: "8.x", flags: "--bazel-flag=--test_tag_filters=-skip-on-bazel8 --bazel-flag=--build_tag_filters=-skip-on-bazel8" }
+                - { id: "bazel-9", version: "9.x", flags: "--bazel-flag=--test_tag_filters=-skip-on-bazel9 --bazel-flag=--build_tag_filters=-skip-on-bazel9" }
+                exclude:
+                - { workspace: { slug: "root" }, bazel: { id: "bazel-7-no-bzlmod" } }
+                - { workspace: { slug: "e2e-smoke_rjs3" }, bazel: { id: "bazel-7-no-bzlmod" } }
+        env:
+            USE_BAZEL_VERSION: ${{ matrix.bazel.version }}
+        steps:
+            - uses: actions/checkout@v6
+            - uses: bazel-contrib/setup-bazel@c5acdfb288317d0b5c0bbd7a396a3dc868bb0f86 # 0.19.0
+              with:
+                bazelisk-cache: true
+                disk-cache: ${{ github.workflow }}-test-${{ matrix.workspace.slug }}-${{ matrix.bazel.id }}
+                repository-cache: true
+                external-cache: true
+            - name: Test
+              working-directory: ${{ matrix.workspace.path }}
+              run: |
+                curl -fsSL https://install.aspect.build | bash -s -- "$INSTALL_ASPECT_LAUNCHER_VERSION"
+                aspect test --task-key=test-${{ matrix.workspace.slug }}-${{ matrix.bazel.id }} ${{ matrix.bazel.flags }} -- //...

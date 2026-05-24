@@ -1,15 +1,15 @@
 import %workspace%/tools/preset.bazelrc
 
-### YOUR PROJECT SPECIFIC OPTIONS GO HERE ###
+common --config=ruleset
 
 # Don't build protoc from the cc_binary, it's slow and spammy when cache miss
 common --per_file_copt=external/.*protobuf.*@--PROTOBUF_WAS_NOT_SUPPOSED_TO_BE_BUILT
 common --host_per_file_copt=external/.*protobuf.*@--PROTOBUF_WAS_NOT_SUPPOSED_TO_BE_BUILT
 
-common --config=ruleset
+# Build without the bytes
+common:ci --remote_download_outputs=minimal
+common:ci --nobuild_runfile_links
 
-# Load any settings & overrides specific to the current user.
-# This file should appear in `.gitignore` so that settings are not shared with team members. This
-# should be last statement in this config so the user configuration is able to overwrite flags from
-# this file. See https://bazel.build/configure/best-practices#bazelrc-file.
-try-import %workspace%/user.bazelrc
+# Override the preset's `--lockfile_mode=error` on CI since we don't
+# yet commit MODULE.bazel.lock — see .gitignore.
+common:ci --lockfile_mode=off
