@@ -1,0 +1,36 @@
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+load("//examples/source_map_support:defs.bzl", "js_test")
+
+swc(
+    name = "compile",
+    srcs = [
+        "a.ts",
+        "b.ts",
+    ],
+    swcrc = ".swcrc",
+)
+
+js_test(
+    name = "stack_trace_support_test",
+    data = [":compile"],
+    entry_point = ":a.js",
+    target_compatible_with = select({
+        # TODO(jbedard): fix CI failure, like
+        # https://github.com/aspect-build/rules_swc/actions/runs/4471322159/jobs/7856057314?pr=187
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
+)
+
+js_test(
+    name = "stack_trace_support_with_chdir_test",
+    chdir = "examples",
+    data = [":compile"],
+    entry_point = ":a.js",
+    target_compatible_with = select({
+        # TODO(jbedard): fix CI failure, like
+        # https://github.com/aspect-build/rules_swc/actions/runs/4471322159/jobs/7856057314?pr=187
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
+)
