@@ -33,7 +33,6 @@ bazel_dep(name = "rules_nodejs", version = "6.7.4", dev_dependency = True)
 bazel_dep(name = "rules_shell", version = "0.6.1", dev_dependency = True)
 bazel_dep(name = "bazelrc-preset.bzl", version = "1.9.2", dev_dependency = True)
 bazel_dep(name = "buildifier_prebuilt", version = "6.4.0", dev_dependency = True)
-bazel_dep(name = "aspect_rules_lint", version = "1.13.0", dev_dependency = True)
 
 # Testing
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
@@ -44,8 +43,3 @@ npm.npm_translate_lock(
     verify_node_modules_ignored = "//:.bazelignore",
 )
 use_repo(npm, "npm")
-
-# aspect_rules_lint transitively pulls in rules_go 0.42.0, which references
-# the legacy global `CcInfo` symbol that Bazel 9 removed. Pin to a current
-# rules_go that loads CcInfo from a load statement.
-bazel_dep(name = "rules_go", version = "0.60.0", dev_dependency = True)
