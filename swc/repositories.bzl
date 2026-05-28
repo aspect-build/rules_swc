@@ -75,7 +75,8 @@ def determine_version(rctx, swc_version, swc_version_from):
 
     # Allow use of "resolved.json", see https://github.com/aspect-build/rules_js/pull/1221
     if "$schema" in p.keys() and p["$schema"] == "https://docs.aspect.build/rules/aspect_rules_js/docs/npm_translate_lock":
-        v = p["version"]
+        # PNPM encodes peer dependencies in the version string that we need to strip out, e.g. "1.15.33(@swc/helpers@0.5.21)"
+        v = p["version"].split("(")[0]
     elif "devDependencies" in p.keys() and _NPM_PKG in p["devDependencies"]:
         v = p["devDependencies"][_NPM_PKG]
     elif "dependencies" in p.keys() and _NPM_PKG in p["dependencies"]:
