@@ -108,9 +108,15 @@ def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcr
     dts_outs = []
 
     if not output_dir:
-        js_outs = _swc_lib.calculate_js_outs(default_ext, srcs, allow_js, out_dir, root_dir)
-        map_outs = _swc_lib.calculate_map_outs(default_ext, srcs, source_maps, allow_js, out_dir, root_dir)
-        dts_outs = _swc_lib.calculate_dts_outs(srcs, kwargs.get("emit_isolated_dts", False), allow_js, out_dir, root_dir)
+        js_outs, map_outs, dts_outs = _swc_lib.calculate_outs(
+            default_ext,
+            srcs,
+            source_maps,
+            kwargs.get("emit_isolated_dts", False),
+            allow_js,
+            out_dir,
+            root_dir,
+        )
 
     swc_compile(
         name = name,
