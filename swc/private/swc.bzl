@@ -160,15 +160,15 @@ _MAP_OUT_EXTS = {
     ".cjs": ".cjs.map",
 }
 
-# If no default_ext was provided allow customizing the output extension via js_outs.
+# Allow customizing the output extension via the declared js_outs.
 # See https://github.com/aspect-build/rules_swc/commit/edc6421cf42a7174bcc38e91b0812abd0bfb0f09
 # TODO(3.0): remove this feature in favour of standard logic above.
-def _match_custom_js_out(js_out, js_outs):
+def _match_custom_js_out(js_out, custom_js_outs):
     alt_js_out = None
 
     # Check if a custom out was requested with a potentially different extension
     no_ext = _remove_extension(js_out)
-    for maybe_out in js_outs:
+    for maybe_out in custom_js_outs:
         # Always use an exact match if it exists
         if maybe_out == js_out:
             return js_out
@@ -181,8 +181,19 @@ def _match_custom_js_out(js_out, js_outs):
     # Return the matched custom out if it exists otherwise fallback to the default
     return alt_js_out or js_out
 
-def _to_outs(default_ext, src, source_maps, emit_isolated_dts, allow_js, out_dir, root_dir, js_outs = []):
+def _to_outs(default_ext, src, source_maps, emit_isolated_dts, allow_js, out_dir, root_dir, custom_js_outs = None):
     """Calculate the output paths for a src, classifying the src only once.
+
+    Args:
+        default_ext: output extension for sources whose extension does not dictate one
+        src: package-relative path of the source file
+        source_maps: value of the source_maps attribute
+        emit_isolated_dts: whether .d.ts outputs are produced
+        allow_js: whether .js/.mjs/.cjs sources are transpiled
+        out_dir: output directory prefix, if any
+        root_dir: input directory to strip, if any
+        custom_js_outs: declared js_outs that may override the predicted output
+            extension, or None if the override feature is inactive. See _swc_impl.
 
     Returns:
         None if the src is not transpiled, otherwise a (js_out, map_out, dts_out)
@@ -197,9 +208,8 @@ def _to_outs(default_ext, src, source_maps, emit_isolated_dts, allow_js, out_dir
 
     js_out = out_base + _JS_OUT_EXTS.get(src_ext, default_ext if default_ext else ".js")
 
-    # If a default extension was specified then use js_out with the defaults
-    if not default_ext:
-        js_out = _match_custom_js_out(js_out, js_outs)
+    if custom_js_outs != None:
+        js_out = _match_custom_js_out(js_out, custom_js_outs)
 
     map_out = None
     if source_maps != "false" and source_maps != "inline":
@@ -359,7 +369,13 @@ def _swc_impl(ctx):
 
         output_sources = []
 
-        js_outs_relative = [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs]
+        # Declared js_outs may override the predicted output extensions, but only
+        # when no default_ext is set: with a default_ext the output extension is
+        # fully determined by the source extension. Leave None (feature inactive)
+        # otherwise, to skip both the computation here and the matching in _to_outs.
+        custom_js_outs = None
+        if not ctx.attr.default_ext:
+            custom_js_outs = [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs]
 
         # Keep srcs in the same tree as a generated swcrc so SWC's symlink-resolving
         # `jsc.paths` resolver emits clean relative imports. See #325.
@@ -394,7 +410,7 @@ def _swc_impl(ctx):
                 output_sources.append(out_file)
                 continue
 
-            outs = _to_outs(ctx.attr.default_ext, src_path, ctx.attr.source_maps, ctx.attr.emit_isolated_dts, ctx.attr.allow_js, ctx.attr.out_dir, ctx.attr.root_dir, js_outs_relative)
+            outs = _to_outs(ctx.attr.default_ext, src_path, ctx.attr.source_maps, ctx.attr.emit_isolated_dts, ctx.attr.allow_js, ctx.attr.out_dir, ctx.attr.root_dir, custom_js_outs)
             if not outs:
                 # This source file is not a supported src
                 continue
