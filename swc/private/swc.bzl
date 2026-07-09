@@ -226,26 +226,36 @@ def _calculate_outs(default_ext, srcs, source_maps, emit_isolated_dts, allow_js,
             dts_outs.append(outs[2])
     return js_outs, map_outs, dts_outs
 
-def _calculate_source_file(ctx, src):
-    if not (ctx.attr.out_dir or ctx.attr.root_dir):
+def _calculate_source_file(ctx, src, dirname_cache):
+    # "." is equivalent to unset: it changes no output paths, see _to_out_path.
+    out_dir = ctx.attr.out_dir if ctx.attr.out_dir != "." else ""
+    root_dir = ctx.attr.root_dir if ctx.attr.root_dir != "." else ""
+    if not (out_dir or root_dir):
         return src.basename
 
-    src_pkg = src.dirname[len(ctx.label.package) + 1:] if ctx.label.package else ""
-    s = ""
+    # The relative prefix depends only on the src directory; cache it since
+    # targets commonly have many srcs in the same directory.
+    prefix = dirname_cache.get(src.dirname)
+    if prefix == None:
+        src_pkg = src.dirname[len(ctx.label.package) + 1:] if ctx.label.package else ""
+        s = ""
 
-    # out of src subdir
-    if src_pkg:
-        src_pkg_depth = len(src_pkg.split("/"))
-        root_dir_depth = len(ctx.attr.root_dir.split("/")) if ctx.attr.root_dir and ctx.attr.root_dir != "." else 0
-        effective_depth = max(0, src_pkg_depth - root_dir_depth)
-        s = paths.join(s, "/".join([".." for _ in range(effective_depth)]))
+        # out of src subdir
+        if src_pkg:
+            src_pkg_depth = len(src_pkg.split("/"))
+            root_dir_depth = len(root_dir.split("/")) if root_dir else 0
+            effective_depth = max(0, src_pkg_depth - root_dir_depth)
+            s = paths.join(s, "/".join([".."] * effective_depth))
 
-    # out of the out dir
-    if ctx.attr.out_dir:
-        s = paths.join(s, "/".join([".." for _ in ctx.attr.out_dir.split("/")]))
+        # out of the out dir
+        if out_dir:
+            s = paths.join(s, "/".join([".."] * len(out_dir.split("/"))))
 
-    # back into the src dir, including into the root_dir
-    return paths.join(s, src_pkg, src.basename)
+        # back into the src dir, including into the root_dir
+        prefix = paths.join(s, src_pkg)
+        dirname_cache[src.dirname] = prefix
+
+    return paths.join(prefix, src.basename) if prefix else src.basename
 
 def _swc_action(ctx, swc_binary, execution_requirements, **kwargs):
     ctx.actions.run(
@@ -355,11 +365,13 @@ def _swc_impl(ctx):
         # `jsc.paths` resolver emits clean relative imports. See #325.
         copy_srcs_to_bin = ctx.attr.swcrc and not ctx.file.swcrc.is_source
 
+        source_file_dirname_cache = {}
+
         for src in ctx.files.srcs:
             src_args = ctx.actions.args()
 
             if ctx.attr.source_maps != "false":
-                src_args.add("--source-file-name", _calculate_source_file(ctx, src))
+                src_args.add("--source-file-name", _calculate_source_file(ctx, src, source_file_dirname_cache))
 
             src_path = _relative_to_package(src.path, ctx)
 
