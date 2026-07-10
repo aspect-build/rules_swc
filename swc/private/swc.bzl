@@ -105,14 +105,18 @@ Can be empty, meaning no dts files should be produced.
 If non-empty, there should be one for each entry in srcs."""),
 }
 
+_TYPINGS_EXTS = (".d.ts", ".d.mts", ".d.cts")
+_JS_EXTS = (".mjs", ".cjs", ".js", ".jsx")
+_TS_EXTS = (".ts", ".mts", ".cts", ".tsx")
+
 def _is_ts_src(src):
-    return src.endswith(".ts") or src.endswith(".mts") or src.endswith(".cts") or src.endswith(".tsx")
+    return src.endswith(_TS_EXTS)
 
 def _is_typings_src(src):
-    return src.endswith(".d.ts") or src.endswith(".d.mts") or src.endswith(".d.cts")
+    return src.endswith(_TYPINGS_EXTS)
 
 def _is_js_src(src):
-    return src.endswith(".mjs") or src.endswith(".cjs") or src.endswith(".js") or src.endswith(".jsx")
+    return src.endswith(_JS_EXTS)
 
 def _is_supported_src(src, allow_js):
     return _is_ts_src(src) or (allow_js and _is_js_src(src))
