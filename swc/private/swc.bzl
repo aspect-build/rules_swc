@@ -388,11 +388,6 @@ def _swc_impl(ctx):
         source_file_dirname_cache = {}
 
         for src in ctx.files.srcs:
-            src_args = ctx.actions.args()
-
-            if ctx.attr.source_maps != "false":
-                src_args.add("--source-file-name", _calculate_source_file(ctx, src, source_file_dirname_cache))
-
             src_path = _relative_to_package(src.path, ctx)
 
             # This source file is a typings file and not transpiled
@@ -432,6 +427,11 @@ def _swc_impl(ctx):
                 outputs.append(dts_out)
 
             src_input = copy_file_to_bin_action(ctx, src) if copy_srcs_to_bin else src
+
+            src_args = ctx.actions.args()
+
+            if ctx.attr.source_maps != "false":
+                src_args.add("--source-file-name", _calculate_source_file(ctx, src, source_file_dirname_cache))
 
             src_args.add("--out-file", js_out)
             src_args.add(src_input)
