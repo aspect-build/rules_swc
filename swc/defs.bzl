@@ -32,6 +32,25 @@ for example to set your own output labels for `js_outs`.
     toolchains = _swc_lib.toolchains,
 )
 
+def _config_resolves_paths(config):
+    """Whether a configuration dict uses swc's path-resolution options.
+
+    swc anchors a relative `jsc.baseUrl` at the location of the config file it
+    was loaded from. Since a config dict is written to a generated file in the
+    output tree, srcs must be copied to the output tree to share a tree with
+    it, otherwise the `jsc.paths` resolver emits imports routed through the
+    filesystem root. Configs without these options resolve no paths at all
+    and their srcs can be transpiled in place.
+
+    Args:
+        config: an swcrc configuration dict
+
+    Returns:
+        True if the config resolves paths relative to its own location
+    """
+    jsc = config.get("jsc", {})
+    return "baseUrl" in jsc or "paths" in jsc
+
 def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcrc = None, source_maps = False, out_dir = None, root_dir = None, default_ext = ".js", allow_js = True, **kwargs):
     """Execute the SWC compiler
 
@@ -84,6 +103,10 @@ def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcr
         if file_exists(to_label(":.swcrc")):
             swcrc = to_label(":.swcrc")
     elif type(swcrc) == type(dict()):
+        # Skip the per-src copy to bin unless the config requires the srcs to
+        # share a tree with the generated config file.
+        kwargs.setdefault("copy_srcs_to_bin", _config_resolves_paths(swcrc))
+
         rcfile = "{}_swcrc.json".format(name)
         write_file(
             name = "_gen_swcrc_" + name,

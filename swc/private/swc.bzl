@@ -88,6 +88,17 @@ or source file extensions.""",
 If False, only TypeScript sources will be transpiled.""",
         default = True,
     ),
+    "copy_srcs_to_bin": attr.bool(
+        doc = """Whether to copy srcs to the output tree when the swcrc config is a generated file.
+
+The copy keeps srcs in the same tree as the config, as required by a `jsc.baseUrl`
+anchored at the config location, at the cost of one extra action per source file.
+
+Set to False to transpile srcs in place. This is always safe when the config does not
+use `jsc.baseUrl`/`jsc.paths`; when it does, the generated config must anchor
+`jsc.baseUrl` back at the source tree, e.g. `"../../../../../<package path>"`.""",
+        default = True,
+    ),
 }
 
 _outputs = {
@@ -308,6 +319,10 @@ def _swc_impl(ctx):
         args.add("--config-file", ctx.file.swcrc)
         inputs.append(ctx.file.swcrc)
 
+    # Rule-supplied config options, merged into a single --config-json below
+    # since swcx only applies the last --config-json argument.
+    config = None
+
     # Add user specified arguments *before* rule supplied arguments
     args.add_all(ctx.attr.args)
 
@@ -317,16 +332,12 @@ def _swc_impl(ctx):
 
     if ctx.attr.plugins:
         plugin_cache = [ctx.actions.declare_directory("{}_plugin_cache".format(ctx.label.name))]
-        plugin_args = ["--config-json", json.encode({
-            "jsc": {
-                "experimental": {
-                    # TODO: .path breaks 'supports-path-mapping'
-                    "cacheRoot": plugin_cache[0].path,
-                    # TODO: .path breaks 'supports-path-mapping'
-                    "plugins": [["./" + p[DefaultInfo].files.to_list()[0].path, json.decode(p[SwcPluginConfigInfo].config)] for p in ctx.attr.plugins],
-                },
-            },
-        })]
+        plugins_config = {
+            # TODO: .path breaks 'supports-path-mapping'
+            "cacheRoot": plugin_cache[0].path,
+            # TODO: .path breaks 'supports-path-mapping'
+            "plugins": [["./" + p[DefaultInfo].files.to_list()[0].path, json.decode(p[SwcPluginConfigInfo].config)] for p in ctx.attr.plugins],
+        }
 
         null_file = "NUL" if platform_utils.host_platform_is_windows() else "/dev/null"
 
@@ -334,7 +345,7 @@ def _swc_impl(ctx):
         _swc_action(
             ctx,
             swc_toolchain.swcinfo.swc_binary,
-            arguments = ["compile"] + plugin_args + ["--source-maps", "false", "--out-file", null_file, null_file],
+            arguments = ["compile", "--config-json", json.encode({"jsc": {"experimental": plugins_config}}), "--source-maps", "false", "--out-file", null_file, null_file],
             inputs = inputs + ctx.files.plugins,
             outputs = plugin_cache,
             execution_requirements = {"supports-path-mapping": "1"},
@@ -342,16 +353,18 @@ def _swc_impl(ctx):
 
         inputs.extend(plugin_cache)
         inputs.extend(ctx.files.plugins)
-        args.add_all(plugin_args)
+
+        if config == None:
+            config = {}
+        config.setdefault("jsc", {}).setdefault("experimental", {}).update(plugins_config)
 
     if ctx.attr.emit_isolated_dts:
-        args.add_all(["--config-json", json.encode({
-            "jsc": {
-                "experimental": {
-                    "emitIsolatedDts": True,
-                },
-            },
-        })])
+        if config == None:
+            config = {}
+        config.setdefault("jsc", {}).setdefault("experimental", {})["emitIsolatedDts"] = True
+
+    if config != None:
+        args.add_all(["--config-json", json.encode(config)])
 
     if ctx.attr.output_dir:
         if len(ctx.attr.srcs) != 1:
@@ -399,9 +412,9 @@ def _swc_impl(ctx):
         if not ctx.attr.default_ext:
             custom_js_outs = [_relative_to_package(f, ctx, dir_cache) for f in ctx.outputs.js_outs]
 
-        # Keep srcs in the same tree as a generated swcrc so SWC's symlink-resolving
-        # `jsc.paths` resolver emits clean relative imports. See #325.
-        copy_srcs_to_bin = ctx.attr.swcrc and not ctx.file.swcrc.is_source
+        # Keep srcs in the same tree as a generated swcrc so its `jsc.baseUrl`/
+        # `jsc.paths` cover them, see the copy_srcs_to_bin docs.
+        copy_srcs_to_bin = ctx.attr.copy_srcs_to_bin and ctx.attr.swcrc and not ctx.file.swcrc.is_source
 
         source_file_dirname_cache = {}
 

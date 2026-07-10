@@ -3,7 +3,7 @@
 Note that this example also depends on the setup in /WORKSPACE at the root of this repository.
 """
 
-load("@aspect_bazel_lib//lib:testing.bzl", "assert_json_matches")
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_contains", "assert_json_matches")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load("@npm//examples:typescript/package_json.bzl", "bin")
@@ -12,6 +12,30 @@ load("@npm//examples:typescript/package_json.bzl", "bin")
 swc(
     name = "compile",
     srcs = glob(["**/*.ts"]),
+)
+
+# A relative jsc.baseUrl must also work when the config is a dict: swc anchors
+# a relative baseUrl at the config file location, which does not exist for
+# configuration passed on the command line.
+swc(
+    name = "compile_dict",
+    srcs = glob(["**/*.ts"]),
+    out_dir = "dict",
+    swcrc = {
+        "jsc": {
+            "parser": {"syntax": "typescript"},
+            "target": "es2021",
+            "baseUrl": "./src",
+            "paths": {"@modules/*": ["./modules/*"]},
+        },
+        "module": {"type": "commonjs"},
+    },
+)
+
+assert_contains(
+    name = "test_dict_paths",
+    actual = "dict/src/index.js",
+    expected = 'require("./modules/moduleA")',
 )
 
 # Produce a folder of the transpiled outputs of `tsc`.

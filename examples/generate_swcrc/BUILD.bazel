@@ -1,3 +1,4 @@
+load("@aspect_bazel_lib//lib:jq.bzl", "jq")
 load("@aspect_bazel_lib//lib:testing.bzl", "assert_contains", "assert_json_matches")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load("@npm//:defs.bzl", "npm_link_all_packages")
@@ -41,5 +42,32 @@ assert_json_matches(
 assert_contains(
     name = "test_paths_import",
     actual = "app/main.js",
+    expected = 'from "../lib/utils/utils.js"',
+)
+
+# With copy_srcs_to_bin = False, srcs are transpiled in place (no per-src copy action).
+# A `jsc.baseUrl` is resolved relative to the generated swcrc's output location, so it
+# must step over bazel-out/<config>/bin and the package path back into the source tree.
+jq(
+    name = "write_swcrc_execroot",
+    srcs = [":write_swcrc"],
+    out = ".swcrc_execroot",
+    filter = '.jsc.baseUrl = "../../../../../examples/generate_swcrc"',
+)
+
+swc(
+    name = "compile_no_copy",
+    srcs = glob([
+        "app/**",
+        "lib/**",
+    ]),
+    copy_srcs_to_bin = False,
+    out_dir = "no_copy",
+    swcrc = ".swcrc_execroot",
+)
+
+assert_contains(
+    name = "test_paths_import_no_copy",
+    actual = "no_copy/app/main.js",
     expected = 'from "../lib/utils/utils.js"',
 )
