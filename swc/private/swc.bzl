@@ -126,13 +126,28 @@ def _is_data_src(src):
 
 # TODO: vendored from rules_ts - bazel_lib should provide this?
 # https://github.com/aspect-build/rules_ts/blob/v3.2.1/ts/private/ts_lib.bzl#L194-L200
-def _relative_to_package(path, ctx):
-    path = path.removeprefix(ctx.bin_dir.path + "/")
-    path = path.removeprefix("external/")
-    path = path.removeprefix(ctx.label.workspace_name + "/")
-    if ctx.label.package:
-        path = path.removeprefix(ctx.label.package + "/")
-    return path
+def _relative_to_package(file, ctx, dir_cache):
+    """Package-relative path of a File.
+
+    The directory prefix depends only on the file's directory, so it is cached
+    in the caller-provided dir_cache since targets commonly have many files in
+    the same directory.
+    """
+    dirname = file.dirname
+    prefix = dir_cache.get(dirname)
+    if prefix == None:
+        # The trailing "/" makes each prefix strip behave exactly as it does on
+        # a full file path, e.g. stripping a directory equal to the package to
+        # the empty prefix.
+        path = dirname + "/" if dirname else ""
+        path = path.removeprefix(ctx.bin_dir.path + "/")
+        path = path.removeprefix("external/")
+        path = path.removeprefix(ctx.label.workspace_name + "/")
+        if ctx.label.package:
+            path = path.removeprefix(ctx.label.package + "/")
+        prefix = path
+        dir_cache[dirname] = prefix
+    return prefix + file.basename
 
 # TODO: vendored from rules_ts - bazel_lib should provide this?
 # https://github.com/aspect-build/rules_ts/blob/v3.2.1/ts/private/ts_lib.bzl#L220-L226
@@ -373,13 +388,16 @@ def _swc_impl(ctx):
 
         output_sources = []
 
+        # Shared cache of package-relative directory prefixes, see _relative_to_package.
+        dir_cache = {}
+
         # Declared js_outs may override the predicted output extensions, but only
         # when no default_ext is set: with a default_ext the output extension is
         # fully determined by the source extension. Leave None (feature inactive)
         # otherwise, to skip both the computation here and the matching in _to_outs.
         custom_js_outs = None
         if not ctx.attr.default_ext:
-            custom_js_outs = [_relative_to_package(f.path, ctx) for f in ctx.outputs.js_outs]
+            custom_js_outs = [_relative_to_package(f, ctx, dir_cache) for f in ctx.outputs.js_outs]
 
         # Keep srcs in the same tree as a generated swcrc so SWC's symlink-resolving
         # `jsc.paths` resolver emits clean relative imports. See #325.
@@ -388,7 +406,7 @@ def _swc_impl(ctx):
         source_file_dirname_cache = {}
 
         for src in ctx.files.srcs:
-            src_path = _relative_to_package(src.path, ctx)
+            src_path = _relative_to_package(src, ctx, dir_cache)
 
             # This source file is a typings file and not transpiled
             if _is_typings_src(src_path):
