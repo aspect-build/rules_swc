@@ -5,6 +5,7 @@ See https://github.com/swc-project/plugins
 
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_bazel_lib//lib:directory_path.bzl", "directory_path")
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_contains")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc", "swc_plugin")
 load("@npm//:defs.bzl", "npm_link_all_packages")
@@ -102,4 +103,22 @@ write_source_files(
         "expected_rc.js_": ":rc/in.js",
         "expected_rcdict.js_": ":rcdict/in.js",
     },
+)
+
+# Regression test: plugins combined with other rule-supplied configuration
+# (here emit_isolated_dts) must not clobber each other. swcx does not merge
+# repeated --config-json arguments — the last one silently wins — so the rule
+# must pass all of its configuration in a single --config-json.
+swc(
+    name = "plugin_with_dts",
+    srcs = ["dts.ts"],
+    emit_isolated_dts = True,
+    out_dir = "plugin_with_dts",
+    plugins = [":npm_plugin"],
+)
+
+assert_contains(
+    name = "test_plugin_with_dts",
+    actual = "plugin_with_dts/dts.js",
+    expected = 'from "lodash/map"',
 )
