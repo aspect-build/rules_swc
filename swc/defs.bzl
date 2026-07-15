@@ -84,7 +84,6 @@ def swc(name, srcs, args = [], data = [], plugins = [], output_dir = False, swcr
         if file_exists(to_label(":.swcrc")):
             swcrc = to_label(":.swcrc")
     elif type(swcrc) == type(dict()):
-        swcrc.setdefault("sourceMaps", source_maps)
         rcfile = "{}_swcrc.json".format(name)
         write_file(
             name = "_gen_swcrc_" + name,
