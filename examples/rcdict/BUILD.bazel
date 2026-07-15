@@ -1,5 +1,6 @@
 "Showcases how to specify the SWC configuration file as a dict"
 
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_contains")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 
@@ -31,4 +32,24 @@ write_source_files(
         "expected_es5.js": ":es5/in.js",
         "expected_es2015.js": ":es2015/in.js",
     },
+)
+
+# The source_maps attribute alone drives source map emission; a dict config
+# does not need a sourceMaps entry.
+swc(
+    name = "es5_maps",
+    srcs = ["in.ts"],
+    out_dir = "es5_maps",
+    source_maps = True,
+    swcrc = {
+        "jsc": {
+            "target": "es5",
+        },
+    },
+)
+
+assert_contains(
+    name = "test_maps",
+    actual = "es5_maps/in.js",
+    expected = "//# sourceMappingURL=in.js.map",
 )
