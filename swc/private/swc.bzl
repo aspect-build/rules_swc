@@ -5,7 +5,6 @@ load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "COPY_FILE_TO_BIN_TOOLCHAINS", "c
 load("@aspect_bazel_lib//lib:platform_utils.bzl", "platform_utils")
 load("@aspect_rules_js//js:libs.bzl", "js_lib_helpers")
 load("@aspect_rules_js//js:providers.bzl", "js_info")
-load("@bazel_skylib//lib:paths.bzl", "paths")
 load("//swc:providers.bzl", "SwcPluginConfigInfo")
 
 _attrs = {
@@ -267,24 +266,25 @@ def _calculate_source_file(ctx, src, dirname_cache):
     prefix = dirname_cache.get(src.dirname)
     if prefix == None:
         src_pkg = src.dirname[len(ctx.label.package) + 1:] if ctx.label.package else ""
-        s = ""
+        segments = []
 
         # out of src subdir
         if src_pkg:
             src_pkg_depth = len(src_pkg.split("/"))
             root_dir_depth = len(root_dir.split("/")) if root_dir else 0
-            effective_depth = max(0, src_pkg_depth - root_dir_depth)
-            s = paths.join(s, "/".join([".."] * effective_depth))
+            segments += [".."] * max(0, src_pkg_depth - root_dir_depth)
 
         # out of the out dir
         if out_dir:
-            s = paths.join(s, "/".join([".."] * len(out_dir.split("/"))))
+            segments += [".."] * len(out_dir.split("/"))
 
         # back into the src dir, including into the root_dir
-        prefix = paths.join(s, src_pkg)
+        if src_pkg:
+            segments.append(src_pkg)
+        prefix = "/".join(segments)
         dirname_cache[src.dirname] = prefix
 
-    return paths.join(prefix, src.basename) if prefix else src.basename
+    return prefix + "/" + src.basename if prefix else src.basename
 
 def _swc_action(ctx, swc_binary, execution_requirements, **kwargs):
     ctx.actions.run(
