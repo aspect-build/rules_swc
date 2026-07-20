@@ -2,6 +2,34 @@
 
 # Versions should be descending order so TOOL_VERSIONS[0] is the latest version.
 TOOL_VERSIONS = {
+    "v1.15.46": {
+        "darwin-arm64": "sha384-AUV1QxDBC0c2r2aodkGaXR3yenkL+0c9bza3AhDyVBGq5YGtnxMMY9PDbe4rNbbE",
+        "darwin-x64": "sha384-wqjo3jc1vU9prZbyKCxSFaZKyj5y3Yetzya27xX+aFKQm9mjCqNi5DAoTDiZeuab",
+        "linux-arm-gnueabihf": "sha384-VJu+PVUWMEnTvWQpKtwW0cIdQmqZ2j2A9sgnt07Wb9IfUblD1rg2KE4L6eLLmGQ8",
+        "linux-arm64-gnu": "sha384-81yl5KdFlxgN5lYvXkdoReHiaXUugMmZ48EBA3zSAVdgCZIy3vkFP0+PhLu23ZpW",
+        "linux-arm64-musl": "sha384-e4VNEi+0Fvh7t5jJurrwRnB3UkX2ergyTOpe1Gdsz9DH9VHf7sjJwcX+OdU1HIQy",
+        "linux-ppc64-gnu": "sha384-MaUc9TEdURrBxAAVokHFzvOJVMAkrOXR7mZP3/26/S7LlH0mA2wf0j9WR4zIno7+",
+        "linux-s390x-gnu": "sha384-rWO/NoXeZ1lTNc8n69vIAcBU1uQBm3tceiwYCoakvg0loiYcZpoceNrKQ5ygwYCq",
+        "linux-x64-gnu": "sha384-3lYGEyxbbq8guriurkb4zW3BNAPEC0AJjbpy51ETNV04+D+rw7ADAStevlI7+uRO",
+        "linux-x64-musl": "sha384-Z01TO+OqYF9PyfwQ8sm1uqOcy0KD2A3kKJcdmuCc68+KmivirpA8b9v+uabelkhO",
+        "win32-arm64-msvc": "sha384-h4Sgr4h0zH5Fe/9+a+M1436E0+u1H26ouxFqL0u7cHadMvQduVO3MH+HohHnihNy",
+        "win32-ia32-msvc": "sha384-CpAeC/tGNGgc/ILRmydAU29Rx+6xETkwl82eOMXPM6ExvnLeP7xmaM/z9xbN0W+0",
+        "win32-x64-msvc": "sha384-QYOLRDCcU5PA+6v+aP0xPu9iJOkWaOXtA9QxytH/vtvUiowNz8Ro2sFT8+DtdLM5",
+    },
+    "v1.15.43": {
+        "darwin-arm64": "sha384-JLyeHGhEHXWG+pszEtEdh9zW+tsSxAZutKgUXRpamv/tG1VxR9zEHpW7UvHta+Sk",
+        "darwin-x64": "sha384-3FrLo74Y3RXufDFq9COxZtlJooKFGRdX/JEcGXmYfvnK29SH/iDltoRJAuNZ3yAm",
+        "linux-arm-gnueabihf": "sha384-1DDTtbCWiqyo/fsGaUwJ9iT9vpuUEURYVy/DBFcuJJv3+L55rVlmtje5Gfg5Mhan",
+        "linux-arm64-gnu": "sha384-4NxKp5mxmToSIGpTnvENa19uGdIQt5PjxCzvuvPmfvNFUAvopNSlodhTUX0tpAlm",
+        "linux-arm64-musl": "sha384-YV07KJfDGP0mX4D9axCsFSCNWl6naJyTWUzfQUljLrbQs8tCSjkgdrKbBcBEmn3p",
+        "linux-ppc64-gnu": "sha384-l06pOxLu9XnzeA4i+n1K/oIvJY2+HC85PotPCL77za0EmtibBug/yn5BT6ZCU7rj",
+        "linux-s390x-gnu": "sha384-yifmXufSpVLRCLFvfXPECU4SAABRSBlPEpPs32C8iJbQDeHJdxVQYF4RkssVGDBo",
+        "linux-x64-gnu": "sha384-wUma3flH2WR48nN7AULLiFpFfdAghbx9yNbbu6kgabAr+UHJzZG68PA/Q/h4Z2WL",
+        "linux-x64-musl": "sha384-FMOXSqDD1G87y8Ate+yKi2K2QTkQndz1PiZ6eD01RaKm+NrMN8qCr5tCr7SDKRtd",
+        "win32-arm64-msvc": "sha384-dzdPKxQpLCiHDWJLjo+pcGPd1X1LBpj47qIpNHe4ShsohiKE+MMgPUzjTbeozK5t",
+        "win32-ia32-msvc": "sha384-l1dVZmloWKKM8/jb1UnW2WxSz8twnuVl7HAJIErlxfvrKiP54oSCTDFVBhdRLMU6",
+        "win32-x64-msvc": "sha384-ylu7Q9DoVHb2nDW+uFd3e/v9Oa5olqQ+9BjCkk8IcRF0lGpNg+iEIBF7GfUo+czW",
+    },
     "v1.15.41": {
         "darwin-arm64": "sha384-RV1D9NDxKfrHBHcjFkgQ3Btpru7BA+2LZg9nUEt0WJrW5r5M+vpVSjQvNE/k68uX",
         "darwin-x64": "sha384-uV8iVsQxSxjF1bvGfO/hlpOSFJmp8CDvChPotxt3pEj39C5d979VhKHBj0LSoy7+",
