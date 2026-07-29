@@ -1,24 +1,23 @@
 #!/usr/bin/env bash
 set -o errexit
 
-dir="genrule"
-if $1; then
-  dir="genrule/$1"
+# Without args the loop below would assert nothing and pass vacuously.
+if [ "$#" -eq 0 ]; then
+  echo "expected at least one <js output path>=<expected sources entry> arg" >&2
+  exit 1
 fi
 
 cd "$TEST_SRCDIR/$TEST_WORKSPACE/$(dirname $TEST_TARGET)"
 
-grep "export var a" $dir/a.js
-grep "sourceMappingURL=a.js.map" $dir/a.js
-grep -v --fixed-strings '"sourceRoot"' $dir/a.js.map
-grep --fixed-strings '"sources":["a.ts"]' $dir/a.js.map
+# Each arg is <js output path>=<expected sources entry>, the output path being
+# relative to the genrule package.
+for pair in "$@"; do
+  js="genrule/${pair%%=*}"
+  src="${pair#*=}"
+  name=$(basename "$js" .js)
 
-grep "export var b" $dir/b.js
-grep "sourceMappingURL=b.js.map" $dir/b.js
-grep -v --fixed-strings '"sourceRoot"' $dir/b.js.map
-grep --fixed-strings '"sources":["b.ts"]' $dir/b.js.map
-
-grep "export var c" $dir/sub/c.js
-grep "sourceMappingURL=c.js.map" $dir/sub/c.js
-grep -v --fixed-strings '"sourceRoot"' $dir/sub/c.js.map
-grep --fixed-strings '"sources":["c.ts"]' $dir/sub/c.js.map
+  grep "export var $name" "$js"
+  grep "sourceMappingURL=$name.js.map" "$js"
+  grep -v --fixed-strings '"sourceRoot"' "$js.map"
+  grep --fixed-strings "\"sources\":[\"$src\"]" "$js.map"
+done
