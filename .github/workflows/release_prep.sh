@@ -9,7 +9,6 @@ TAG=$1
 PREFIX="rules_swc-${TAG:1}"
 ARCHIVE="rules_swc-$TAG.tar.gz"
 git archive --format=tar --prefix=${PREFIX}/ ${TAG} | gzip > $ARCHIVE
-SHA=$(shasum -a 256 $ARCHIVE | awk '{print $1}')
 
 # Add generated API docs to the release, see https://github.com/bazelbuild/bazel-central-registry/issues/5593
 docs="$(mktemp -d)"; targets="$(mktemp)"
@@ -20,27 +19,26 @@ tar --create --auto-compress \
     --file "$GITHUB_WORKSPACE/${ARCHIVE%.tar.gz}.docs.tar.gz" .
 
 cat << EOF
-## Using [Bzlmod] with Bazel 6:
-
 Add to your \`MODULE.bazel\` file:
-
 \`\`\`starlark
 bazel_dep(name = "aspect_rules_swc", version = "${TAG:1}")
 \`\`\`
 
-[Bzlmod]: https://bazel.build/build/bzlmod
-
-## Using WORKSPACE
-
+By default you get the \`@swc/core\` version registered by rules_swc.
+Optionally you can pin a different version:
 \`\`\`starlark
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-http_archive(
-    name = "aspect_rules_swc",
-    sha256 = "${SHA}",
-    strip_prefix = "${PREFIX}",
-    url = "https://github.com/aspect-build/rules_swc/releases/download/${TAG}/${ARCHIVE}",
+swc = use_extension("@aspect_rules_swc//swc:extensions.bzl", "swc")
+swc.toolchain(
+    name = "swc",
+    swc_version = "v1.15.46",
 )
-EOF
+\`\`\`
 
-awk 'f;/--SNIP--/{f=1}' e2e/smoke/WORKSPACE.bazel
-echo "\`\`\`"
+Or take the version from your \`package.json\`, resolved by rules_js:
+\`\`\`starlark
+swc.toolchain(
+    name = "swc",
+    swc_version_from = "@npm//:@swc/core/resolved.json",
+)
+\`\`\`
+EOF
