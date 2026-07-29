@@ -48,6 +48,11 @@ build_test(
 sh_test(
     name = "check_outputs",
     srcs = ["check_outputs.sh"],
+    args = [
+        "a.js=a.ts",
+        "b.js=b.ts",
+        "sub/c.js=c.ts",
+    ],
     data = [":compile"],
     target_compatible_with = select({
         "@platforms//os:windows": ["@platforms//:incompatible"],
@@ -80,8 +85,12 @@ build_test(
 sh_test(
     name = "check_out_dir_outputs",
     srcs = ["check_outputs.sh"],
-    args = ["out2"],
-    data = [":compile"],
+    args = [
+        "out2/a.js=../a.ts",
+        "out2/b.js=../b.ts",
+        "out2/sub/c.js=../../sub/c.ts",
+    ],
+    data = [":compile2"],
     target_compatible_with = select({
         "@platforms//os:windows": ["@platforms//:incompatible"],
         "//conditions:default": [],
@@ -105,4 +114,15 @@ build_test(
         "out3/c.js",
         "out3/c.js.map",
     ],
+)
+
+sh_test(
+    name = "check_root_dir_outputs",
+    srcs = ["check_outputs.sh"],
+    args = ["out3/c.js=../sub/c.ts"],
+    data = [":compile3"],
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
 )

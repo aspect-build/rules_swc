@@ -265,18 +265,30 @@ def _calculate_outs(default_ext, srcs, source_maps, emit_isolated_dts, allow_js,
             dts_outs.append(outs[2])
     return js_outs, map_outs, dts_outs
 
-def _calculate_source_file(ctx, src, dirname_cache):
+def _calculate_source_file(ctx, src_path, dirname_cache):
+    """Path from the js output back to the src, for swc --source-file-name.
+
+    Args:
+        ctx: the rule context
+        src_path: package-relative path of the source file, see _relative_to_package
+        dirname_cache: cache of relative prefixes keyed by src directory
+    """
+
     # "." is equivalent to unset: it changes no output paths, see _to_out_path.
     out_dir = ctx.attr.out_dir if ctx.attr.out_dir != "." else ""
     root_dir = ctx.attr.root_dir if ctx.attr.root_dir != "." else ""
+
+    slash = src_path.rfind("/")
+    basename = src_path[slash + 1:]
     if not (out_dir or root_dir):
-        return src.basename
+        return basename
+
+    src_pkg = src_path[:slash] if slash != -1 else ""
 
     # The relative prefix depends only on the src directory; cache it since
     # targets commonly have many srcs in the same directory.
-    prefix = dirname_cache.get(src.dirname)
+    prefix = dirname_cache.get(src_pkg)
     if prefix == None:
-        src_pkg = src.dirname[len(ctx.label.package) + 1:] if ctx.label.package else ""
         segments = []
 
         # out of src subdir
@@ -293,9 +305,9 @@ def _calculate_source_file(ctx, src, dirname_cache):
         if src_pkg:
             segments.append(src_pkg)
         prefix = "/".join(segments)
-        dirname_cache[src.dirname] = prefix
+        dirname_cache[src_pkg] = prefix
 
-    return prefix + "/" + src.basename if prefix else src.basename
+    return prefix + "/" + basename if prefix else basename
 
 def _swc_action(ctx, swc_binary, execution_requirements, **kwargs):
     ctx.actions.run(
@@ -462,7 +474,7 @@ def _swc_impl(ctx):
             src_args = ctx.actions.args()
 
             if ctx.attr.source_maps != "false":
-                src_args.add("--source-file-name", _calculate_source_file(ctx, src, source_file_dirname_cache))
+                src_args.add("--source-file-name", _calculate_source_file(ctx, src_path, source_file_dirname_cache))
 
             src_args.add("--out-file", js_out)
             src_args.add(src_input)
