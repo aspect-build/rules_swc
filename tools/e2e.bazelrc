@@ -1,0 +1,16 @@
+# Shared by the e2e workspaces, each of which imports it as
+# `import %workspace%/../../tools/e2e.bazelrc`. Inside an imported file,
+# %workspace% is still the workspace that invoked Bazel, so the paths below
+# assume the importing workspace sits two levels below the repository root.
+
+try-import %workspace%/../../.aspect/bazelrc
+
+import %workspace%/../../tools/preset.bazelrc
+
+# Build without the bytes
+common:ci --remote_download_outputs=minimal
+common:ci --nobuild_runfile_links
+
+# Override the preset's `--lockfile_mode=error` on CI since we don't
+# yet commit MODULE.bazel.lock — see .gitignore.
+common:ci --lockfile_mode=off
