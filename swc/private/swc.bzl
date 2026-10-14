@@ -379,11 +379,11 @@ def _swc_impl(ctx):
     if ctx.attr.source_maps != "false" and ctx.attr.source_root:
         args.add("--source-root", ctx.attr.source_root)
 
-    plugin_cache = []
+    plugin_cache = None
     plugins = [(p[DefaultInfo].files.to_list()[0], p[SwcPluginConfigInfo].config) for p in ctx.attr.plugins]
 
     if ctx.attr.plugins:
-        plugin_cache = [ctx.actions.declare_directory("{}_plugin_cache".format(ctx.label.name))]
+        plugin_cache = ctx.actions.declare_directory("{}_plugin_cache".format(ctx.label.name))
 
         null_file = "NUL" if platform_utils.host_platform_is_windows() else "/dev/null"
 
@@ -392,7 +392,7 @@ def _swc_impl(ctx):
         cache_args.add("compile")
         cache_args.add_joined(
             "--config-json",
-            _config_json_parts(plugin_cache[0], plugins, False),
+            _config_json_parts(plugin_cache, plugins, False),
             join_with = "",
             map_each = _json_escape_path,
             expand_directories = False,
@@ -405,11 +405,11 @@ def _swc_impl(ctx):
             swc_toolchain.swcinfo.swc_binary,
             arguments = [cache_args],
             inputs = inputs + ctx.files.plugins,
-            outputs = plugin_cache,
+            outputs = [plugin_cache],
             execution_requirements = {"supports-path-mapping": "1"},
         )
 
-        inputs.extend(plugin_cache)
+        inputs.append(plugin_cache)
         inputs.extend(ctx.files.plugins)
 
     # Rule-supplied config options are passed in a single --config-json since
@@ -417,7 +417,7 @@ def _swc_impl(ctx):
     if ctx.attr.plugins or ctx.attr.emit_isolated_dts:
         args.add_joined(
             "--config-json",
-            _config_json_parts(plugin_cache[0] if plugin_cache else None, plugins, ctx.attr.emit_isolated_dts),
+            _config_json_parts(plugin_cache, plugins, ctx.attr.emit_isolated_dts),
             join_with = "",
             map_each = _json_escape_path,
             expand_directories = False,
