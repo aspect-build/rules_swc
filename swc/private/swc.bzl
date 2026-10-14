@@ -309,6 +309,47 @@ def _calculate_source_file(ctx, src_path, dirname_cache):
 
     return prefix + "/" + basename if prefix else basename
 
+def _json_escape_path(value):
+    # Escapes File paths as JSON string content. Under path mapping, the File
+    # passed to map_each already has its mapped path.
+    if type(value) == "File":
+        return json.encode(value.path)[1:-1]
+    return value
+
+def _config_json_parts(plugin_cache, plugins, emit_isolated_dts):
+    """Returns the rule-supplied swc config as JSON fragments and Files.
+
+    swc only accepts plugin and plugin cache paths inside its JSON config, but
+    path mapping (`--experimental_output_paths=strip`) only rewrites the paths of
+    Files passed to Args. The returned list is joined by Args.add_joined with
+    _json_escape_path, rather than encoded from a dict holding `.path` strings.
+
+    Args:
+        plugin_cache: the plugin cache directory, required if there are plugins
+        plugins: list of (File, JSON config string) tuples
+        emit_isolated_dts: whether to set jsc.experimental.emitIsolatedDts
+
+    Returns:
+        list of strings and Files
+    """
+
+    # Fields in the order json.encode would sort them
+    fields = []
+    if plugins:
+        fields.append(['"cacheRoot":"', plugin_cache, '"'])
+    if emit_isolated_dts:
+        fields.append(['"emitIsolatedDts":true'])
+    if plugins:
+        entries = []
+        for i, (file, config) in enumerate(plugins):
+            entries += ([","] if i else []) + ['["./', file, '",', json.encode(json.decode(config)), "]"]
+        fields.append(['"plugins":['] + entries + ["]"])
+
+    parts = ['{"jsc":{"experimental":{']
+    for i, field in enumerate(fields):
+        parts += ([","] if i else []) + field
+    return parts + ["}}}"]
+
 def _swc_action(ctx, swc_binary, execution_requirements, **kwargs):
     ctx.actions.run(
         mnemonic = "SWCCompile",
@@ -331,10 +372,6 @@ def _swc_impl(ctx):
         args.add("--config-file", ctx.file.swcrc)
         inputs.append(ctx.file.swcrc)
 
-    # Rule-supplied config options, merged into a single --config-json below
-    # since swcx only applies the last --config-json argument.
-    config = None
-
     # Add user specified arguments *before* rule supplied arguments
     args.add_all(ctx.attr.args)
 
@@ -342,22 +379,31 @@ def _swc_impl(ctx):
     if ctx.attr.source_maps != "false" and ctx.attr.source_root:
         args.add("--source-root", ctx.attr.source_root)
 
+    plugin_cache = []
+    plugins = [(p[DefaultInfo].files.to_list()[0], p[SwcPluginConfigInfo].config) for p in ctx.attr.plugins]
+
     if ctx.attr.plugins:
         plugin_cache = [ctx.actions.declare_directory("{}_plugin_cache".format(ctx.label.name))]
-        plugins_config = {
-            # TODO: .path breaks 'supports-path-mapping'
-            "cacheRoot": plugin_cache[0].path,
-            # TODO: .path breaks 'supports-path-mapping'
-            "plugins": [["./" + p[DefaultInfo].files.to_list()[0].path, json.decode(p[SwcPluginConfigInfo].config)] for p in ctx.attr.plugins],
-        }
 
         null_file = "NUL" if platform_utils.host_platform_is_windows() else "/dev/null"
 
         # run swc once with a null input to compile the plugins into the plugin cache
+        cache_args = ctx.actions.args()
+        cache_args.add("compile")
+        cache_args.add_joined(
+            "--config-json",
+            _config_json_parts(plugin_cache[0], plugins, False),
+            join_with = "",
+            map_each = _json_escape_path,
+            expand_directories = False,
+        )
+        cache_args.add("--source-maps", "false")
+        cache_args.add("--out-file", null_file)
+        cache_args.add(null_file)
         _swc_action(
             ctx,
             swc_toolchain.swcinfo.swc_binary,
-            arguments = ["compile", "--config-json", json.encode({"jsc": {"experimental": plugins_config}}), "--source-maps", "false", "--out-file", null_file, null_file],
+            arguments = [cache_args],
             inputs = inputs + ctx.files.plugins,
             outputs = plugin_cache,
             execution_requirements = {"supports-path-mapping": "1"},
@@ -366,17 +412,16 @@ def _swc_impl(ctx):
         inputs.extend(plugin_cache)
         inputs.extend(ctx.files.plugins)
 
-        if config == None:
-            config = {}
-        config.setdefault("jsc", {}).setdefault("experimental", {}).update(plugins_config)
-
-    if ctx.attr.emit_isolated_dts:
-        if config == None:
-            config = {}
-        config.setdefault("jsc", {}).setdefault("experimental", {})["emitIsolatedDts"] = True
-
-    if config != None:
-        args.add_all(["--config-json", json.encode(config)])
+    # Rule-supplied config options are passed in a single --config-json since
+    # swcx only applies the last --config-json argument.
+    if ctx.attr.plugins or ctx.attr.emit_isolated_dts:
+        args.add_joined(
+            "--config-json",
+            _config_json_parts(plugin_cache[0] if plugin_cache else None, plugins, ctx.attr.emit_isolated_dts),
+            join_with = "",
+            map_each = _json_escape_path,
+            expand_directories = False,
+        )
 
     if ctx.attr.output_dir:
         if len(ctx.attr.srcs) != 1:

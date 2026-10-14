@@ -1,5 +1,12 @@
-load("@aspect_rules_swc//swc:defs.bzl", "swc")
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+load("@aspect_bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
+load("@aspect_bazel_lib//lib:directory_path.bzl", "directory_path")
+load("@aspect_rules_swc//swc:defs.bzl", "swc", "swc_plugin")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
+load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
+npm_link_all_packages(name = "node_modules")
 
 swc(
     name = "compile",
@@ -9,4 +16,63 @@ swc(
 build_test(
     name = "test",
     targets = [":compile"],
+)
+
+# Plugins are passed to swc as file paths inside --config-json, which must be
+# rewritten under path mapping like any other path on the command line.
+swc_plugin(
+    name = "plugin",
+    srcs = [":node_modules/@swc/plugin-transform-imports/dir"],
+    config = {
+        "lodash": {
+            "transform": "lodash/{{member}}",
+        },
+    },
+)
+
+# The plugin cache action supports path mapping for every swc target with plugins.
+swc(
+    name = "compile_plugin",
+    srcs = ["plugin.ts"],
+    out_dir = "compile_plugin",
+    plugins = [":plugin"],
+)
+
+diff_test(
+    name = "test_plugin",
+    file1 = "compile_plugin/plugin.js",
+    file2 = "expected.js",
+)
+
+# Under output_dir, the compile action itself also supports path mapping.
+copy_to_directory(
+    name = "plugin_srcs",
+    srcs = ["plugin.ts"],
+)
+
+swc(
+    name = "compile_plugin_output_dir",
+    srcs = [":plugin_srcs"],
+    output_dir = True,
+    plugins = [":plugin"],
+)
+
+# swc nests outputs under the exec path of the input directory, which under
+# path mapping is bazel-out/cfg/bin.
+directory_path(
+    name = "compile_plugin_output_dir_js_path",
+    directory = ":compile_plugin_output_dir",
+    path = "bazel-out/cfg/bin/plugin_srcs/plugin.js",
+)
+
+copy_file(
+    name = "compile_plugin_output_dir_js",
+    src = ":compile_plugin_output_dir_js_path",
+    out = "compile_plugin_output_dir.js",
+)
+
+diff_test(
+    name = "test_plugin_output_dir",
+    file1 = ":compile_plugin_output_dir_js",
+    file2 = "expected.js",
 )
