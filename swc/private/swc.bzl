@@ -333,17 +333,14 @@ def _config_json_parts(plugin_cache, plugins, emit_isolated_dts):
         list of strings and Files
     """
 
-    # Fields in the order json.encode would sort them
     fields = []
-    if plugins:
-        fields.append(['"cacheRoot":"', plugin_cache, '"'])
     if emit_isolated_dts:
         fields.append(['"emitIsolatedDts":true'])
     if plugins:
         entries = []
         for i, (file, config) in enumerate(plugins):
-            entries += ([","] if i else []) + ['["./', file, '",', json.encode(json.decode(config)), "]"]
-        fields.append(['"plugins":['] + entries + ["]"])
+            entries += ([","] if i else []) + ['["./', file, '",', config, "]"]
+        fields.append(['"cacheRoot":"', plugin_cache, '","plugins":['] + entries + ["]"])
 
     parts = ['{"jsc":{"experimental":{']
     for i, field in enumerate(fields):
