@@ -6,6 +6,7 @@
     ]
   },
   "devDependencies": {
-    "@swc/core": "~1.11.0"
+    "@swc/core": "~1.11.0",
+    "@swc/plugin-transform-imports": "7.0.1"
   }
 }
