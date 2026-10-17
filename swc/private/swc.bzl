@@ -316,7 +316,7 @@ def _json_escape_path(value):
         return json.encode(value.path)[1:-1]
     return value
 
-def _config_json_parts(plugin_cache, plugins, emit_isolated_dts):
+def _config_json_parts(plugin_cache, plugins, emit_isolated_dts, typescript_parser = False):
     """Returns the rule-supplied swc config as JSON fragments and Files.
 
     swc only accepts plugin and plugin cache paths inside its JSON config, but
@@ -328,24 +328,48 @@ def _config_json_parts(plugin_cache, plugins, emit_isolated_dts):
         plugin_cache: the plugin cache directory, required if there are plugins
         plugins: list of (File, JSON config string) tuples
         emit_isolated_dts: whether to set jsc.experimental.emitIsolatedDts
+        typescript_parser: whether to set jsc.parser.syntax to typescript
 
     Returns:
-        list of strings and Files
+        list of strings and Files, empty if there is no config
     """
 
-    fields = []
+    experimental = []
     if emit_isolated_dts:
-        fields.append(['"emitIsolatedDts":true'])
+        experimental.append(['"emitIsolatedDts":true'])
     if plugins:
         entries = []
         for i, (file, config) in enumerate(plugins):
             entries += ([","] if i else []) + ['["./', file, '",', config, "]"]
-        fields.append(['"cacheRoot":"', plugin_cache, '","plugins":['] + entries + ["]"])
+        experimental.append(['"cacheRoot":"', plugin_cache, '","plugins":['] + entries + ["]"])
 
-    parts = ['{"jsc":{"experimental":{']
+    fields = []
+    if typescript_parser:
+        fields.append(['"parser":{"syntax":"typescript"}'])
+    if experimental:
+        fields.append(['"experimental":{'] + _join_json_fields(experimental) + ["}"])
+    if not fields:
+        return []
+    return ['{"jsc":{'] + _join_json_fields(fields) + ["}}"]
+
+def _join_json_fields(fields):
+    parts = []
     for i, field in enumerate(fields):
         parts += ([","] if i else []) + field
-    return parts + ["}}}"]
+    return parts
+
+def _config_args(ctx, plugin_cache, plugins, typescript_parser = False):
+    # Rule-supplied config options are passed in a single --config-json since
+    # swcx only applies the last --config-json argument.
+    args = ctx.actions.args()
+    args.add_joined(
+        "--config-json",
+        _config_json_parts(plugin_cache, plugins, ctx.attr.emit_isolated_dts, typescript_parser),
+        join_with = "",
+        map_each = _json_escape_path,
+        expand_directories = False,
+    )
+    return args
 
 def _swc_action(ctx, swc_binary, execution_requirements, **kwargs):
     ctx.actions.run(
@@ -409,16 +433,7 @@ def _swc_impl(ctx):
         inputs.append(plugin_cache)
         inputs.extend(ctx.files.plugins)
 
-    # Rule-supplied config options are passed in a single --config-json since
-    # swcx only applies the last --config-json argument.
-    if ctx.attr.plugins or ctx.attr.emit_isolated_dts:
-        args.add_joined(
-            "--config-json",
-            _config_json_parts(plugin_cache, plugins, ctx.attr.emit_isolated_dts),
-            join_with = "",
-            map_each = _json_escape_path,
-            expand_directories = False,
-        )
+    config_args = _config_args(ctx, plugin_cache, plugins)
 
     if ctx.attr.output_dir:
         if len(ctx.attr.srcs) != 1:
@@ -438,7 +453,7 @@ def _swc_impl(ctx):
             ctx,
             swc_toolchain.swcinfo.swc_binary,
             inputs = inputs,
-            arguments = [args],
+            arguments = [args, config_args],
             outputs = output_sources,
             execution_requirements = {"supports-path-mapping": "1"},
         )
@@ -471,6 +486,12 @@ def _swc_impl(ctx):
         copy_srcs_to_bin = ctx.attr.copy_srcs_to_bin and ctx.attr.swcrc and not ctx.file.swcrc.is_source
 
         source_file_dirname_cache = {}
+
+        # swc's default config parses .mts/.cts as plain ES since its first (ES)
+        # entry only excludes .ts/.tsx, see
+        # https://github.com/swc-project/swc/blob/v1.7.40/crates/swc/src/config/mod.rs#L855-L865
+        # A user swcrc governs the parser for all srcs and is not overridden.
+        typescript_config_args = None if ctx.attr.swcrc else _config_args(ctx, plugin_cache, plugins, typescript_parser = True)
 
         for src in ctx.files.srcs:
             src_path = _relative_to_package(src, ctx, dir_cache)
@@ -523,12 +544,15 @@ def _swc_impl(ctx):
 
             output_sources.extend(outputs)
 
+            src_config_args = typescript_config_args if typescript_config_args != None and src_path.endswith((".mts", ".cts")) else config_args
+
             _swc_action(
                 ctx,
                 swc_toolchain.swcinfo.swc_binary,
                 inputs = [src_input] + inputs,
                 arguments = [
                     args,
+                    src_config_args,
                     src_args,
                 ],
                 outputs = outputs,

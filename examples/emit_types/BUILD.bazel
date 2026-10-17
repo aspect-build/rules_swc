@@ -94,3 +94,23 @@ write_source_files(
         "expected.b.d.ts": "src/b.d.ts",
     },
 )
+
+# .mts/.cts without a swcrc
+swc(
+    name = "emit_dts_mts",
+    srcs = [
+        "mts/c.mts",
+        "mts/d.cts",
+    ],
+    emit_isolated_dts = True,
+)
+
+build_test(
+    name = "emit_dts_mts-test",
+    targets = [
+        "mts/c.mjs",
+        "mts/c.d.ts",
+        "mts/d.cjs",
+        "mts/d.d.ts",
+    ],
+)
