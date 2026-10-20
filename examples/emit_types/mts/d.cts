@@ -1,10 +1,9 @@
-// Imported and used as types
-import { A, Foo } from "./a";
+/* A basic type alias */
+export type Bar = {
+  name: string;
+};
 
-// Use of imported types
-export const B: typeof A = 1;
-
-/** Another use of imported types */
-export const BF: Foo = {
+// Explicit type
+export const D: Bar = {
   name: "baz",
 };

@@ -358,13 +358,13 @@ def _join_json_fields(fields):
         parts += ([","] if i else []) + field
     return parts
 
-def _config_args(ctx, plugin_cache, plugins, typescript_parser = False):
+def _config_args(ctx, plugin_cache, plugins, emit_isolated_dts, typescript_parser = False):
     # Rule-supplied config options are passed in a single --config-json since
     # swcx only applies the last --config-json argument.
     args = ctx.actions.args()
     args.add_joined(
         "--config-json",
-        _config_json_parts(plugin_cache, plugins, ctx.attr.emit_isolated_dts, typescript_parser),
+        _config_json_parts(plugin_cache, plugins, emit_isolated_dts, typescript_parser),
         join_with = "",
         map_each = _json_escape_path,
         expand_directories = False,
@@ -411,20 +411,18 @@ def _swc_impl(ctx):
         # run swc once with a null input to compile the plugins into the plugin cache
         cache_args = ctx.actions.args()
         cache_args.add("compile")
-        cache_args.add_joined(
-            "--config-json",
-            _config_json_parts(plugin_cache, plugins, False),
-            join_with = "",
-            map_each = _json_escape_path,
-            expand_directories = False,
-        )
-        cache_args.add("--source-maps", "false")
-        cache_args.add("--out-file", null_file)
-        cache_args.add(null_file)
+        cache_io_args = ctx.actions.args()
+        cache_io_args.add("--source-maps", "false")
+        cache_io_args.add("--out-file", null_file)
+        cache_io_args.add(null_file)
         _swc_action(
             ctx,
             swc_toolchain.swcinfo.swc_binary,
-            arguments = [cache_args],
+            arguments = [
+                cache_args,
+                _config_args(ctx, plugin_cache, plugins, emit_isolated_dts = False),
+                cache_io_args,
+            ],
             inputs = inputs + ctx.files.plugins,
             outputs = [plugin_cache],
             execution_requirements = {"supports-path-mapping": "1"},
@@ -433,7 +431,7 @@ def _swc_impl(ctx):
         inputs.append(plugin_cache)
         inputs.extend(ctx.files.plugins)
 
-    config_args = _config_args(ctx, plugin_cache, plugins)
+    config_args = _config_args(ctx, plugin_cache, plugins, ctx.attr.emit_isolated_dts)
 
     if ctx.attr.output_dir:
         if len(ctx.attr.srcs) != 1:
@@ -490,8 +488,10 @@ def _swc_impl(ctx):
         # swc's default config parses .mts/.cts as plain ES since its first (ES)
         # entry only excludes .ts/.tsx, see
         # https://github.com/swc-project/swc/blob/v1.7.40/crates/swc/src/config/mod.rs#L855-L865
-        # A user swcrc governs the parser for all srcs and is not overridden.
-        typescript_config_args = None if ctx.attr.swcrc else _config_args(ctx, plugin_cache, plugins, typescript_parser = True)
+        # A user swcrc or --config-json governs the parser for all srcs and is
+        # not overridden.
+        user_config_json = [a for a in ctx.attr.args if a == "--config-json" or a.startswith("--config-json=")]
+        typescript_config_args = None if ctx.attr.swcrc or user_config_json else _config_args(ctx, plugin_cache, plugins, ctx.attr.emit_isolated_dts, typescript_parser = True)
 
         for src in ctx.files.srcs:
             src_path = _relative_to_package(src, ctx, dir_cache)
