@@ -1,0 +1,20 @@
+load("@aspect_rules_js//js:defs.bzl", "js_test")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+
+# A user --config-json is not overridden by the TypeScript parser config the
+# rule supplies for .mts/.cts srcs without a swcrc.
+swc(
+    name = "cts",
+    srcs = ["index.cts"],
+    args = [
+        "--config-json",
+        """{"jsc": {"parser": {"syntax": "typescript"}}, "module": {"type": "commonjs"}}""",
+    ],
+)
+
+js_test(
+    # Node fails to load index.cjs if it was compiled as ESM.
+    name = "cts-commonjs",
+    data = [":cts"],
+    entry_point = "index.cjs",
+)
