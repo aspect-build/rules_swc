@@ -3,6 +3,7 @@ load("@aspect_bazel_lib//lib:testing.bzl", "assert_contains", "assert_json_match
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//examples/generate_swcrc:tsconfig-to-swcconfig/package_json.bzl", tsconfig_to_swcconfig = "bin")
+load(":inputs_test.bzl", "swc_action_inputs_test")
 
 npm_link_all_packages(name = "node_modules")
 
@@ -43,6 +44,19 @@ assert_contains(
     name = "test_paths_import",
     actual = "app/main.js",
     expected = 'from "../lib/utils/utils.js"',
+)
+
+# swc probes the filesystem to resolve `jsc.paths` imports, and the action is not
+# sandboxed, so each action must have all copied srcs as inputs: otherwise whether
+# `../lib/utils/utils.js` gets its extension depends on whether the copy of
+# lib/utils/utils.ts happened to run before app/main.ts was compiled.
+swc_action_inputs_test(
+    name = "test_copied_srcs_are_inputs",
+    expected_inputs = [
+        "examples/generate_swcrc/app/main.ts",
+        "examples/generate_swcrc/lib/utils/utils.ts",
+    ],
+    target_under_test = ":compile",
 )
 
 # With copy_srcs_to_bin = False, srcs are transpiled in place (no per-src copy action).

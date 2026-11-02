@@ -493,6 +493,10 @@ def _swc_impl(ctx):
         user_config_json = [a for a in ctx.attr.args if a == "--config-json" or a.startswith("--config-json=")]
         typescript_config_args = None if ctx.attr.swcrc or user_config_json else _config_args(ctx, plugin_cache, plugins, ctx.attr.emit_isolated_dts, typescript_parser = True)
 
+        # (src_input, arguments, outputs) of each swc action, created once all
+        # srcs have been processed so that copied srcs can be shared as inputs.
+        swc_actions = []
+
         for src in ctx.files.srcs:
             src_path = _relative_to_package(src, ctx, dir_cache)
 
@@ -546,15 +550,22 @@ def _swc_impl(ctx):
 
             src_config_args = typescript_config_args if typescript_config_args != None and src_path.endswith((".mts", ".cts")) else config_args
 
+            swc_actions.append((src_input, [args, src_config_args, src_args], outputs))
+
+        # Under a `jsc.baseUrl`/`jsc.paths` config, swc probes the filesystem next to
+        # the src to resolve every import, e.g. `./foo` is rewritten to `./foo.js` only
+        # if `foo.ts` is found. Since the action is not sandboxed, a copied sibling src
+        # would be found or not depending on whether its copy action already ran. Make
+        # all of the target's copied srcs inputs of every action so the output is
+        # deterministic.
+        shared_inputs = depset([a[0] for a in swc_actions] + inputs) if copy_srcs_to_bin else None
+
+        for src_input, arguments, outputs in swc_actions:
             _swc_action(
                 ctx,
                 swc_toolchain.swcinfo.swc_binary,
-                inputs = [src_input] + inputs,
-                arguments = [
-                    args,
-                    src_config_args,
-                    src_args,
-                ],
+                inputs = shared_inputs if shared_inputs != None else [src_input] + inputs,
+                arguments = arguments,
                 outputs = outputs,
                 execution_requirements = execution_requirements,
             )
