@@ -84,7 +84,3 @@ SWC cli provided in aspect_rules_swc.
 ### Synchronizing settings with tsconfig.json
 
 See [`tsconfig.md`](docs/tsconfig.md)
-
-# Telemetry & privacy policy
-
-This ruleset collects limited usage data via [`tools_telemetry`](https://github.com/aspect-build/tools_telemetry), which is reported to Aspect Build Inc and governed by our [privacy policy](https://www.aspect.build/privacy-policy).

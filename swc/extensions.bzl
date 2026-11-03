@@ -1,6 +1,5 @@
 "extensions for bzlmod"
 
-load("@aspect_tools_telemetry_report//:defs.bzl", "TELEMETRY")  # buildifier: disable=load
 load("//swc/private:toolchains_repo.bzl", "PLATFORMS")
 load("//swc/private:versions.bzl", "TOOL_VERSIONS")
 load(":repositories.bzl", "determine_version", "swc_register_toolchains")
