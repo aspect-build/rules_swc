@@ -2,6 +2,20 @@
 
 # Versions should be descending order so TOOL_VERSIONS[0] is the latest version.
 TOOL_VERSIONS = {
+    "v1.16.22": {
+        "darwin-arm64": "sha384-BBUkmmfbWjYISt7i8e1u6jcp1PvtCegldkaFMRP9eGnEr6jF6YAdNMUA3u9mkjOC",
+        "darwin-x64": "sha384-NZZIvGgwgKhBLxZKJnML9fl/fwgaV8aQ2ge1kMMb8TGDdbnb+EH/OAMx8OJmFhLd",
+        "linux-arm-gnueabihf": "sha384-nIgfNNHy9FAnGrn0lctf/nfpsMFb1VoYeWbp2/4OIPaEALRZ7ol/pUiBnl/C5Nqc",
+        "linux-arm64-gnu": "sha384-rvuNpZ2KcFfjDoutDlIMtW/ySSW/RIMYOyR1yRYOi9zXibmOr8owKI6kI662+3Bn",
+        "linux-arm64-musl": "sha384-sr1UYUtgoNijmn6UlWQHqnCmo3LQAQzq2dQBNrkM6O9i6wAfAaVyNbUSxRprUuxa",
+        "linux-ppc64-gnu": "sha384-WTBGUxMR3Bl8Hw8eZYAimC9Fn75oOAO6wLEqb7ZbAbwBe/dxqgfZLPxpuuZv0+es",
+        "linux-s390x-gnu": "sha384-rTnEz/fyFfoED9tcQ5/6+Kwi//WwRTVBinnNcMBE05jZeeqCB8gOSFOdl7s3vSBo",
+        "linux-x64-gnu": "sha384-ZyDvVux73vO3awttXuEToh2ZBvv8LiQjBxTmxODT3Epc9nszwtixL6P3Ouz+j95W",
+        "linux-x64-musl": "sha384-mRAFPuVzaJ34Jm3qZOANGynX28G943ZFRo2T/01sZdOSpLdyVVgHo3I/Tb0SHBz1",
+        "win32-arm64-msvc": "sha384-ca2gg1cy9BrSZKtNttL3VptGGLxJedo5zoCCRwbSryhpv4RhZ4G5rDVBy87nPsXP",
+        "win32-ia32-msvc": "sha384-yCD4f35K88WmDj5UR20A0/xkUFT+lL4Yte5wfF3HbQ+W1WFQU/ZxfE4abQyVNSsU",
+        "win32-x64-msvc": "sha384-PJvj1sAp2ayd97qoUoZ8hj7S8B28XzwJxzjbvWDRnHPTndq1uigJetQ4/qrhxAzD",
+    },
     "v1.16.21": {
         "darwin-arm64": "sha384-3dJF63iJ4gzPZUOCwEEGNpkLBhJksN7xyxItM6DMbLbuOR0hNaqrZ+BLy+zCUqo/",
         "darwin-x64": "sha384-RSCuZ2wCv+rrYWyBzyqYZ2KCGI+weFfvEz2IJN4d2e+3kuohnHc3OHukohGHX/AV",
