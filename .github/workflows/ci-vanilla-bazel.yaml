@@ -15,6 +15,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
+permissions:
+  id-token: write
+
 jobs:
   # Prepares dynamic test matrix values
   matrix-prep:
