@@ -2,9 +2,19 @@
   "homepage": "https://docs.aspect.build/bazel/javascript",
   "maintainers": [
     {
-      "email": "jason@aspect.build",
+      "email": "jason@jbedard.ca",
       "github": "jbedard",
       "name": "Jason Bedard"
+    },
+    {
+      "email": "greg@aspect.build",
+      "github": "gregmagolan",
+      "name": "Greg Magolan"
+    },
+    {
+      "email": "adamc@aspect.build",
+      "github": "acozzette",
+      "name": "Adam Cozzette"
     }
   ],
   "repository": ["github:aspect-build/rules_swc"],
